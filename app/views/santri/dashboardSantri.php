@@ -760,7 +760,7 @@
                             text: "You have exited the application successfully.",
                             icon: "success"
                         }).then(() => {
-                            window.location.href = 'index.html';
+                            window.location.href = '<?=BASEURL;?>';
                         });
                     } else {
                         Swal.fire({
