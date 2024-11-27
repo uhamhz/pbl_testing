@@ -25,21 +25,17 @@ class Umum extends Controller {
             } else if ($this->isPengurus()) {
                 $_SESSION['role'] = "pengurus";
                 header("location:$url./Pengurus");
-                $_SESSION['email'] = $this->email;
-                $_SESSION['password'] = $this->password;
                 exit;
             } else if ($this->isSantri()) {
                 $_SESSION['role'] = "santri";
                 header("location:$url./Santri");
-                $_SESSION['email'] = $this->email;
-                $_SESSION['password'] = $this->password;
                 exit;
             } else {
-                header("location:$url/Umum/login");
-                $_SESSION['email'] = $this->email;
-                $_SESSION['password'] = $this->password;
-                exit;
+                header("location:$url");
+                // exit;
             }
+            $_SESSION['email'] = $this->email;
+            $_SESSION['password'] = $this->password;
         }
 
 
@@ -53,7 +49,7 @@ class Umum extends Controller {
 
     public function isPengurus(): bool
     {
-        if ($this->email == "Pengurus" && $this->password == "pengurus") {
+        if ($this->email == "Pengurus@gmail.com" && $this->password == "pengurus") {
             return true;
         }
         return false;
@@ -61,7 +57,7 @@ class Umum extends Controller {
 
     public function isSantri(): bool
     {
-        if ($this->email == "nim" && $this->password == "password") {
+        if ($this->email == "ammarhafizh2404@gmail.com" && $this->password == "santri") {
             return true;
         } else {
             return false;

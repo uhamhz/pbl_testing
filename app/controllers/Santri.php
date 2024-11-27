@@ -19,7 +19,7 @@ class Santri extends Controller
 
     public function dashboardSantri()
     {
-        $this->view('Santri/dashboardSantri');
+        $this->view('santri/dashboardSantri');
     }
 }
 ?>
