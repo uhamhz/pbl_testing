@@ -19,28 +19,36 @@ class Umum extends Controller
         $this->password = $_POST["password"];
         $url = BASEURL;
 
-        if ($this->isAdmin()) {
-            $_SESSION['role'] = "admin";
-            $url = BASEURL . "/Admin/index";
-            header("location:$url");
-            exit;
-        } else if ($this->isPengurus()) {
-            $_SESSION['role'] = "pengurus";
-            header("location:$url./Pengurus");
-            exit;
-        } else if ($this->isSantri()) {
-            $_SESSION['role'] = "santri";
-            $url = BASEURL . "/Santri/index";
-            header("location:$url");
+        $userModel = $this->model("UserModel");
+        $user = $userModel->getUserByEmailAndPassword($this->email, $this->password);
+
+        if ($user) {
+            // Login berhasil
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['email'] = $this->email;
+
+            // Redirect sesuai role
+            switch ($user['role']) {
+                case 'admin':
+                    header("location:$url/Admin/index");
+                    break;
+                case 'pengurus':
+                    header("location:$url/Pengurus");
+                    break;
+                case 'santri':
+                    header("location:$url/Santri/index");
+                    break;
+                default:
+                    header("location:$url");
+            }
             exit;
         } else {
+            // Login gagal
+            $_SESSION['login_error'] = "Email atau password salah!";
             header("location:$url");
-            // exit;
+            exit;
         }
-        $_SESSION['email'] = $this->email;
-        $_SESSION['password'] = $this->password;
     }
-
 
     public function isAdmin(): bool
     {
@@ -64,6 +72,12 @@ class Umum extends Controller
         $user = $userModel->getUserByEmailAndPassword($this->email, $this->password);
 
         return $user && $user['role'] === 'santri';
+    }
+    
+    public function isLihatFormulir(): bool
+    {
+        $this->view('umum/formulir');
+        return true;
     }
 }
 

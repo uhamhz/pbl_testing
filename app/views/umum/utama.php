@@ -16,6 +16,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!--Bootstrap Icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!--Sweet Alert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <style>
@@ -335,7 +337,7 @@
                         berakhlak mulia, berpegang teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin
                         dalam setiap aspek kehidupan.</p>
                     <div class="cta-buttons">
-                        <a href="formulir.html" class="cta-button primary-button">Daftar Sekarang →</a>
+                        <a href="<?= BASEURL; ?>/Umum/isLihatFormulir" class="cta-button primary-button">Daftar Sekarang →</a>
                         <a href="#kegiatan" class="cta-button secondary-button">Pelajari Lebih Lanjut</a>
                     </div>
                 </div>
@@ -345,13 +347,13 @@
                         <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img src="/public/img/fotbar.jpg" class="d-block w-100" alt="...">
+                                    <img class="fotbar" src="/public/img/fotbar.jpg" class="d-block w-100" alt="...">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="/public/img/forbar2.jpg" class="d-block w-100" alt="...">
+                                    <img class="fotbar" src="/public/img/forbar2.jpg" class="d-block w-100" alt="...">
                                 </div>
                                 <div class="carousel-item">
-                                    <img src="/public/img/fotbar3.jpg" class="d-block w-100" alt="...">
+                                    <img class="fotbar" src="/public/img/fotbar3.jpg" class="d-block w-100" alt="...">
                                 </div>
                             </div>
                             <button class="carousel-control-prev" type="button"
@@ -636,6 +638,22 @@
         </div>
     </footer>
 
+    <!-- Trigger Wrong data -->
+    <?php
+    if (isset($_SESSION['login_error'])):
+        ?>
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Username atau Password Salah!",
+            });
+        </script>
+        <?php
+        unset($_SESSION['login_error']);
+    endif;
+    ?>
+
     <!-- Login Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1">
         <div class="modal-dialog">
@@ -645,7 +663,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?=BASEURL;?>/Umum/isLogin" method="post">
+                    <form action="<?= BASEURL; ?>/Umum/isLogin" method="post">
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" name="email" class="form-control">
@@ -680,17 +698,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
     <script>
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('passwordInput');
-        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('passwordInput');
+            const togglePassword = document.getElementById('togglePassword');
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
 
-        togglePassword.addEventListener('click', function (e) {
-            // Toggle antara tipe 'password' dan 'text'
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-
-            // Ganti ikon
-            togglePasswordIcon.className = type === 'password' ? 'bi bi-eye-slash' : 'bi bi-eye';
+            togglePassword.addEventListener('click', function () {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    togglePasswordIcon.classList.remove('bi-eye-slash');
+                    togglePasswordIcon.classList.add('bi-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    togglePasswordIcon.classList.remove('bi-eye');
+                    togglePasswordIcon.classList.add('bi-eye-slash');
+                }
+            });
         });
     </script>
 

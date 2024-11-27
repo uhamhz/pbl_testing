@@ -112,7 +112,7 @@
             <span class="logo-text">ASHABUL KAHFI</span>
         </div>
         <div class="nav-links">
-            <a href="index.html" class="back-button">Kembali</a>
+            <a href="index.php" class="back-button">Kembali</a>
         </div>
     </nav>
     <div class="container">
