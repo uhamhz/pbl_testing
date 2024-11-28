@@ -2,7 +2,7 @@
 class Connection 
 {
     private $serverName = "LAPTOP-V6CM8SFG";
-    private $connectionInfo = ["Database" => "pesantren"];
+    private $connectionInfo = ["Database" => "dbpesantren"];
     public $conn;
 
     public function __construct() {

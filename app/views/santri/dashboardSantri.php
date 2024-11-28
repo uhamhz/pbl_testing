@@ -438,29 +438,46 @@
             <!-- Profile Section -->
             <section id="profile" class="content-section">
                 <h2>Data Pribadi</h2>
-                <form class="profile-form">
+
+                <!-- Menampilkan data pribadi sebagai teks biasa -->
+                <div class="data-pribadi">
+                    <p><strong>NIS:</strong> <span id="nis-text">001</span></p>
+                    <p><strong>Nama Lengkap:</strong> <span id="nama-text">Ahmad Fauzi</span></p>
+                    <p><strong>Kelas:</strong> <span id="kelas-text">10</span></p>
+                    <p><strong>Alamat:</strong> <span id="alamat-text">Jl. Raya No. 123</span></p>
+                    <p><strong>No. HP:</strong> <span id="hp-text">081234567890</span></p>
+                </div>
+
+                <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
+                <form class="profile-form" style="display:none;">
                     <div class="form-group">
                         <label>NIS</label>
-                        <input type="text" value="001" readonly>
+                        <input type="text" id="nis-input" value="001" readonly>
                     </div>
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" value="Ahmad Fauzi">
+                        <input type="text" id="nama-input" value="Ahmad Fauzi">
                     </div>
                     <div class="form-group">
                         <label>Kelas</label>
-                        <input type="text" value="10" readonly>
+                        <input type="text" id="kelas-input" value="10" readonly>
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <textarea>Jl. Raya No. 123</textarea>
+                        <textarea id="alamat-input">Jl. Raya No. 123</textarea>
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" value="081234567890">
+                        <input type="tel" id="hp-input" value="081234567890">
                     </div>
+
+                    <!-- Tombol Simpan dan Cancel -->
                     <button type="submit">Simpan Perubahan</button>
+                    <button type="button" id="cancel-button">Batal</button>
                 </form>
+
+                <!-- Tombol Ubah -->
+                <button type="button" id="edit-button">Ubah</button>
             </section>
 
             <!-- Jadwal Section -->
@@ -606,6 +623,39 @@
 
         </main>
     </div>
+
+    <script>
+        // Ketika tombol "Ubah" diklik
+        document.getElementById("edit-button").addEventListener("click", function () {
+            // Sembunyikan data teks biasa
+            document.querySelector(".data-pribadi").style.display = "none";
+
+            // Tampilkan form input untuk edit
+            document.querySelector(".profile-form").style.display = "block";
+
+            // Menyalin data dari teks ke input (untuk memulai editing)
+            document.getElementById("nis-input").value = document.getElementById("nis-text").innerText;
+            document.getElementById("nama-input").value = document.getElementById("nama-text").innerText;
+            document.getElementById("kelas-input").value = document.getElementById("kelas-text").innerText;
+            document.getElementById("alamat-input").value = document.getElementById("alamat-text").innerText;
+            document.getElementById("hp-input").value = document.getElementById("hp-text").innerText;
+
+            // Ganti tombol "Ubah" menjadi tidak terlihat setelah klik
+            document.getElementById("edit-button").style.display = "none";
+        });
+
+        // Ketika tombol "Cancel" diklik
+        document.getElementById("cancel-button").addEventListener("click", function () {
+            // Sembunyikan form input
+            document.querySelector(".profile-form").style.display = "none";
+
+            // Tampilkan data teks biasa
+            document.querySelector(".data-pribadi").style.display = "block";
+
+            // Ganti tombol "Ubah" menjadi terlihat kembali
+            document.getElementById("edit-button").style.display = "inline-block";
+        });
+    </script>
 
     <script>
         function uploadPaymentProof(month) {
@@ -760,7 +810,7 @@
                             text: "You have exited the application successfully.",
                             icon: "success"
                         }).then(() => {
-                            window.location.href = '<?=BASEURL;?>';
+                            window.location.href = '<?= BASEURL; ?>';
                         });
                     } else {
                         Swal.fire({
