@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -279,14 +278,15 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="/api/placeholder/100/100" alt="Admin Avatar" class="admin-avatar">
-                <h2>Admin Panel</h2>
-                <p>Admin Pesantren</p>
+                <h2><?= $data['users']['0']['nama_lengkap'] ?></h2>
+                <p><?= $data['users']['0']['role'] ?></p>
             </div>
 
             <nav>
                 <ul>
                     <li><a href="#dashboard" class="active">Dashboard</a></li>
                     <li><a href="#pribadi">Data Pribadi</a></li>
+                    <li><a href="#admin">Data Admin</a></li>
                     <li><a href="#santri">Data Santri</a></li>
                     <li><a href="#jadwal">Jadwal</a></li>
                     <li><a href="#perizinan">Perizinan</a></li>
@@ -300,7 +300,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="main-header">
-                <h1>Selamat Datang, Admin</h1>
+               <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?> </h1>
                 <div class="user-info">
                     <span>Terakhir login: 24 April 2024, 08:30 WIB</span>
                 </div>
@@ -333,33 +333,34 @@
 
                 <!-- Menampilkan data pribadi sebagai teks biasa -->
                 <div class="data-pribadi">
-                    <p><strong>Nama Lengkap:</strong> <span id="nama-text">Ahmad Fauzi</span></p>
-                    <p><strong>Email:</strong> <span id="kelas-text">10</span></p>
-                    <p><strong>Role:</strong> <span id="role-text">Admin</span></p>
-                    <p><strong>Alamat:</strong> <span id="alamat-text">Jl. Raya No. 123</span></p>
-                    <p><strong>No. HP:</strong> <span id="hp-text">081234567890</span></p>
+                    <p><strong>Nama Lengkap:</strong> <?= $data['users']['0']['nama_lengkap'] ?></p>
+                    <p><strong>Email:</strong> <?= $data['users']['0']['email'] ?></p>
+                    <p><strong>Role:</strong> <?= $data['users']['0']['role'] ?></p>
+                    <p><strong>Alamat:</strong> <?= $data['users']['0']['alamat'] ?></p>
+                    <p><strong>No. HP:</strong> <?= $data['users']['0']['no_hp'] ?></p>
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-                <form class="profile-form" style="display:none;">
+                <form class="profile-form" style="display:none; action="" method="post">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nama-input" value="Ahmad Fauzi">
+                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="kelas-input" value="10" readonly>
+                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly>
                     </div>
                     <div class="form-group">
                         <label>Role</label>
+                        <label><?= $data['users']['0']['role'] ?></label>
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <textarea id="alamat-input">Jl. Raya No. 123</textarea>
+                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>" readonly>
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" id="hp-input" value="081234567890">
+                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>">
                     </div>
 
                     <!-- Tombol Simpan dan Cancel -->
@@ -371,6 +372,84 @@
                 <button type="button" id="edit-button">Ubah</button>
             </section>
 
+            <!-- Data Admin Section -->
+            <section id="admin" class="content-section">
+                <h2>Data Admin</h2>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahAdmin">Tambah
+                    Admin</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Email:</th>
+                            <th>Password:</th>
+                            <th>Nama Lengkap:</th>
+                            <th>Alamat:</th>
+                            <th>Nomor HP:</th>
+                            <th>Aksi:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($data['admin'] as $admin) : ?>
+                        <tr>
+                            <td><?= $admin['email'] ?></td>
+                            <td><?= $admin['password'] ?></td>
+                            <td><?= $admin['nama_lengkap'] ?></td>
+                            <td><?= $admin['alamat'] ?></td>
+                            <td><?= $admin['no_hp'] ?></td>
+                            <td>
+                                <button class="btn btn-danger">Hapus</button>
+                                <button class="btn btn-primary">Edit</button>
+                            </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Modal Tambah Admin -->
+            <div class="modal fade" id="modalTambahAdmin" tabindex="-1" role="dialog" aria-labelledby="tambahAdminLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="tambahAdminLabel">Tambah Admin Baru</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formTambahAdmin">
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nama">Nama Lengkap:</label>
+                                    <input type="text" class="form-control" id="nama" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="alamat">Alamat:</label>
+                                    <input type="text" class="form-control" id="alamat" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="hp">Nomor HP:</label>
+                                    <input type="tel" class="form-control" id="hp" required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary" form="formTambahAdmin">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Data Santri Section -->
             <section id="santri" class="content-section">
                 <h2>Data Santri</h2>
@@ -379,34 +458,28 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>NIS</th>
-                            <th>Nama</th>
-                            <th>Kelas</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th>Email:</th>
+                            <th>Password:</th>
+                            <th>Nama Lengkap:</th>
+                            <th>Alamat:</th>
+                            <th>Nomor HP:</th>
+                            <th>Aksi:</th>
                         </tr>
                     </thead>
                     <tbody>
+                      <?php foreach ($data['santri'] as $santri) : ?>
                         <tr>
-                            <td>001</td>
-                            <td>Ahmad Fauzi</td>
-                            <td>10</td>
-                            <td>Aktif</td>
+                            <td><?= $santri['email'] ?></td>
+                            <td><?= $santri['password'] ?></td>
+                            <td><?= $santri['nama_lengkap'] ?></td>
+                            <td><?= $santri['alamat'] ?></td>
+                            <td><?= $santri['no_hp'] ?></td>
                             <td>
-                                <button class="btn btn-primary">Edit</button>
                                 <button class="btn btn-danger">Hapus</button>
+                                <button class="btn btn-primary">Edit</button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>Muhammad Rizki</td>
-                            <td>10</td>
-                            <td>Aktif</td>
-                            <td>
-                                <button class="btn btn-primary">Edit</button>
-                                <button class="btn btn-danger">Hapus</button>
-                            </td>
-                        </tr>
+                      <?php endforeach; ?>
                     </tbody>
                 </table>
             </section>

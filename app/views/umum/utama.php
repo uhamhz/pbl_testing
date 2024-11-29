@@ -337,7 +337,8 @@
                         berakhlak mulia, berpegang teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin
                         dalam setiap aspek kehidupan.</p>
                     <div class="cta-buttons">
-                        <a href="<?= BASEURL; ?>/Umum/isLihatFormulir" class="cta-button primary-button">Daftar Sekarang →</a>
+                        <a href="<?= BASEURL; ?>/Umum/isLihatFormulir" class="cta-button primary-button">Daftar Sekarang
+                            →</a>
                         <a href="#kegiatan" class="cta-button secondary-button">Pelajari Lebih Lanjut</a>
                     </div>
                 </div>
@@ -663,7 +664,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= BASEURL; ?>/Umum/isLogin" method="post">
+                    <form action="<?= BASEURL; ?>/Umum/isLogin" method="post" >
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" name="email" class="form-control">
@@ -689,6 +690,35 @@
         </div>
     </div>
 
+    <style>
+        /* Efek loading spinner */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Animasi rotasi */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
@@ -696,6 +726,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
     <!-- AOS JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
