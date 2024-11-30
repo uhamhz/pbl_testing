@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -300,7 +301,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="main-header">
-               <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?> </h1>
+                <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?> </h1>
                 <div class="user-info">
                     <span>Terakhir login: 24 April 2024, 08:30 WIB</span>
                 </div>
@@ -341,7 +342,7 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-                <form class="profile-form" style="display:none; action="" method="post">
+                <form class="profile-form" style="display:none; action="" method=" post">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
                         <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>">
@@ -389,19 +390,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($data['admin'] as $admin) : ?>
-                        <tr>
-                            <td><?= $admin['email'] ?></td>
-                            <td><?= $admin['password'] ?></td>
-                            <td><?= $admin['nama_lengkap'] ?></td>
-                            <td><?= $admin['alamat'] ?></td>
-                            <td><?= $admin['no_hp'] ?></td>
-                            <td>
-                                <button class="btn btn-danger">Hapus</button>
-                                <button class="btn btn-primary">Edit</button>
-                            </td>
-                        </tr>
-                      <?php endforeach; ?>
+                        <?php foreach ($data['admin'] as $admin): ?>
+                            <tr>
+                                <td><?= $admin['email'] ?></td>
+                                <td><?= $admin['password'] ?></td>
+                                <td><?= $admin['nama_lengkap'] ?></td>
+                                <td><?= $admin['alamat'] ?></td>
+                                <td><?= $admin['no_hp'] ?></td>
+                                <td>
+                                    <button class="btn btn-danger">Hapus</button>
+                                    <button class="btn btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </section>
@@ -467,19 +468,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($data['santri'] as $santri) : ?>
-                        <tr>
-                            <td><?= $santri['email'] ?></td>
-                            <td><?= $santri['password'] ?></td>
-                            <td><?= $santri['nama_lengkap'] ?></td>
-                            <td><?= $santri['alamat'] ?></td>
-                            <td><?= $santri['no_hp'] ?></td>
-                            <td>
-                                <button class="btn btn-danger">Hapus</button>
-                                <button class="btn btn-primary">Edit</button>
-                            </td>
-                        </tr>
-                      <?php endforeach; ?>
+                        <?php foreach ($data['santri'] as $santri): ?>
+                            <tr>
+                                <td><?= $santri['email'] ?></td>
+                                <td><?= $santri['password'] ?></td>
+                                <td><?= $santri['nama_lengkap'] ?></td>
+                                <td><?= $santri['alamat'] ?></td>
+                                <td><?= $santri['no_hp'] ?></td>
+                                <td>
+                                    <button class="btn btn-danger">Hapus</button>
+                                    <button class="btn btn-primary">Edit</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </section>
@@ -650,24 +651,49 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Tanggal</th>
-                            <th>Santri</th>
+                            <th>Nama Santri</th>
+                            <th>Tanggal Izin</th>
+                            <th>Tanggal Kembali</th>
                             <th>Jenis Izin</th>
                             <th>Alasan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>24-04-2024</td>
-                            <td>Ahmad Fauzi</td>
-                            <td>Pulang</td>
-                            <td>Acara Keluarga</td>
-                            <td>
-                                <button class="btn btn-success">Setujui</button>
-                                <button class="btn btn-danger">Tolak</button>
-                            </td>
-                        </tr>
+                        <?php foreach ($data['perizinan'] as $izin):
+                            if ($izin['status'] == 'pending'): ?>
+                                <tr>
+                                    <td><?= $izin['nama_lengkap'] ?></td> <!-- Menampilkan nama lengkap santri -->
+                                    <td>
+                                        <?php
+                                        // Memformat tanggal_izin jika diperlukan
+                                        if ($izin['tanggal_izin'] instanceof DateTime) {
+                                            echo $izin['tanggal_izin']->format('Y-m-d');
+                                        } else {
+                                            echo $izin['tanggal_izin'];
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        // Memformat tanggal_kembali jika diperlukan
+                                        if ($izin['tanggal_kembali'] instanceof DateTime) {
+                                            echo $izin['tanggal_kembali']->format('Y-m-d');
+                                        } else {
+                                            echo $izin['tanggal_kembali'];
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?= $izin['jenis_izin'] ?></td>
+                                    <td><?= $izin['alasan'] ?></td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                            data-target="#modalApproveIzin" data-izin-id="<?= $izin['id'] ?>">Approve</button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalRejectIzin"
+                                            data-izin-id="<?= $izin['id'] ?>">Reject</button>
+                                    </td>
+                                </tr>
+                            <?php endif; endforeach; ?>
                     </tbody>
                 </table>
             </section>

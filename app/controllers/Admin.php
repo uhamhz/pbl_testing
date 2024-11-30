@@ -9,6 +9,7 @@ class Admin extends Controller
                 $data['users'] = $this->model("UserModel")->getUserData($_SESSION['email']);
                 $data['admin'] = $this->model("UserModel")->getAdminData();
                 $data ['santri'] = $this->model("UserModel")->getSantriData();
+                $data ['perizinan'] = $this->model("PerizinanModel")->getAllDataPerizinan();
                 $this->view('admin/dashboardAdmin', $data);
             }else if ($role == "pengurus") {
                 header("location:http://localhost/public/Pengurus");
