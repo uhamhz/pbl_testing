@@ -682,13 +682,11 @@
                 </table>
             </section>
 
-            <!-- Tagihan Section -->
             <section id="tagihan" class="content-section">
-                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalBuatTagihan">Buat
-                    Tagihan
+                <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalBuatTagihan">Buat Tagihan
                     Baru</button>
                 <h2>Tagihan</h2>
-                <table>
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Nama Santri</th>
@@ -701,42 +699,126 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Contoh Data -->
-                        <tr>
-                            <td>Ahmad Fauzi</td>
-                            <td>SPP Mei</td>
-                            <td>Rp 1.000.000</td>
-                            <td>15 Mei 2024</td>
-                            <td>Pending</td>
-                            <td>
-                                <button class="btn btn-secondary btn-sm lihat-bukti" data-url="path/to/bukti1.jpg">Lihat
-                                    Bukti</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-success btn-sm verifikasi-tagihan" data-id="1">Tandai
-                                    Lunas</button>
-                                <button class="btn btn-danger btn-sm tolak-tagihan" data-id="1">Tandai Belum
-                                    Lunas</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Muhammad Rizki</td>
-                            <td>SPP Mei</td>
-                            <td>Rp 1.000.000</td>
-                            <td>15 Mei 2024</td>
-                            <td>Lunas</td>
-                            <td>
-                                <button class="btn btn-secondary btn-sm lihat-bukti" data-url="path/to/bukti2.jpg"
-                                    disabled>Bukti Tidak Tersedia</button>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm tolak-tagihan" data-id="2">Tandai Belum
-                                    Lunas</button>
-                            </td>
-                        </tr>
+                        <!-- Menampilkan data tagihan menggunakan PHP -->
+                        <?php foreach ($data['tagihan'] as $tagihan): ?>
+                            <tr>
+                                <!-- Nama Santri -->
+                                <td><?php echo htmlspecialchars($tagihan['nama_santri']); ?></td>
+                                <!-- Jenis Tagihan -->
+                                <td><?php echo htmlspecialchars($tagihan['jenis_tagihan']); ?></td>
+                                <!-- Jumlah -->
+                                <td>Rp <?php echo number_format($tagihan['jumlah'], 2, ',', '.'); ?></td>
+                                <!-- Tanggal Jatuh Tempo -->
+                                <td>
+                                    <?php
+                                    // Pastikan jatuh_tempo ada dan valid
+                                    if (isset($tagihan['jatuh_tempo']) && !empty($tagihan['jatuh_tempo'])) {
+                                        // Cek apakah jatuh_tempo sudah dalam bentuk objek DateTime
+                                        if ($tagihan['jatuh_tempo'] instanceof DateTime) {
+                                            // Jika sudah DateTime, format langsung
+                                            echo $tagihan['jatuh_tempo']->format('d F Y');
+                                        } else {
+                                            // Jika bukan DateTime (misalnya string), coba buat objek DateTime
+                                            try {
+                                                $date = new DateTime($tagihan['jatuh_tempo']);
+                                                echo $date->format('d F Y');
+                                            } catch (Exception $e) {
+                                                echo "Format Tanggal Salah";
+                                            }
+                                        }
+                                    } else {
+                                        echo "Tanggal Tidak Tersedia"; // Tampilkan pesan jika jatuh_tempo kosong atau NULL
+                                    }
+                                    ?>
+                                </td>
+
+                                <!-- Status -->
+                                <td>
+                                    <?php
+                                    $status = ucfirst($tagihan['status']); // Mengubah status menjadi kapital
+                                    echo $status;
+                                    ?>
+                                </td>
+
+                                <!-- Bukti Pembayaran -->
+                                <td>
+                                    <?php if (!empty($tagihan['bukti_pembayaran'])): ?>
+                                        <!-- Tombol Lihat Bukti Pembayaran -->
+                                        <button class="btn btn-secondary btn-sm" data-toggle="modal"
+                                            data-target="#modalLihatBukti"
+                                            data-url="<?php echo htmlspecialchars($tagihan['bukti_pembayaran']); ?>">
+                                            Lihat Bukti
+                                        </button>
+                                    <?php else: ?>
+                                        <button class="btn btn-secondary btn-sm" disabled>Bukti Tidak Tersedia</button>
+                                    <?php endif; ?>
+                                </td>
+
+                                <!-- Aksi -->
+                                <td>
+                                    <?php if ($tagihan['status'] == 'belum lunas'): ?>
+                                        <!-- Tombol Tandai Lunas -->
+                                        <button class="btn btn-success btn-sm" data-id="<?php echo $tagihan['id_tagihan']; ?>"
+                                            onclick="ubahStatus(<?php echo $tagihan['id_tagihan']; ?>, 'lunas')">Tandai
+                                            Lunas</button>
+                                    <?php endif; ?>
+
+                                    <?php if ($tagihan['status'] != 'lunas'): ?>
+                                        <!-- Tombol Tandai Pending -->
+                                        <button class="btn btn-warning btn-sm" data-id="<?php echo $tagihan['id_tagihan']; ?>"
+                                            onclick="ubahStatus(<?php echo $tagihan['id_tagihan']; ?>, 'pending')">Tandai
+                                            Pending</button>
+                                    <?php endif; ?>
+
+                                    <?php if ($tagihan['status'] != 'belum lunas'): ?>
+                                        <!-- Tombol Tandai Belum Lunas -->
+                                        <button class="btn btn-danger btn-sm" data-id="<?php echo $tagihan['id_tagihan']; ?>"
+                                            onclick="ubahStatus(<?php echo $tagihan['id_tagihan']; ?>, 'belum lunas')">Tandai
+                                            Belum Lunas</button>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </section>
+
+            <!-- Modal untuk melihat bukti pembayaran -->
+            <div class="modal fade" id="modalLihatBukti" tabindex="-1" role="dialog"
+                aria-labelledby="modalLihatBuktiLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLihatBuktiLabel">Lihat Bukti Pembayaran</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="buktiImage" src="" alt="Bukti Pembayaran" class="img-fluid" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // JavaScript untuk melihat bukti pembayaran
+                $('#modalLihatBukti').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget); // Tombol yang memicu modal
+                    var url = button.data('url'); // Ambil URL bukti pembayaran
+                    var modal = $(this);
+                    modal.find('#buktiImage').attr('src', url); // Set URL ke gambar bukti
+                });
+
+                // JavaScript untuk mengubah status
+                function ubahStatus(id, status) {
+                    if (confirm("Apakah Anda yakin ingin mengubah status tagihan ini menjadi " + status + "?")) {
+                        // Kirim request ke server untuk mengubah status
+                        window.location.href = "ubah_status.php?id=" + id + "&status=" + status;
+                    }
+                }
+            </script>
+
 
             <!-- Modal Buat Tagihan Baru -->
             <div class="modal fade" id="modalBuatTagihan" tabindex="-1" role="dialog"

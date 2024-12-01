@@ -1,6 +1,8 @@
 <?php
 class MataPelajaranModel
 {
+    private $db;
+    
     public function getJadwalWithPelajaranAndUstadz()
     {
         // Membuka koneksi database
