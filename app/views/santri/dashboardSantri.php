@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="id">
 
 <head>
@@ -449,26 +450,26 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
+
                 <form class="profile-form" style="display:none;">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nis-input" value="001" readonly>
-                    </div>
+                        <input type="text" id="nama-input" value="<? $data['users']['0']['nama_lengkap']?>"> 
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="nama-input" value="Ahmad Fauzi">
+                        <input type="text" id="nama-input" value="<? $data['users']['0']['email']?>">
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" id="kelas-input" value="10" readonly>
+                        <input type="text" id="kelas-input" value="<? $data['users']['0']['alamat']?>" readonly>
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <textarea id="alamat-input">Jl. Raya No. 123</textarea>
+                        <textarea id="alamat-input"><? $data['users']['0']['no_hp']?></textarea>
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="tel" id="hp-input" value="081234567890">
+                        <input type="tel" id="hp-input" value="<? $data['users']['0']['password']?>">
                     </div>
 
                     <!-- Tombol Simpan dan Cancel -->
