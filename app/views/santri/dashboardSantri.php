@@ -441,33 +441,33 @@
 
                 <!-- Menampilkan data pribadi sebagai teks biasa -->
                 <div class="data-pribadi">
-                    <p><strong>NIS:</strong> <span id="nis-text">001</span></p>
-                    <p><strong>Nama Lengkap:</strong> <span id="nama-text">Ahmad Fauzi</span></p>
-                    <p><strong>Kelas:</strong> <span id="kelas-text">10</span></p>
-                    <p><strong>Alamat:</strong> <span id="alamat-text">Jl. Raya No. 123</span></p>
-                    <p><strong>No. HP:</strong> <span id="hp-text">081234567890</span></p>
+                    <p><strong>Nama Lengkap:</strong> Ahmad Fauzi</p>
+                    <p><strong>Email:</strong> ahmadfauzi.com</p>
+                    <p><strong>Alamat:</strong> Jl. Raya No. 123</p>
+                    <p><strong>No. HP:</strong> 081234567890</p>
+                    <p><strong>Password:</strong> Pass</p>
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
                 <form class="profile-form" style="display:none;">
                     <div class="form-group">
-                        <label>NIS</label>
+                        <label>Nama Lengkap</label>
                         <input type="text" id="nis-input" value="001" readonly>
                     </div>
                     <div class="form-group">
-                        <label>Nama Lengkap</label>
+                        <label>Email</label>
                         <input type="text" id="nama-input" value="Ahmad Fauzi">
                     </div>
                     <div class="form-group">
-                        <label>Kelas</label>
+                        <label>Alamat</label>
                         <input type="text" id="kelas-input" value="10" readonly>
                     </div>
                     <div class="form-group">
-                        <label>Alamat</label>
+                        <label>No. HP</label>
                         <textarea id="alamat-input">Jl. Raya No. 123</textarea>
                     </div>
                     <div class="form-group">
-                        <label>No. HP</label>
+                        <label>Password</label>
                         <input type="tel" id="hp-input" value="081234567890">
                     </div>
 
