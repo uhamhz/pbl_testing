@@ -342,7 +342,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="/api/placeholder/100/100" alt="Santri Avatar" class="santri-avatar">
-                <h2 id="santriName">Ahmad Fauzi</h2>
+                <h2 id="santriName"><?= $data['users']['0']['nama_lengkap'] ?></h2>
                 <p>Kelas 10</p>
             </div>
 
@@ -441,11 +441,11 @@
 
                 <!-- Menampilkan data pribadi sebagai teks biasa -->
                 <div class="data-pribadi">
-                    <p><strong>Nama Lengkap:</strong> Ahmad Fauzi</p>
-                    <p><strong>Email:</strong> ahmadfauzi.com</p>
-                    <p><strong>Alamat:</strong> Jl. Raya No. 123</p>
-                    <p><strong>No. HP:</strong> 081234567890</p>
-                    <p><strong>Password:</strong> Pass</p>
+                    <p><strong>Nama Lengkap:</strong> <?= $data['users']['0']['nama_lengkap'] ?></p>
+                    <p><strong>Email:</strong><?= $data['users']['0']['email'] ?></p>
+                    <p><strong>Alamat:</strong> <?= $data['users']['0']['alamat'] ?></p>
+                    <p><strong>No. HP:</strong> <?= $data['users']['0']['no_hp'] ?></p>
+                    <p><strong>Password:</strong> <?= $data['users']['0']['password'] ?></p>
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
