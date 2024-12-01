@@ -311,18 +311,18 @@
             <section id="dashboard" class="content-section active">
                 <div class="dashboard-stats">
                     <div class="stat-card">
-                   <h3>Total Santri Aktif</h3>
-                   <p><?= $data['jumlahSantri'] ?></p>
+                        <h3>Total Santri Aktif</h3>
+                        <p><?= $data['jumlahSantri'] ?></p>
                         <small>Tahun Ajaran 2024/2025</small>
                     </div>
                     <div class="stat-card">
-                   <h3>Total Admin Aktif</h3>
-                   <p><?= $data['jumlahAdmin'] ?></p>
+                        <h3>Total Admin Aktif</h3>
+                        <p><?= $data['jumlahAdmin'] ?></p>
                         <small>Tahun Ajaran 2024/2025</small>
                     </div>
                     <div class="stat-card">
                         <h3>Perizinan Pending</h3>
-                       <p><?= $data['jumlahIzin'] ?></p>
+                        <p><?= $data['jumlahIzin'] ?></p>
                         <small>Membutuhkan persetujuan</small>
                     </div>
                     <div class="stat-card">
@@ -395,7 +395,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($data['admin'] as $admin) : ?>
+                        <?php foreach ($data['admin'] as $admin): ?>
                             <tr>
                                 <td><?= $admin['email'] ?></td>
                                 <td><?= $admin['password'] ?></td>
@@ -532,77 +532,57 @@
             </div>
 
 
-            <!-- Jadwal Section -->
             <section id="jadwal" class="content-section">
                 <h2>Jadwal</h2>
                 <div class="jadwal-container">
-                    <!-- Box untuk Hari Senin -->
-                    <div class="jadwal-box" id="jadwalSenin">
-                        <h3>Senin</h3>
-                        <ul id="listJadwalSenin">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                            <li data-id="1">
-                                <span>08:00 - 10:00</span> - <strong>Bahasa Indonesia</strong>
-                                <button class="btn btn-primary btn-sm edit-jadwal">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-jadwal">Hapus</button>
-                            </li>
-                            <li data-id="2">
-                                <span>10:30 - 12:00</span> - <strong>Matematika</strong>
-                                <button class="btn btn-primary btn-sm edit-jadwal">Edit</button>
-                                <button class="btn btn-danger btn-sm delete-jadwal">Hapus</button>
-                            </li>
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="senin">Tambah Jadwal</button>
-                    </div>
-                    <!-- Box untuk Hari Selasa -->
-                    <div class="jadwal-box" id="jadwalSelasa">
-                        <h3>Selasa</h3>
-                        <ul id="listJadwalSelasa">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="selasa">Tambah
-                            Jadwal</button>
-                    </div>
-                    <!-- Box untuk Hari Rabu -->
-                    <div class="jadwal-box" id="jadwalRabu">
-                        <h3>Rabu</h3>
-                        <ul id="listJadwalRabu">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="rabu">Tambah Jadwal</button>
-                    </div>
-                    <!-- Box untuk Hari Kamis -->
-                    <div class="jadwal-box" id="jadwalKamis">
-                        <h3>Kamis</h3>
-                        <ul id="listJadwalKamis">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="kamis">Tambah Jadwal</button>
-                    </div>
-                    <!-- Box untuk Hari Jumat -->
-                    <div class="jadwal-box" id="jadwalJumat">
-                        <h3>Jumat</h3>
-                        <ul id="listJadwalJumat">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="jumat">Tambah Jadwal</button>
-                    </div>
-                    <!-- Box untuk Hari Sabtu -->
-                    <div class="jadwal-box" id="jadwalSabtu">
-                        <h3>Sabtu</h3>
-                        <ul id="listJadwalSabtu">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="sabtu">Tambah Jadwal</button>
-                    </div>
-                    <!-- Box untuk Hari Minggu -->
-                    <div class="jadwal-box" id="jadwalMinggu">
-                        <h3>Minggu</h3>
-                        <ul id="listJadwalMinggu">
-                            <!-- Jadwal akan dimasukkan secara dinamis -->
-                        </ul>
-                        <button class="btn btn-success btn-sm tambah-jadwal" data-day="sabtu">Tambah Jadwal</button>
-                    </div>
+                    <?php
+                    // Inisialisasi array untuk menyimpan jadwal per hari
+                    $jadwalPerHari = [
+                        'Senin' => [],
+                        'Selasa' => [],
+                        'Rabu' => [],
+                        'Kamis' => [],
+                        'Jumat' => [],
+                        'Sabtu' => [],
+                        'Minggu' => []
+                    ];
+
+                    // Kelompokkan jadwal berdasarkan hari
+                    foreach ($data['jadwal'] as $jadwal) {
+                        $hari = $jadwal['hari']; // Misalnya 'Senin', 'Selasa', dsb.
+                        if (array_key_exists($hari, $jadwalPerHari)) {
+                            $jadwalPerHari[$hari][] = $jadwal;
+                        }
+                    }
+
+                    // Looping untuk setiap hari
+                    foreach ($jadwalPerHari as $hari => $jadwals): ?>
+                        <div class="jadwal-box" id="jadwal<?= $hari ?>">
+                            <h3><?= $hari ?></h3>
+                            <ul id="listJadwal<?= $hari ?>">
+                                <?php foreach ($jadwals as $jadwal): ?>
+                                    <li data-id="<?= $jadwal['id_jadwal'] ?>">
+                                        <span>
+                                            <?php
+                                            // Format waktu jika 'waktu' adalah objek DateTime
+                                            if ($jadwal['waktu'] instanceof DateTime) {
+                                                echo $jadwal['waktu']->format('H:i');
+                                            } else {
+                                                echo 'Waktu tidak valid';
+                                            }
+                                            ?>
+                                        </span> -
+                                        <strong><?= $jadwal['nama_pelajaran'] ?></strong> -
+                                        <strong><?= $jadwal['nama_lengkap'] ?></strong>
+                                        <button class="btn btn-primary btn-sm edit-jadwal">Edit</button>
+                                        <button class="btn btn-danger btn-sm delete-jadwal">Hapus</button>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <button class="btn btn-success btn-sm tambah-jadwal" data-day="<?= strtolower($hari) ?>">Tambah
+                                Jadwal</button>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </section>
 
