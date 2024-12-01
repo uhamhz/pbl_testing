@@ -311,13 +311,18 @@
             <section id="dashboard" class="content-section active">
                 <div class="dashboard-stats">
                     <div class="stat-card">
-                        <h3>Total Santri Aktif</h3>
-                        <p>350</p>
+                   <h3>Total Santri Aktif</h3>
+                   <p><?= $data['jumlahSantri'] ?></p>
+                        <small>Tahun Ajaran 2024/2025</small>
+                    </div>
+                    <div class="stat-card">
+                   <h3>Total Admin Aktif</h3>
+                   <p><?= $data['jumlahAdmin'] ?></p>
                         <small>Tahun Ajaran 2024/2025</small>
                     </div>
                     <div class="stat-card">
                         <h3>Perizinan Pending</h3>
-                        <p>5</p>
+                       <p><?= $data['jumlahIzin'] ?></p>
                         <small>Membutuhkan persetujuan</small>
                     </div>
                     <div class="stat-card">
@@ -390,7 +395,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($data['admin'] as $admin): ?>
+                        <?php foreach ($data['admin'] as $admin) : ?>
                             <tr>
                                 <td><?= $admin['email'] ?></td>
                                 <td><?= $admin['password'] ?></td>
@@ -399,7 +404,6 @@
                                 <td><?= $admin['no_hp'] ?></td>
                                 <td>
                                     <button class="btn btn-danger">Hapus</button>
-                                    <button class="btn btn-primary">Edit</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

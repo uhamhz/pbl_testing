@@ -31,6 +31,26 @@ class UserModel
         return $data;
     }
 
+    public function getJumlahAdmin()
+    {
+        $this->db = new Connection;
+        $stmt = "SELECT COUNT(*) AS jumlah FROM users WHERE role = 'admin'";
+        $result = sqlsrv_query($this->db->conn, $stmt);
+
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+        return $row['jumlah'];
+    }
+
+    public function getJumlahSantri()
+    {
+        $this->db = new Connection;
+        $stmt = "SELECT COUNT(*) AS jumlah FROM users WHERE role = 'santri'";
+        $result = sqlsrv_query($this->db->conn, $stmt);
+
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+        return $row['jumlah'];
+    }
+
     public function getSantriData()
     {
         $this->db = new Connection;

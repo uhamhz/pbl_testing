@@ -6,7 +6,8 @@ class Santri extends Controller
         if (isset($_SESSION['role'])) {
             $role = $_SESSION['role'];
             if ($role == "santri") {
-                $this->view('santri/dashboardSantri');
+                $data['users'] = $this->model("UserModel")->getUserData($_SESSION['email']);
+                $this->view('santri/dashboardSantri', $data);
             }else if ($role == "pengurus") {
                 header("location:http://localhost/public/Pengurus");
             }else if ($role == "admin") {

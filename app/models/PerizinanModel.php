@@ -36,5 +36,13 @@ class PerizinanModel
         return $data;
     }
 
+    public function getJumlahIzinPending()
+    {
+        $this->db = new Connection;
+        $stmt = "SELECT COUNT(*) AS jumlah FROM perizinan WHERE status = 'Pending'";
+        $result = sqlsrv_query($this->db->conn, $stmt);
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+        return $row['jumlah'];
+    }
 
 }

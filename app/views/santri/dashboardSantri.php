@@ -362,7 +362,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="main-header">
-                <h1>Selamat Datang, Ahmad Fauzi</h1>
+                <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?></h1>
                 <div class="user-info">
                     <span>Terakhir login: 24 April 2024, 08:30 WIB</span>
                 </div>
