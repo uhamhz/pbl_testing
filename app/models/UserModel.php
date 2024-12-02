@@ -96,5 +96,71 @@ class UserModel
 
         return $user ? $user : false;
     }
+
+    public function postEditUser($id, $data)
+    {
+        $this->db = new Connection;
+
+        // Mengupdate hanya jika password diubah
+        $stmt = "UPDATE users SET nama_lengkap = ?, email = ?, role = ?, alamat = ?, no_hp = ? WHERE id = ?";
+
+        // Jika password diubah
+        if (!empty($data['password'])) {
+            $stmt = "UPDATE users SET nama_lengkap = ?, email = ?, password = ?, role = ?, alamat = ?, no_hp = ? WHERE id = ?";
+            $params = [
+                $data['nama_lengkap'],
+                $data['email'],
+                password_hash($data['password'], PASSWORD_BCRYPT), // Hash password
+                $data['role'],
+                $data['alamat'],
+                $data['no_hp'],
+                $id
+            ];
+        } else {
+            $params = [
+                $data['nama_lengkap'],
+                $data['email'],
+                $data['role'],
+                $data['alamat'],
+                $data['no_hp'],
+                $id
+            ];
+        }
+
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        if ($result === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function deleteUser($id)
+    {
+        // Membuat koneksi
+        $this->db = new Connection;
+
+        // Menyiapkan query SQL dengan placeholder tanda tanya (?)
+        $stmt = "DELETE FROM users WHERE id = ?";
+
+        // Menyiapkan query dengan parameter numerik
+        $query = sqlsrv_prepare($this->db->conn, $stmt, array($id));
+
+        // Mengecek jika query gagal disiapkan
+        if ($query === false) {
+            return false;
+        }
+
+        // Mengeksekusi query
+        $result = sqlsrv_execute($query);
+
+        // Mengecek apakah eksekusi berhasil
+        if ($result === false) {
+            return false;
+        }
+
+        return true;
+    }
 }
 ?>

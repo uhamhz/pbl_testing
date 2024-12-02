@@ -328,12 +328,11 @@
                     <div class="stat-card">
                         <h3>Tagihan Belum Lunas</h3>
                         <p><?= $data['jumlahTagihan'] ?></p>
-                        <small>Total Tagihan : Rp.<?= number_format($data['totalTagihan'], 2, ',', '.' ) ?></small>
+                        <small>Total Tagihan : Rp.<?= number_format($data['totalTagihan'], 0, ',', '.') ?></small>
                     </div>
                 </div>
             </section>
 
-            <!-- Menampilkan data pribadi sebagai teks biasa -->
             <section id="pribadi" class="content-section">
                 <h2>Data Pribadi</h2>
 
@@ -347,26 +346,29 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-                <form class="profile-form" style="display:none; action="" method=" post">
+                <form class="profile-form" style="display:none;" action="<?= BASEURL; ?> ../models/UserModel.php"
+                    method="POST">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>">
+                        <input type="text" name="nama_lengkap" id="nama-input"
+                            value="<?= $data['users']['0']['nama_lengkap'] ?>">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly>
+                        <input type="text" name="email" id="email-input" value="<?= $data['users']['0']['email'] ?>">
                     </div>
                     <div class="form-group">
                         <label>Role</label>
-                        <label><?= $data['users']['0']['role'] ?></label>
+                        <input type="text" name="role" id="role-input" value="<?= $data['users']['0']['role'] ?>"
+                            readonly>
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>" readonly>
+                        <input type="text" name="alamat" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>">
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>">
+                        <input type="tel" name="no_hp" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>">
                     </div>
 
                     <!-- Tombol Simpan dan Cancel -->
@@ -403,7 +405,12 @@
                                 <td><?= $admin['alamat'] ?></td>
                                 <td><?= $admin['no_hp'] ?></td>
                                 <td>
-                                    <button class="btn btn-danger">Hapus</button>
+                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
+                                        data-id="<?= $admin['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $admin['id'] ?>">
+                                        <button type="button" class="btn btn-danger hapus-admin"
+                                            data-id="<?= $admin['id']; ?>">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -454,7 +461,6 @@
                 </div>
             </div>
 
-
             <!-- Data Santri Section -->
             <section id="santri" class="content-section">
                 <h2>Data Santri</h2>
@@ -480,8 +486,12 @@
                                 <td><?= $santri['alamat'] ?></td>
                                 <td><?= $santri['no_hp'] ?></td>
                                 <td>
-                                    <button class="btn btn-danger">Hapus</button>
-                                    <button class="btn btn-primary">Edit</button>
+                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
+                                        data-id="<?= $santri['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $santri['id'] ?>">
+                                        <button type="button" class="btn btn-danger hapus-santri"
+                                            data-id="<?= $santri['id']; ?>">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -707,7 +717,7 @@
                                 <!-- Jenis Tagihan -->
                                 <td><?php echo htmlspecialchars($tagihan['jenis_tagihan']); ?></td>
                                 <!-- Jumlah -->
-                                <td>Rp <?php echo number_format($tagihan['jumlah'], 2, ',', '.'); ?></td>
+                                <td>Rp <?php echo number_format($tagihan['jumlah'], 0, ',', '.'); ?></td>
                                 <!-- Tanggal Jatuh Tempo -->
                                 <td>
                                     <?php
@@ -1047,6 +1057,76 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Mempersiapkan SweetAlert dengan styling Bootstrap
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success ml-2",
+                cancelButton: "btn btn-danger ml-2"
+            },
+            buttonsStyling: false
+        });
+
+        // Menambahkan event listener untuk tombol "Hapus Admin"
+        document.querySelectorAll(".hapus-admin").forEach(button => {
+            button.addEventListener("click", function () {
+                const idToDelete = this.getAttribute("data-id"); // Mengambil ID dari tombol
+                const form = this.closest("form"); // Mendapatkan form yang terkait dengan tombol
+
+                // Menampilkan SweetAlert konfirmasi sebelum hapus
+                swalWithBootstrapButtons.fire({
+                    title: "Apakah Anda yakin?",
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel!",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Mengirimkan form untuk penghapusan
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire({
+                            title: "Cancelled",
+                            text: "Data tidak jadi dihapus.",
+                            icon: "error"
+                        });
+                    }
+                });
+            });
+        });
+
+        // Menambahkan event listener untuk tombol "Hapus Santri"
+        document.querySelectorAll(".hapus-santri").forEach(button => {
+            button.addEventListener("click", function () {
+                const idToDelete = this.getAttribute("data-id"); // Mendapatkan ID dari tombol
+                const form = document.querySelector(`.form-hapus[data-id="${idToDelete}"]`); // Mencari form berdasarkan data-id
+
+                // Menampilkan SweetAlert konfirmasi sebelum hapus
+                swalWithBootstrapButtons.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel!",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Mengirimkan form untuk penghapusan
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire({
+                            title: "Cancelled",
+                            text: "Your data is safe :)",
+                            icon: "error"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const homeLink = document.querySelector('a[href="#beranda"]'); // Link that triggers the modal
