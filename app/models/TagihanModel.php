@@ -63,6 +63,51 @@ class TagihanModel
         return $data;
     }
 
+    public function getJumlahTagihanPending()
+    {
+        $this->db = new Connection;
 
+        // Mengambil jumlah tagihan dengan status 'Pending'
+        $stmt = "
+        SELECT COUNT(*) AS jumlah FROM tagihan WHERE status = 'belum lunas'
+    ";
+
+        $result = sqlsrv_query($this->db->conn, $stmt);
+
+        // Cek jika query gagal
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        // Ambil satu baris data hasil query
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+        // Jika ada hasil, kembalikan jumlahnya
+        return ($row && $row['jumlah'] > 0) ? $row['jumlah'] : 0;
+    }
+
+
+    public function getTotalTagihanPending()
+    {
+        $this->db = new Connection;
+
+        // Mengambil total jumlah tagihan dengan status 'Pending'
+        $stmt = "
+            SELECT SUM(jumlah) AS total FROM tagihan WHERE status = 'belum lunas'
+        ";
+
+        $result = sqlsrv_query($this->db->conn, $stmt);
+
+        // Cek jika query gagal
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        // Ambil satu baris data hasil query
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+        // Jika ada hasil, kembalikan totalnya
+        return ($row && $row['total'] > 0) ? $row['total'] : 0;
+    }
 
 }
