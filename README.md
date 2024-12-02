@@ -4,7 +4,7 @@
 ## Req
 - Node.js
 - PHP
-- Mysql
+- SQL Server
 
 ## Team
 - AQSA HERRY PRASTYO . (2341720153) https://github.com/AqsaPrastyo
