@@ -36,7 +36,52 @@ class PerizinanModel
         return $data;
     }
 
-    
+
+    public function getPerizinanByEmail($email)
+    {
+        // Membuat koneksi database
+        $this->db = new Connection;
+
+        // Menyiapkan query untuk mengambil perizinan berdasarkan user_id
+        $stmt = "SELECT id FROM users WHERE email = ?";
+        $params = array($email);
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Memeriksa apakah query berhasil dijalankan
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true)); // Debugging jika query gagal
+        }
+
+        // Ambil user_id berdasarkan email
+        $user = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+        // Jika tidak ada user ditemukan, return data kosong
+        if (!$user) {
+            return [];
+        }
+
+        $user_id = $user['id']; // Ambil user_id yang ditemukan
+
+        // Query untuk mengambil perizinan berdasarkan user_id
+        $stmt = "SELECT * FROM perizinan WHERE user_id = ?";
+        $params = array($user_id);
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Memeriksa apakah query berhasil dijalankan
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true)); // Debugging jika query gagal
+        }
+
+        $data = [];
+        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row; // Menambahkan setiap baris data ke dalam array
+        }
+
+        return $data; // Mengembalikan data yang berhasil diambil
+    }
+
+
+
 
     public function getJumlahIzinPending()
     {
@@ -46,5 +91,30 @@ class PerizinanModel
         $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
         return $row['jumlah'];
     }
+
+    public function getJumlahIzinPendingByEmail($email)
+    {
+        // Inisialisasi koneksi database
+        $this->db = new Connection;
+
+        // Query untuk menghitung jumlah izin dengan status Pending berdasarkan email
+        $stmt = "SELECT COUNT(*) AS jumlah FROM perizinan WHERE status = 'Pending' AND user_id = (SELECT id FROM users WHERE email = ?)";
+        $params = array($email);
+
+        // Eksekusi query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Cek jika query berhasil
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
+        }
+
+        // Ambil hasil query
+        $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+        // Kembalikan jumlah izin Pending
+        return $row['jumlah'];
+    }
+
 
 }

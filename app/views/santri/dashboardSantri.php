@@ -195,21 +195,39 @@
         }
 
         /* Status Badges */
+        /* Kelas untuk menampilkan status */
         .status-badge {
-            padding: 0.25em 0.75em;
-            color: white;
-            border-radius: 4px;
-            text-align: center;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
         }
 
-        .status-pending {
-            background-color: #f39c12;
-            /* Oranye */
-        }
-
+        /* Kelas untuk status disetujui */
         .status-approved {
-            background-color: #27ae60;
+            background-color: #28a745;
             /* Hijau */
+            color: white;
+        }
+
+        /* Kelas untuk status menunggu */
+        .status-pending {
+            background-color: #ffc107;
+            /* Kuning */
+            color: black;
+        }
+
+        /* Kelas untuk status ditolak */
+        .status-rejected {
+            background-color: #dc3545;
+            /* Merah */
+            color: white;
+        }
+
+        /* Kelas untuk status yang tidak dikenal */
+        .status-unknown {
+            background-color: #6c757d;
+            /* Abu-abu */
+            color: white;
         }
 
 
@@ -379,13 +397,21 @@
                     </div>
                     <div class="stat-card">
                         <h3>Tagihan Aktif</h3>
-                        <p>Rp 1.000.000</p>
-                        <small>Jatuh tempo: 15 Mei 2024</small>
+                      <?= $data['tagihan'] 
+                      ?'<p>' . $data['tagihan']['0']['jumlah'] . '</p>
+                        <small>Total tagihan bulan ini</small>'
+                      :'<p>0</p>
+                        <small>Total tagihan bulan ini</small>'
+                      ?>
                     </div>
                     <div class="stat-card">
                         <h3>Perizinan</h3>
-                        <p>1 Pending</p>
-                        <small>Menunggu persetujuan admin</small>
+                        <?= $data['jumlahIzin']
+                        ?'<p>' . $data['jumlahIzin'] . '</p>
+                        <small>Membutuhkan persetujuan</small>'
+                        :'<p>0</p>
+                        <small>Membutuhkan persetujuan</small>'
+                        ?>
                     </div>
                 </div>
 
@@ -539,6 +565,8 @@
                 <h2>Perizinan</h2>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalAjukanPerizinan">Ajukan Perizinan
                     Baru</button>
+
+                <!-- Tabel Perizinan -->
                 <table>
                     <thead>
                         <tr>
@@ -550,23 +578,107 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>24-04-2024</td>
-                            <td>26-04-2024</td>
-                            <td>Pulang</td>
-                            <td>Acara Keluarga</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
-                        </tr>
-                        <tr>
-                            <td>10-02-2024</td>
-                            <td>12-02-2024</td>
-                            <td>Tidak Masuk</td>
-                            <td>Sakit</td>
-                            <td><span class="status-badge status-approved">Disetujui</span></td>
-                        </tr>
+                        <?php
+                        if (!empty($data)) {
+                            foreach ($data['izin'] as $row) {
+                                echo "<tr>";
+
+                                // Tanggal Izin
+                                $tanggalIzin = $row['tanggal_izin'];
+                                $tanggalIzinObj = validDate($tanggalIzin);
+                                if ($tanggalIzinObj) {
+                                    echo "<td>" . $tanggalIzinObj->format('d-m-Y') . "</td>";
+                                } else {
+                                    echo "<td>Tanggal Tidak Valid</td>";
+                                }
+
+                                // Tanggal Kembali
+                                $tanggalKembali = $row['tanggal_kembali'];
+                                $tanggalKembaliObj = validDate($tanggalKembali);
+                                if ($tanggalKembaliObj) {
+                                    echo "<td>" . $tanggalKembaliObj->format('d-m-Y') . "</td>";
+                                } else {
+                                    echo "<td>Tanggal Tidak Valid</td>";
+                                }
+
+                                // Jenis Izin dan Alasan
+                                echo "<td>" . htmlspecialchars($row['jenis_izin']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['alasan']) . "</td>";
+
+                                // Tentukan status perizinan dan tampilkan dengan badge
+                                $statusClass = "";
+                                $statusText = "";  // Ini untuk menampilkan teks status
+                        
+                                if ($row['status'] == 'setuju') {
+                                    $statusClass = "status-approved";
+                                    $statusText = "Disetujui";
+                                } elseif ($row['status'] == 'pending') {
+                                    $statusClass = "status-pending";
+                                    $statusText = "Menunggu Persetujuan";
+                                } elseif ($row['status'] == 'tolak') {
+                                    $statusClass = "status-rejected";
+                                    $statusText = "Ditolak";
+                                } else {
+                                    $statusClass = "status-unknown";  // Jika status tidak dikenali
+                                    $statusText = "Status Tidak Dikenali";
+                                }
+
+                                echo "<td><span class='status-badge $statusClass'>" . htmlspecialchars($statusText) . "</span></td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>Tidak ada perizinan ditemukan.</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
+
+                <?php
+                // Fungsi untuk memvalidasi dan mengonversi tanggal ke objek DateTime
+                function validDate($date)
+                {
+                    // Jika sudah objek DateTime, langsung dikembalikan
+                    if ($date instanceof DateTime) {
+                        return $date;
+                    }
+
+                    // Jika formatnya adalah Y-m-d, buat objek DateTime
+                    $dateTimeObj = DateTime::createFromFormat('Y-m-d', $date);
+                    if ($dateTimeObj && $dateTimeObj->format('Y-m-d') === $date) {
+                        return $dateTimeObj;
+                    }
+
+                    // Jika tidak sesuai format, kembalikan false
+                    return false;
+                }
+                ?>
+
+
+                <?php
+                // Cek apakah fungsi sudah ada sebelum mendeklarasikannya
+                if (!function_exists('validDate')) {
+                    function validDate($date)
+                    {
+                        // Jika sudah objek DateTime, langsung dikembalikan
+                        if ($date instanceof DateTime) {
+                            return $date;
+                        }
+
+                        // Jika formatnya adalah Y-m-d, buat objek DateTime
+                        $dateTimeObj = DateTime::createFromFormat('Y-m-d', $date);
+                        if ($dateTimeObj && $dateTimeObj->format('Y-m-d') === $date) {
+                            return $dateTimeObj;
+                        }
+
+                        // Jika tidak sesuai format, kembalikan false
+                        return false;
+                    }
+                }
+                ?>
+                </tbody>
+                </table>
             </section>
+
 
             <div class="modal fade" id="modalAjukanPerizinan" tabindex="-1" role="dialog"
                 aria-labelledby="modalPerizinanLabel" aria-hidden="true">
@@ -616,26 +728,75 @@
             </div>
 
 
-            <!-- Payment Section -->
             <section id="pembayaran" class="content-section">
                 <h2>Pembayaran</h2>
                 <div class="dashboard-stats">
-                    <!-- Contoh Tagihan Bulan Januari -->
-                    <div class="stat-card">
-                        <h2>Tagihan Januari</h2>
-                        <p>Rp 500.000</p>
-                        <small>Jatuh tempo: 15 Januari 2024</small>
-                        <form id="paymentFormJanuari" method="post" enctype="multipart/form-data">
-                            <input type="file" id="paymentProofJanuari" name="paymentProof" accept="image/*">
-                            <button type="button" onclick="uploadPaymentProof('Januari')">Kirim Bukti
-                                Pembayaran</button>
-                        </form>
-                    </div>
-                    <!-- Ulangi blok ini untuk setiap bulan -->
+                    <?php
+                    // Cek apakah data tagihan tersedia
+                    if (!empty($data['tagihan'])) {
+                        foreach ($data['tagihan'] as $tagihan) {
+                            echo "<div class='stat-card'>";
+
+                            // Jenis Tagihan
+                            $jenisTagihan = htmlspecialchars($tagihan['jenis_tagihan']);
+                            echo "<h2>$jenisTagihan</h2>";
+
+                            // Jumlah Tagihan
+                            $jumlah = number_format($tagihan['jumlah'], 0, ',', '.'); // Format jumlah sebagai rupiah
+                            echo "<p>Rp $jumlah</p>";
+
+                            // Validasi dan Format Tanggal Jatuh Tempo
+                            $jatuhTempo = validDate($tagihan['jatuh_tempo']);
+                            if ($jatuhTempo) {
+                                echo "<small>Jatuh Tempo: " . $jatuhTempo->format('d F Y') . "</small>";
+                            } else {
+                                echo "<small>Jatuh Tempo: Tanggal Tidak Valid</small>";
+                            }
+
+                            // Status Tagihan
+                            $status = htmlspecialchars($tagihan['status']);
+                            $statusClass = "";
+                            $statusText = ""; // Menentukan teks untuk status tagihan
+                    
+                            // Perbaiki pengecekan status sesuai dengan nilai yang ada di database
+                            if ($status == 'belum lunas') {
+                                $statusClass = "status-pending";
+                                $statusText = "Menunggu Pembayaran";
+                            } elseif ($status == 'Lunas') {
+                                $statusClass = "status-approved";
+                                $statusText = "Lunas";
+                            } elseif ($status == 'diTolak') {
+                                $statusClass = "status-rejected";
+                                $statusText = "Ditolak";
+                            } else {
+                                $statusClass = "status-unknown";  // Jika status tidak dikenali
+                                $statusText = "Status Tidak Dikenali";
+                            }
+
+                            echo "<p>Status: <span class='status-badge $statusClass'>" . htmlspecialchars($statusText) . "</span></p>";
+
+                            // Jika status 'belum lunas', tampilkan form untuk mengirim bukti pembayaran
+                            if ($status == 'belum lunas') {
+                                echo "<form id='paymentForm{$tagihan['id_tagihan']}' method='post' enctype='multipart/form-data'>";
+                                echo "<input type='file' id='paymentProof{$tagihan['id_tagihan']}' name='paymentProof' accept='image/*'>";
+                                echo "<button type='button' onclick='uploadPaymentProof({$tagihan['id_tagihan']})'>Kirim Bukti Pembayaran</button>";
+                                echo "</form>";
+                            } else {
+                                // Jika sudah lunas atau ditolak, tampilkan bukti pembayaran yang sudah diunggah
+                                $buktiPembayaran = htmlspecialchars($tagihan['bukti_pembayaran']);
+                                if (!empty($buktiPembayaran)) {
+                                    echo "<p>Bukti Pembayaran: <a href='$buktiPembayaran' target='_blank'>Lihat Bukti</a></p>";
+                                }
+                            }
+
+                            echo "</div>"; // End of stat-card
+                        }
+                    } else {
+                        echo "<p>Anda tidak memiliki tagihan saat ini.</p>";
+                    }
+                    ?>
                 </div>
             </section>
-
-
 
             <!-- Settings Section -->
             <section id="pengaturan" class="content-section">
