@@ -450,26 +450,22 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-
-                <form class="profile-form" style="display:none;">
+                <form class="profile-form" style="display:none; action="" method=" post">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nama-input" value="<? $data['users']['0']['nama_lengkap']?>"> 
+                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>">
+                    </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="nama-input" value="<? $data['users']['0']['email']?>">
+                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly>
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" id="kelas-input" value="<? $data['users']['0']['alamat']?>" readonly>
+                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>" readonly>
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <textarea id="alamat-input"><? $data['users']['0']['no_hp']?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="tel" id="hp-input" value="<? $data['users']['0']['password']?>">
+                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>">
                     </div>
 
                     <!-- Tombol Simpan dan Cancel -->
@@ -484,9 +480,58 @@
             <!-- Jadwal Section -->
             <section id="jadwal" class="content-section">
                 <h2>Jadwal</h2>
-                <div class="calendar-container">
-                    <div id="calendar"></div>
-                </div>
+
+                <!-- Tabel untuk menampilkan jadwal -->
+                <table border="1" cellpadding="10">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Pelajaran</th>
+                            <th>Ustadz</th>
+                            <th>Waktu</th>
+                            <th>Hari</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($data)): ?>
+                            <?php foreach ($data['jadwal'] as $index => $jadwal): ?>
+                                <tr>
+                                    <td><?php echo $index + 1; ?></td>
+                                    <td><?php echo htmlspecialchars($jadwal['nama_pelajaran']); ?></td>
+                                    <td><?php echo htmlspecialchars($jadwal['nama_lengkap']); ?></td>
+                                    <td>
+                                        <?php
+                                        // Check if 'waktu' is a valid DateTime object
+                                        if ($jadwal['waktu'] instanceof DateTime) {
+                                            // If it's already a DateTime object, format it directly
+                                            echo $jadwal['waktu']->format('H:i');
+                                        } else {
+                                            // If it's a string, create a DateTime object from it
+                                            try {
+                                                // Remove fractional seconds (if any) before creating DateTime object
+                                                $timeString = preg_replace('/\.\d+/', '', $jadwal['waktu']);
+                                                $dateTime = new DateTime($timeString);  // Create DateTime object from the time string
+                                
+                                                // Format the time to 'H:i' (Hour:Minute)
+                                                echo $dateTime->format('H:i');
+                                            } catch (Exception $e) {
+                                                // If the time is invalid, display error message
+                                                echo 'Waktu tidak valid';
+                                            }
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($jadwal['hari']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5">Tidak ada jadwal yang tersedia.</td>
+                            </tr>
+                        <?php endif; ?>
+
+                    </tbody>
+                </table>
             </section>
 
             <!-- Permission Section -->

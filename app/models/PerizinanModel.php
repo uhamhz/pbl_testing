@@ -36,6 +36,8 @@ class PerizinanModel
         return $data;
     }
 
+    
+
     public function getJumlahIzinPending()
     {
         $this->db = new Connection;
