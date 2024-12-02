@@ -398,7 +398,7 @@
                     <div class="stat-card">
                         <h3>Tagihan Aktif</h3>
                       <?= $data['tagihan'] 
-                      ?'<p>' . $data['tagihan']['0']['jumlah'] . '</p>
+                      ?'<p>' . number_format($data['tagihan']['0']['jumlah'], 0, ',', '.') . '</p>
                         <small>Total tagihan bulan ini</small>'
                       :'<p>0</p>
                         <small>Total tagihan bulan ini</small>'

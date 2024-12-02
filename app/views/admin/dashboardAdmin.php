@@ -328,7 +328,7 @@
                     <div class="stat-card">
                         <h3>Tagihan Belum Lunas</h3>
                         <p><?= $data['jumlahTagihan'] ?></p>
-                        <small>Total Tagihan : <?= $data['totalTagihan'] ?></small>
+                        <small>Total Tagihan : Rp.<?= number_format($data['totalTagihan'], 2, ',', '.' ) ?></small>
                     </div>
                 </div>
             </section>
