@@ -397,21 +397,21 @@
                     </div>
                     <div class="stat-card">
                         <h3>Tagihan Aktif</h3>
-                      <?= $data['tagihan'] 
-                      ?'<p>' . number_format($data['tagihan']['0']['jumlah'], 0, ',', '.') . '</p>
+                        <?= $data['tagihan']
+                            ? '<p>' . number_format($data['tagihan']['0']['jumlah'], 0, ',', '.') . '</p>
                         <small>Total tagihan bulan ini</small>'
-                      :'<p>0</p>
+                            : '<p>0</p>
                         <small>Total tagihan bulan ini</small>'
-                      ?>
+                            ?>
                     </div>
                     <div class="stat-card">
                         <h3>Perizinan</h3>
                         <?= $data['jumlahIzin']
-                        ?'<p>' . $data['jumlahIzin'] . '</p>
+                            ? '<p>' . $data['jumlahIzin'] . '</p>
                         <small>Membutuhkan persetujuan</small>'
-                        :'<p>0</p>
+                            : '<p>0</p>
                         <small>Membutuhkan persetujuan</small>'
-                        ?>
+                            ?>
                     </div>
                 </div>
 
@@ -575,11 +575,12 @@
                             <th>Jenis Izin</th>
                             <th>Alasan</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($data)) {
+                        if (!empty($data['izin'])) {
                             foreach ($data['izin'] as $row) {
                                 echo "<tr>";
 
@@ -607,7 +608,7 @@
 
                                 // Tentukan status perizinan dan tampilkan dengan badge
                                 $statusClass = "";
-                                $statusText = "";  // Ini untuk menampilkan teks status
+                                $statusText = ""; // Ini untuk menampilkan teks status
                         
                                 if ($row['status'] == 'setuju') {
                                     $statusClass = "status-approved";
@@ -619,22 +620,32 @@
                                     $statusClass = "status-rejected";
                                     $statusText = "Ditolak";
                                 } else {
-                                    $statusClass = "status-unknown";  // Jika status tidak dikenali
+                                    $statusClass = "status-unknown"; // Jika status tidak dikenali
                                     $statusText = "Status Tidak Dikenali";
                                 }
 
                                 echo "<td><span class='status-badge $statusClass'>" . htmlspecialchars($statusText) . "</span></td>";
+
+                                // Kolom Aksi: tombol Hapus
+                                echo "<td>
+                        <form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
+                            <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
+                            <button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
+                        </form>
+                    </td>";
+
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='5'>Tidak ada perizinan ditemukan.</td></tr>";
+                            echo "<tr><td colspan='6'>Tidak ada perizinan ditemukan.</td></tr>";
                         }
                         ?>
                     </tbody>
                 </table>
 
+                <!-- Fungsi untuk memvalidasi dan mengonversi tanggal ke objek DateTime -->
                 <?php
-                // Fungsi untuk memvalidasi dan mengonversi tanggal ke objek DateTime
+                // Pastikan fungsi validDate hanya dideklarasikan satu kali
                 function validDate($date)
                 {
                     // Jika sudah objek DateTime, langsung dikembalikan
@@ -653,32 +664,7 @@
                 }
                 ?>
 
-
-                <?php
-                // Cek apakah fungsi sudah ada sebelum mendeklarasikannya
-                if (!function_exists('validDate')) {
-                    function validDate($date)
-                    {
-                        // Jika sudah objek DateTime, langsung dikembalikan
-                        if ($date instanceof DateTime) {
-                            return $date;
-                        }
-
-                        // Jika formatnya adalah Y-m-d, buat objek DateTime
-                        $dateTimeObj = DateTime::createFromFormat('Y-m-d', $date);
-                        if ($dateTimeObj && $dateTimeObj->format('Y-m-d') === $date) {
-                            return $dateTimeObj;
-                        }
-
-                        // Jika tidak sesuai format, kembalikan false
-                        return false;
-                    }
-                }
-                ?>
-                </tbody>
-                </table>
             </section>
-
 
             <div class="modal fade" id="modalAjukanPerizinan" tabindex="-1" role="dialog"
                 aria-labelledby="modalPerizinanLabel" aria-hidden="true">
@@ -830,6 +816,7 @@
 
         </main>
     </div>
+
 
     <script>
         // Ketika tombol "Ubah" diklik
@@ -993,6 +980,49 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Menginisialisasi SweetAlert dengan Bootstrap buttons
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            });
+
+            // Menambahkan event listener untuk tombol "Hapus Perizinan"
+            document.querySelectorAll(".hapus-perizinan").forEach(button => {
+                button.addEventListener("click", function () {
+                    const idToDelete = this.getAttribute("data-id"); // Mendapatkan ID dari tombol
+                    const form = document.querySelector(`.form-hapus[data-id="${idToDelete}"]`); // Mencari form berdasarkan data-id
+
+                    // Menampilkan SweetAlert konfirmasi sebelum hapus
+                    swalWithBootstrapButtons.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel!",
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Mengirimkan form untuk penghapusan
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons.fire({
+                                title: "Cancelled",
+                                text: "Your data is safe :)",
+                                icon: "error"
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const homeLink = document.querySelector('a[href="#beranda"]'); // Link that triggers the modal

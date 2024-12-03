@@ -4,6 +4,8 @@ class PerizinanModel
 {
     private $db;
 
+
+
     public function getAllDataPerizinan()
     {
         $this->db = new Connection;
@@ -116,5 +118,24 @@ class PerizinanModel
         return $row['jumlah'];
     }
 
+    public function deletePerizinan($id_perizinan)
+    {
+        $this->db = new Connection;
 
+        // Query untuk menghapus perizinan berdasarkan ID
+        $stmt = "DELETE FROM perizinan WHERE id = ?";
+        $params = [$id_perizinan];  // Pastikan parameter id yang benar sudah dikirim
+
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        if (!$result) {
+            // Jika query gagal, tampilkan error
+            $errors = sqlsrv_errors();
+            echo "Error: " . print_r($errors, true);
+            return false;
+        }
+
+        return true; // Penghapusan berhasil
+    }
 }
