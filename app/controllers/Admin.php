@@ -28,6 +28,39 @@ class Admin extends Controller
         }
     }
 
+    public function tambah()
+    {
+        // Validasi input
+        if (empty($_POST['email']) || empty($_POST['password'])) {
+            $_SESSION['error'] = "Email dan password wajib diisi";
+            header('Location: ' . BASEURL . '/Admin/#admin');
+            exit;
+        }
+
+        $data = [
+            'email' => $_POST['email'],
+            'nama_lengkap' => $_POST['nama_lengkap'],
+            'alamat' => $_POST['alamat'],
+            'no_hp' => $_POST['no_hp'],
+            'role' => $_POST['role'], //
+            'password' => $_POST['password'],
+        ];
+
+        // Di controller
+        if ($this->model('UserModel')->tambahDataUsers($data)) {
+            // Berhasil
+            error_log('User berhasil ditambahkan: ' . $data['email']);
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah user: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah user";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+
     public function hapus()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -35,7 +68,7 @@ class Admin extends Controller
                 $id = $_POST['id'];
                 $userModel = $this->model('UserModel');
                 $userModel->deleteUser($id);
-                header('Location: ' . BASEURL . '/Admin');  // Redirect ke halaman admin setelah penghapusan
+                header('Location: ' . BASEURL . '/Admin/#admin');  // Redirect ke halaman admin setelah penghapusan
                 exit;
             }
         }

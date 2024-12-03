@@ -373,7 +373,7 @@
                     <li><a href="#perizinan">Perizinan</a></li>
                     <li><a href="#pembayaran">Pembayaran</a></li>
                     <li><a href="#pengaturan">Pengaturan</a></li>
-                    <li><a href="#beranda">Beranda</a></li>
+                    <li><a href="#beranda">Logout</a></li>
                 </ul>
             </nav>
         </aside>
