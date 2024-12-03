@@ -383,7 +383,7 @@
             <div class="main-header">
                 <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?></h1>
                 <div class="user-info">
-                    <span>Terakhir login: 24 April 2024, 08:30 WIB</span>
+                    <h2 id="realTimeClock"></h2>
                 </div>
             </div>
 
@@ -867,6 +867,35 @@
                     alert('Terjadi kesalahan saat mengunggah bukti pembayaran untuk ' + month + '.');
                 });
         }
+    </script>
+
+    <script>
+        // Fungsi untuk mengupdate waktu setiap detik
+        function updateClock() {
+            var currentDate = new Date();
+
+            // Mengambil jam, menit, dan detik
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+
+            // Menambahkan 0 di depan angka jika kurang dari 10
+            if (hours < 10) hours = '0' + hours;
+            if (minutes < 10) minutes = '0' + minutes;
+            if (seconds < 10) seconds = '0' + seconds;
+
+            // Format jam dalam bentuk hh:mm:ss
+            var formattedTime = hours + ':' + minutes + ':' + seconds;
+
+            // Menampilkan waktu di elemen dengan ID 'realTimeClock'
+            document.getElementById('realTimeClock').textContent = formattedTime;
+        }
+
+        // Memanggil fungsi updateClock setiap detik (1000 ms)
+        setInterval(updateClock, 1000);
+
+        // Panggil satu kali saat halaman pertama dimuat untuk menampilkan waktu langsung
+        updateClock();
     </script>
 
     <script>
