@@ -193,5 +193,47 @@ class UserModel
 
         return true;
     }
+
+    public function editDataUser($data, $id)
+    {
+        // Pastikan koneksi database
+        if (!$this->db || !$this->db->conn) {
+            $this->db = new Connection();
+        }
+    
+        // Query untuk mengupdate data user
+        $query = "UPDATE users 
+                  SET email = ?, 
+                      nama_lengkap = ?, 
+                      alamat = ?, 
+                      no_hp = ?, 
+                      role = ?, 
+                      password = ?
+                  WHERE id = ?";
+    
+        // Parameter untuk query
+        $params = array(
+            $data['email'],
+            $data['nama_lengkap'],
+            $data['alamat'],
+            $data['no_hp'],
+            $data['role'],
+            $data['password'],
+            $id
+        );
+    
+        // Eksekusi query
+        $stmt = sqlsrv_query($this->db->conn, $query, $params);
+    
+        if ($stmt === false) {
+            // Tampilkan error database untuk diagnosa
+            $errors = sqlsrv_errors();
+            error_log(print_r($errors, true));
+            return false;
+        }
+    
+        return true;
+    }
+    
 }
 ?>

@@ -281,8 +281,9 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="/api/placeholder/100/100" alt="Admin Avatar" class="admin-avatar">
-                <h2><?= $data['users']['0']['nama_lengkap'] ?></h2>
-                <p><?= $data['users']['0']['role'] ?></p>
+                <h2><?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
+                </h2>
+                <p><?= !isset($data['users']['0']['role']) ? 'Not Found' : $data['users']['0']['role'] ?></p>
             </div>
 
             <nav>
@@ -303,7 +304,9 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="main-header">
-                <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?> </h1>
+                <h1>Selamat Datang,
+                    <?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
+                </h1>
                 <div class="user-info">
                     <h2 id="realTimeClock"> </h2>
                 </div>
@@ -409,13 +412,79 @@
                                 <td>
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                         data-id="<?= $admin['id'] ?>">
-                                        <button class="btn btn-primary">Edit</button>
+                                        <button class="btn btn-primary" type="button" data-toggle="modal"
+                                            data-target="#modalTambahAdminEdit<?= $admin['id'] ?>">
+                                            Edit
+                                        </button>
                                         <input type="hidden" name="id" value="<?= $admin['id'] ?>">
                                         <button type="button" class="btn btn-danger hapus-admin"
                                             data-id="<?= $admin['id']; ?>">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
+                            <!-- ini modal edit -->
+                            <div class="modal fade" id="modalTambahAdminEdit<?= $admin['id'] ?>" tabindex="-1" role="dialog"
+                                aria-labelledby="tambahAdminLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="tambahAdminLabel">Edit Admin <?= $admin['nama_lengkap'] ?></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="formTambahAdmin" action="<?= BASEURL; ?>/Admin/edit" method="POST">
+    
+                                                <div class="form-group">
+                                                    <label for="email">Email:</label>
+                                                    <input type="email" class="form-control" id="email" name="email"
+                                                        required value="<?= $admin['email'] ?>">
+                                                        <input type="hidden" class="form-control" id="id" name="id"
+                                                         value="<?= $admin['id'] ?>">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="nama">Nama Lengkap:</label>
+                                                    <input type="text" class="form-control" id="nama" name="nama_lengkap"
+                                                        required value="<?= $admin['nama_lengkap'] ?>">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="alamat">Alamat:</label>
+                                                    <input type="text" class="form-control" id="alamat" name="alamat"
+                                                        required value="<?= $admin['alamat'] ?>">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="hp">Nomor HP:</label>
+                                                    <input type="tel" class="form-control" id="hp" name="no_hp" required value="<?= $admin['no_hp'] ?>">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="hp">Role :</label>
+                                                    <input type="text" class="form-control" id="role" name="role"
+                                                        value="admin" readonly>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="password">Password:</label>
+                                                    <input type="password" class="form-control" id="password"
+                                                        name="password" required value="<?= $admin['password'] ?>">
+                                                </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Tutup</button>
+                                            <button type="submit" class="btn btn-primary"
+                                                form="formTambahAdmin">Simpan</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ini modal edit akhir -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>
@@ -619,7 +688,8 @@
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal" data-target="#modalJadwal" data-day="<?= strtolower($hari) ?>">Tambah
+                            <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal"
+                                data-target="#modalJadwal" data-day="<?= strtolower($hari) ?>">Tambah
                                 Jadwal</button>
                         </div>
                     <?php endforeach; ?>
@@ -655,7 +725,7 @@
                                 <div class="form-group">
                                     <label for="waktu">Waktu:</label>
                                     <input type="time" class="form-control" id="waktu" name="waktu" required>
-                            </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label for="hari">Hari:</label>

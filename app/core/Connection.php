@@ -1,7 +1,7 @@
 <?php 
 class Connection 
 {
-    private $serverName = "LAPTOP-V6CM8SFG";
+    private $serverName = "DESKTOP-E1F4IKQ";
     private $connectionInfo = ["Database" => "dbpesantren"];
     public $conn;
 
