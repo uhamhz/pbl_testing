@@ -161,5 +161,37 @@ class PerizinanModel
         return true;
     }
 
+    public function updateStatusPerizinan($data, $id)
+    {
+        // $query = "UPDATE perizinan SET status = :status WHERE id = :id";
+        // $this->db->query($query);
+        // $this->db->bind('status', $data['status']);
+        // $this->db->bind('id', $id);
+
+        // return $this->db->execute();
+        if (!$this->db || !$this->db->conn) {
+            $this->db = new Connection();
+        }
+        $query = "UPDATE perizinan 
+                  SET status = ?
+                  WHERE id = ?";
+    
+        // Parameter untuk query
+        $params = array(
+            $data['status'],
+            $id
+        );
+    
+        // Eksekusi query
+        $stmt = sqlsrv_query($this->db->conn, $query, $params);
+    
+        if ($stmt === false) {
+            // Tampilkan error database untuk diagnosa
+            $errors = sqlsrv_errors();
+            error_log(print_r($errors, true));
+            return false;
+        }
+    }
+
 
 }

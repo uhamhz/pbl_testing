@@ -578,7 +578,7 @@
                             <th>Jenis Izin</th>
                             <th>Alasan</th>
                             <th>Status</th>
-                            <th>Aksi</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -630,12 +630,12 @@
                                 echo "<td><span class='status-badge $statusClass'>" . htmlspecialchars($statusText) . "</span></td>";
 
                                 // Kolom Aksi: tombol Hapus
-                                echo "<td>
-                        <form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
-                            <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
-                            <button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
-                        </form>
-                    </td>";
+                                //echo "<td>
+                        //<form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
+                            //<input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
+                            //<button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
+                       // </form>
+                    //</td>";
 
                                 echo "</tr>";
                             }

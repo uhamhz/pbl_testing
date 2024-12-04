@@ -428,20 +428,21 @@
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="tambahAdminLabel">Edit Admin <?= $admin['nama_lengkap'] ?></h5>
+                                            <h5 class="modal-title" id="tambahAdminLabel">Edit Admin
+                                                <?= $admin['nama_lengkap'] ?></h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
                                             <form id="formTambahAdmin" action="<?= BASEURL; ?>/Admin/edit" method="POST">
-    
+
                                                 <div class="form-group">
                                                     <label for="email">Email:</label>
                                                     <input type="email" class="form-control" id="email" name="email"
                                                         required value="<?= $admin['email'] ?>">
-                                                        <input type="hidden" class="form-control" id="id" name="id"
-                                                         value="<?= $admin['id'] ?>">
+                                                    <input type="hidden" class="form-control" id="id" name="id"
+                                                        value="<?= $admin['id'] ?>">
                                                 </div>
 
                                                 <div class="form-group">
@@ -458,7 +459,8 @@
 
                                                 <div class="form-group">
                                                     <label for="hp">Nomor HP:</label>
-                                                    <input type="tel" class="form-control" id="hp" name="no_hp" required value="<?= $admin['no_hp'] ?>">
+                                                    <input type="tel" class="form-control" id="hp" name="no_hp" required
+                                                        value="<?= $admin['no_hp'] ?>">
                                                 </div>
 
                                                 <div class="form-group">
@@ -755,6 +757,7 @@
                             <th>Tanggal Kembali</th>
                             <th>Jenis Izin</th>
                             <th>Alasan</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -785,11 +788,22 @@
                                     </td>
                                     <td><?= $izin['jenis_izin'] ?></td>
                                     <td><?= $izin['alasan'] ?></td>
+                                    <td><?= $izin['status'] ?></td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#modalApproveIzin" data-izin-id="<?= $izin['id'] ?>">Approve</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalRejectIzin"
-                                            data-izin-id="<?= $izin['id'] ?>">Reject</button>
+                                        <form action="<?= BASEURL; ?>/Admin/approvePerizinan" method="POST"
+                                            style="display:inline-block;">
+                                            <input type="hidden" name="id" value="<?= $izin['id']; ?>">
+                                            <input type="hidden" name="status" value="setuju">
+                                            <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin menyetujui perizinan ini?')" >Approve</button>
+                                        </form>
+
+                                       
+                                            <form action="<?= BASEURL; ?>/Admin/approvePerizinan" method="POST"
+                                            style="display:inline-block;">
+                                            <input type="hidden" name="id" value="<?= $izin['id']; ?>">
+                                            <input type="hidden" name="status" value="tidak setuju">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak perizinan ini?')">Reject</button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endif; endforeach; ?>

@@ -206,9 +206,9 @@ class UserModel
                   SET email = ?, 
                       nama_lengkap = ?, 
                       alamat = ?, 
-                      no_hp = ?, 
-                      role = ?, 
-                      password = ?
+                      no_hp = ?
+                    --   role = ?, 
+                    --   password = ?
                   WHERE id = ?";
     
         // Parameter untuk query
@@ -217,8 +217,8 @@ class UserModel
             $data['nama_lengkap'],
             $data['alamat'],
             $data['no_hp'],
-            $data['role'],
-            $data['password'],
+            // $data['role'],
+            // $data['password'],
             $id
         );
     

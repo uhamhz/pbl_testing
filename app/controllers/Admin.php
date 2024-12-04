@@ -189,5 +189,38 @@ class Admin extends Controller
             exit;
         }
     }
+
+    public function approvePerizinan()
+    {
+        //echo var_dump($_POST);
+        // // Validasi input
+        if (empty($_POST['id'])) {
+            $_SESSION['error'] = "ID perizinan tidak ditemukan";
+            header('Location: ' . BASEURL . '/Admin/#admin');
+            exit;
+        }
+    
+        $data = [
+            'status' =>$_POST['status'], // Mengubah status menjadi approve
+        ];
+       // echo var_dump($data);
+       // Mengupdate status di database
+        if ($this->model('PerizinanModel')->updateStatusPerizinan($data, $_POST['id'])) {
+          //  echo 'success';
+           // Berhasil
+            error_log('Perizinan berhasil diubah menjadi approve: ID ' . $_POST['id']);
+            $_SESSION['success'] = "Perizinan berhasil disetujui";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            //echo 'gagal';
+            // Gagal
+            error_log('Gagal mengubah perizinan: ID ' . $_POST['id']);
+            $_SESSION['error'] = "Gagal menyetujui perizinan";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+    
 }
 ?>
