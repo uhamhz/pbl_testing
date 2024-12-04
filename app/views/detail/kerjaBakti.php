@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rihlah</title>
+    <title>Kerja Bakti</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Swiper CSS -->
@@ -39,8 +39,7 @@
             color: #555;
             margin-top: 20px;
         }
-
-        /* Style for the navbar */
+    /* Style for the navbar */
         nav {
             display: flex;
             justify-content: space-between;
@@ -130,48 +129,59 @@
             <span class="logo-text">ASHABUL KAHFI</span>
         </div>
         <div class="nav-links">
-            <a href="/view/index.html" class="back-button">Kembali</a>
+            <a href="/app/views/umum/utama.html" class="back-button">Kembali</a>
         </div>
     </nav>
-    <div class="container mt-5">
-        <!-- Gambar -->
-        <section class="image-section text-center mb-4">
-            <img src="/public/img/rihlah.jpg" alt="Rihlah" class="img-fluid" data-aos="fade-up">
+
+    <!-- Content -->
+    <div class="container mt-4">
+        <!-- Image Section -->
+        <section class="image-section text-center" data-aos="fade-up">
+            <img src="/public/img/roan.jpg" alt="Kegiatan Ro’an">
         </section>
 
-        <!-- Konten -->
+        <!-- Content Section -->
         <section class="content-section">
-            <h1 class="text-center" data-aos="fade-right">Liburan Semester Para Santri Pondok Pesantren Ashabul Kahfi</h1>
-            <p class="text-justify" data-aos="fade-left">
-                Liburan semester menjadi momen yang dinanti-nanti oleh para santri Pondok Pesantren Ashabul Kahfi. Di tengah kesibukan belajar dan rutinitas di pesantren, mereka diajak untuk mengikuti kegiatan liburan yang tak hanya menyegarkan pikiran, tetapi juga memperkaya spiritualitas dan wawasan. Kegiatan ini dikemas dalam bentuk wisata edukasi dan islami dengan tujuan utama tadabur alam, sehingga menjadi pengalaman yang penuh makna dan keberkahan.
+            <h1 data-aos="fade-right">Kegiatan Ro’an Pondok Pesantren Ashabul Kahfi</h1>
+            <p data-aos="fade-left">
+                Setiap minggu, seluruh santri putra dan santri putri Pondok Pesantren Ashabul Kahfi melaksanakan kegiatan ro’an atau kerja bakti sebagai bentuk tanggung jawab bersama dalam menjaga kebersihan dan keasrian lingkungan pesantren. Kegiatan ini bukan sekadar aktivitas fisik, tetapi juga bagian dari pembelajaran penting tentang nilai-nilai kebersamaan, tanggung jawab, dan kepekaan terhadap lingkungan.
             </p>
 
-            <h5 data-aos="fade-right">Makna Tadabur Alam dalam Islam</h5>
-            <p class="text-justify" data-aos="fade-left">
-                Tadabur alam bukan sekadar rekreasi biasa. Dalam Islam, Allah SWT memerintahkan kita untuk merenungkan keindahan ciptaan-Nya sebagai tanda kebesaran-Nya. Firman Allah dalam Surah Ali-Imran ayat 190 berbunyi:
-                <span class="quote">“Sesungguhnya dalam penciptaan langit dan bumi, serta pergantian malam dan siang terdapat tanda-tanda (kebesaran Allah) bagi orang-orang yang berakal.”</span>
-                Dengan mengunjungi tempat-tempat yang indah dan penuh nilai edukasi, para santri diajak untuk merenungkan ayat-ayat kauniyah (tanda-tanda kebesaran Allah di alam semesta) sambil menikmati suasana liburan.
+            <h5 data-aos="fade-right">Makna di Balik Kegiatan Ro’an</h5>
+            <p data-aos="fade-left">
+                Dalam tradisi pesantren, kebersihan adalah cerminan keimanan. Rasulullah SAW bersabda, “Kebersihan adalah sebagian dari iman.” Dengan semangat hadits ini, ro’an menjadi lebih dari sekadar rutinitas mingguan; ini adalah ibadah yang dilakukan dengan niat untuk menjaga amanah Allah SWT atas lingkungan yang telah diberikan kepada kita.
+            </p>
+            <p data-aos="fade-left">
+                Kegiatan ini juga diselingi dengan suasana keakraban, candaan ringan antar santri, dan terkadang diakhiri dengan hidangan sederhana dari dapur pesantren. Semua ini menciptakan suasana kerja yang menyenangkan dan penuh semangat.
             </p>
 
-            <p class="text-justify" data-aos="fade-left">
-                Kegiatan liburan semester ini dirancang bukan hanya sebagai hiburan, tetapi juga sebagai sarana pembelajaran yang membekas di hati para santri. Mereka pulang dengan jiwa yang lebih segar, iman yang lebih kuat, dan semangat yang lebih besar untuk terus belajar dan mengamalkan ilmu.
-            </p>
+            <ol data-aos="fade-up">
+                <li style="font-weight: bold;">Kebersihan Lingkungan Terjaga</li>
+                    <p>Pesantren menjadi tempat yang nyaman, sehat, dan asri untuk kegiatan belajar, beribadah, dan tinggal.</p>
+                <li style="font-weight: bold;">Meningkatkan Kebersamaan</li>
+                    <p>Santri belajar bekerja sama, saling membantu, dan mempererat ukhuwah Islamiyah dalam setiap aktivitas.</p>
+                <li style="font-weight: bold;">Menanamkan Nilai-Nilai Islami</li>
+                    <p>Ro’an menjadi sarana pembelajaran langsung tentang pentingnya kebersihan sebagai bagian dari iman.</p>
+                <li style="font-weight: bold;">Meningkatkan Kesadaran Lingkungan</li>
+                    <p>Dengan merawat lingkungan pesantren, santri belajar untuk peduli terhadap lingkungan alam sekitar, yang nantinya akan menjadi bekal dalam kehidupan bermasyarakat.</p>
+            </ol>
 
-            <p class="text-justify" data-aos="fade-up">
-                <strong>Mari bersama Pondok Pesantren Ashabul Kahfi,</strong> menjadikan setiap momen liburan sebagai perjalanan spiritual yang membawa kita lebih dekat kepada Sang Pencipta.
+            <p data-aos="fade-up">
+                Mari Jadikan Kebersihan sebagai Budaya. Kegiatan ro’an adalah contoh nyata bahwa menjaga kebersihan bukan hanya tanggung jawab individu, tetapi tugas bersama yang bisa menjadi ladang pahala dan kebahagiaan. Dengan lingkungan yang bersih, aktivitas pesantren berjalan lebih lancar, dan suasana belajar menjadi lebih kondusif.
             </p>
+            <h5 data-aos="fade-right">Pondok Pesantren Ashabul Kahfi: Bersih Lingkungannya, Bersih Hatinya, Berkah Hidupnya.</h5>
         </section>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    <!-- Swiper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
-    <!-- AOS JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
-    <script>
-        AOS.init();
-    </script>
+     <!-- Bootstrap JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+     <!-- Swiper JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.7/swiper-bundle.min.js"></script>
+     <!-- AOS JS -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+ 
+     <script>
+         AOS.init();
+     </script>
 </body>
 </html>

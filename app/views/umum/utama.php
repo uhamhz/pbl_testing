@@ -89,6 +89,12 @@
 
         .activity-content {
             padding: 1.5rem;
+            min-height: 160px;
+        }
+
+        .activity-content2 {
+            padding: 1.5rem;
+            min-height: 150px;
         }
 
         /* Profile card styles */
@@ -99,6 +105,7 @@
             border-radius: 10px;
             margin-bottom: 2rem;
             transition: background-color var(--transition-duration);
+            min-height: 300px;
         }
 
         /* Contact section styles */
@@ -308,6 +315,9 @@
                         <a class="nav-link active" href="#home">Beranda</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#ustadz">Asatidz</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#kegiatan">Kegiatan</a>
                     </li>
                     <li class="nav-item">
@@ -337,7 +347,7 @@
                         berakhlak mulia, berpegang teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin
                         dalam setiap aspek kehidupan.</p>
                     <div class="cta-buttons">
-                        <a href="<?= BASEURL; ?>/Umum/isLihatFormulir" class="cta-button primary-button">Daftar Sekarang
+                        <a href="/app/views/umum/formulir.html" class="cta-button primary-button">Daftar Sekarang
                             →</a>
                         <a href="#kegiatan" class="cta-button secondary-button">Pelajari Lebih Lanjut</a>
                     </div>
@@ -374,55 +384,157 @@
         </div>
     </section>
 
-    <!-- Pengumuman Section -->
-    <section id="kegiatan" class="py-5">
+    <!-- Ustadz Section -->
+    <section id="ustadz" class="py-5">
         <div class="container">
-            <h2 class="text-center mb-5" data-aos="fade-up">Kegiatan Pondok</h2>
-            <p class="text-center mb-5" data-aos="fade-up">Berbagai kegiatan dan agenda di Ashabul Kahfi yang ada untuk
-                mencapai visi, diikuti oleh seluruh santri dan masyarakat umum dari berbagai kalangan.</p>
+            <h2 class="text-center mb-5" data-aos="fade-up">Pengasuh dan Asatidz</h2>
+            <p class="text-center mb-5" data-aos="fade-up">Para asatidz dan pengasuh di Ashabul Kahfi 
+                adalah sosok-sosok berpengalaman dan berdedikasi dalam membimbing santri menuju akhlak mulia 
+                dan pemahaman agama yang mendalam. Mereka berperan aktif dalam memberikan ilmu, teladan, dan 
+                arahan yang sesuai dengan nilai-nilai Islam.</p>
 
-            <div id="carouselExampleCaptions" class="carousel slide">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
-                        aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
-                        aria-label="Slide 3"></button>
+            <div class="swiper" data-aos="fade-up">
+                <div class=" d-flex overflow-auto flex-nowrap">
+                    <!-- Pegasuh -->
+                    <div class="swiper-slide col me-3 " style="min-width: 350px;">
+                        <div class="activity-card">
+                            <img src="/public/img/Pengasuh.png" alt="Kajian Harian" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Abah Usmawan Hasanu & Ummu Puput Anggraini</h3>
+                            </div>
+                            <div class="activity-content2">
+                                <p>Pengasuh Pondok Pesantren MahasiswaAshabul Kahfi</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ustadz Hasanu -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usHasanu.png" alt="Kajian Harian" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz Usmawan Hasanu</h3>
+                            </div>
+                            <div class="activity-content2">
+                                <p>Idhotun Nasyiin | Mukhtarul Ahadist | Jalaul Afham | Ta'limul Muta'alim</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ustadz Husein -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usHusein.png" alt="Kajian Harian" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz Husein</h3>
+                               
+                            </div>
+                            <div class="activity-content2">
+                                <p>At-Tibyan fi Adabi Hamlatil Qur'an</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ustadz Syaiful Andshori -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usSyaiful.png" alt="Kegiatan Akademik" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz Syaiful Anhsori</h3>
+                                
+                            </div>
+                            <div class="activity-content2">
+                                <p>Arbain An Nawawi</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Ustadz Oemar -->
+                     <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usUmar.png" alt="Kajian Harian" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz H. Umar Faruq, S.Hum, M.Pd.</h3>
+                                
+                            </div>
+                            <div class="activity-content2">
+                                <p>Tarikhul Hawadist wa Ahwal An Nabawiyyah</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ustadz Lutfi -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usLudzfi.png" alt="Kegiatan Akademik" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz Luthfi</h3>
+                                
+                            </div>
+                            <div class="activity-content2">
+                                <p>Bil Qolam</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Habib Alwi Alaydrus -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/habibA.png" alt="Rihlah" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Habib Alwi Alaydrus</h3>
+                                
+                            </div>
+                            <div class="activity-content2">
+                                <p>Adabul Islam fii Nadzomil Usro'</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Habib Alwi bin Husein Al-Haddad -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/habibB.png" alt="Rihlah" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Habib Alwi bin Husein Al-Haddad</h3>
+                                
+                            </div>
+                            <div class="activity-content2">
+                                <p>Wasailul wusul ila syamail rosul</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ustadz Ustadz Syamsul -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usSyamsul.png" alt="Rihlah" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz Syamsul Arifin M.Pd</h3>
+                            </div>
+                            <div class="activity-content2">
+                                <p>Kifayatul Akhyar</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ustadz Ikhwan -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                        <div class="activity-card">
+                            <img src="/public/img/usIkhwan.png" alt="Kegiatan Akademik" class="activity-image">
+                            <div class="activity-content">
+                                <h3>Ustadz Ikhwan</h3>
+                            </div>
+                            <div class="activity-content2">
+                                <p>At Tarhib At Targhib</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="/public//img/rihlah.jpg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>First slide label</h5>
-                            <p>Some representative placeholder content for the first slide.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="/public//img/kajianPutra.jpg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Second slide label</h5>
-                            <p>Some representative placeholder content for the second slide.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="public/img/roan.jpg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Third slide label</h5>
-                            <p>Some representative placeholder content for the third slide.</p>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </section>
@@ -440,12 +552,12 @@
                     <!-- Kegiatan Taklim -->
                     <div class="swiper-slide">
                         <div class="activity-card">
-                            <img src="/public/img/takilm.jpg" alt="Kajian Harian" class="activity-image">
+                            <img src="/public/img/putra.png" alt="Kajian Harian" class="activity-image">
                             <div class="activity-content">
                                 <h3>Kegiatan Taklim Rutin</h3>
                                 <p>Kegiatan rutinan yang diikuti oleh seluruh santri/wati Pondok Pesantren Ashabul Kahfi
                                     dan dibimbing oleh asatidz dengan sanad yang jelas.</p>
-                                <a href="detail/Taklim.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
+                                <a href="/app/views/detail/Taklim.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
                             </div>
                         </div>
                     </div>
@@ -458,7 +570,7 @@
                                 <h3>Alquran Study Club</h3>
                                 <p>Pengajaran mengaji anak-anak dari masyarakat sekitar oleh santri/wati Pondok
                                     Pesantren Ashabul Kahfi.</p>
-                                <a href="detail/asc.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
+                                <a href="/app/views/detail/asc.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
                             </div>
                         </div>
                     </div>
@@ -471,7 +583,7 @@
                                 <h3>Ro'an/Kerja Bakti</h3>
                                 <p>Kegiatan bersih-bersih lingkungan internal pondok setiap minggu untuk menjaga
                                     kebersihan dan keasrian pesantren</p>
-                                <a href="detail/kerjaBakti.html" class="btn btn-outline-success">Pelajari lebih lanjut
+                                <a href="/app/views/detail/kerjaBakti.html" class="btn btn-outline-success">Pelajari lebih lanjut
                                     →</a>
                             </div>
                         </div>
@@ -485,7 +597,7 @@
                                 <h3>Rihlah</h3>
                                 <p>Liburan para santri saat liburan semester ke tempat wisata edukasi dan islami sebagai
                                     tadabur alam.</p>
-                                <a href="detail/rihlah.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
+                                <a href="/app/views/detail/rihlah.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
                             </div>
                         </div>
                     </div>
@@ -508,7 +620,10 @@
                     <div class="profile-card">
                         <div class="profile-icon">📚</div>
                         <h3>Visi dan Misi</h3>
-                        <p>Membentuk generasi Qurani yang berakhlak mulia dan berwawasan luas</p>
+                        <p>Mencetak generasi Islam yang shalih dan shalihah 
+                            berarti membentuk individu berakhlak mulia, berpegang 
+                            teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin 
+                            dalam setiap aspek kehidupan.</p>
                     </div>
                 </div>
 
@@ -516,7 +631,7 @@
                     <div class="profile-card">
                         <div class="profile-icon">🎯</div>
                         <h3>Program Unggulan</h3>
-                        <p>Program tahfidz, bahasa Arab & Inggris, dan entrepreneurship</p>
+                        <p>Taklim Rutin, Sholat dan Dzikir Berjamaah, Ro'an/Kerja Bakti, Khotmil Qur'an, Bersholawat Bersama, Rihlah</p>
                     </div>
                 </div>
 
@@ -524,7 +639,7 @@
                     <div class="profile-card">
                         <div class="profile-icon">🏢</div>
                         <h3>Fasilitas</h3>
-                        <p>Asrama nyaman, masjid, perpustakaan, dan laboratorium modern</p>
+                        <p>Asrama nyaman, Masjid, Gazebo, Parkiran</p>
                     </div>
                 </div>
             </div>
@@ -553,8 +668,8 @@
                             <div class="contact-icon">📱</div>
                             <div>
                                 <h4>Telepon</h4>
-                                <p>Santri Putra : 085785872572 (Sugiono)<br>
-                                    Santri Putri : 085784880315 (Lily)</p>
+                                <p>Santri Putra : <a href="https://wa.me/081333277496" target="_blank">081333277496</a>  (Raihan)<br>
+                                    Santri Putri : <a href="https://wa.me/085784880315" target="_blank">085784880315</a> (Lily)</p>
                             </div>
                         </div>
 
@@ -562,7 +677,7 @@
                             <div class="contact-icon">✉️</div>
                             <div>
                                 <h4>Email</h4>
-                                <p>info@ashabulkahfi.ac.id</p>
+                                <p> <a href="mailto:humas.ashkahf@gmail.com" target="_blank"></a>humas.ashkahf@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -595,13 +710,14 @@
             <div class="row text-center">
                 <div class="col-md-4 mb-4">
                     <h3>Ashabul Kahfi</h3>
-                    <p>Membentuk generasi Qurani yang berakhlak mulia dan berwawasan luas</p>
+                    <p>Generasi Islam yang mengikuti tradisi Salafush Sholihin</p>
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <h3>Quick Links</h3>
                     <ul class="list-unstyled">
                         <li><a href="#home" class="text-light text-decoration-none">Beranda</a></li>
+                        <li><a href="#ustadz" class="text-light text-decoration-none">Asatidz</a></li>
                         <li><a href="#kegiatan" class="text-light text-decoration-none">Kegiatan</a></li>
                         <li><a href="#about" class="text-light text-decoration-none">Profil</a></li>
                         <li><a href="#contact" class="text-light text-decoration-none">Contact</a></li>
@@ -613,21 +729,15 @@
                     <h3>Sosial Media</h3>
                     <ul class="list-unstyled d-flex justify-content-center gap-2">
                         <li>
-                            <a href="https://www.youtube.com/channel/YourChannelID" target="_blank"
+                            <a href="https://m.youtube.com/@PESMAASKAHF?fbclid=PAY2xjawG8rTFleHRuA2FlbQIxMAABpv2yAAskbxWQQo30LR5HHvheXgRQ1vlL9qDOGID8SzKlq1n7ZeV32frQdg_aem_lCwDjUl1laCSqVTkD6TAsQ" target="_blank"
                                 class="social-icon youtube">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.instagram.com/YourInstagramID" target="_blank"
+                            <a href="https://www.instagram.com/ppashabulkahfi_malang/profilecard/?igsh=MTZkN20yMDFkNjkzOQ==" target="_blank"
                                 class="social-icon instagram">
                                 <i class="fab fa-instagram"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://www.facebook.com/YourFacebookID" target="_blank"
-                                class="social-icon facebook">
-                                <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
                     </ul>

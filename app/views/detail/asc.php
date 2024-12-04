@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kerja Bakti</title>
+    <title>ASC</title>
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Swiper CSS -->
@@ -14,32 +15,55 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+            background-color: #f9f9f9;
+        }
         .image-section img {
             max-width: 100%;
             height: auto;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .content-section {
-            background: #f9f9f9;
-            padding: 30px;
+            padding: 20px;
+            background: white;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .content-section h1, .content-section h5 {
-            font-family: 'Arial', sans-serif;
+        .content-section h1, .content-section h4 {
             font-weight: bold;
+            
         }
-        .content-section p {
-            font-size: 1.1rem;
-            line-height: 1.8;
+        .content-section ol li {
+            font-weight: bold;
+            margin-top: 10px;
         }
-        .quote {
-            font-style: italic;
-            color: #555;
+        .cta-buttons {
+            text-align: center;
             margin-top: 20px;
         }
-    /* Style for the navbar */
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .primary-button {
+            background-color: #007bff;
+            color: white;
+        }
+        .primary-button:hover {
+            background-color: #0056b3;
+            color: #f9f9f9;
+        }
+
+        /* Style for the navbar */
         nav {
             display: flex;
             justify-content: space-between;
@@ -129,47 +153,49 @@
             <span class="logo-text">ASHABUL KAHFI</span>
         </div>
         <div class="nav-links">
-            <a href="/view/index.html" class="back-button">Kembali</a>
+            <a href="/app/views/umum/utama.html" class="back-button">Kembali</a>
         </div>
     </nav>
 
-    <!-- Content -->
+    <!-- Container -->
     <div class="container mt-4">
         <!-- Image Section -->
         <section class="image-section text-center" data-aos="fade-up">
-            <img src="/public/img/roan.jpg" alt="Kegiatan Ro’an">
+            <img src="/public/img/asc.jpg" alt="Madrasah Diniah ASC">
         </section>
 
         <!-- Content Section -->
         <section class="content-section">
-            <h1 data-aos="fade-right">Kegiatan Ro’an Pondok Pesantren Ashabul Kahfi</h1>
+            <h1 data-aos="fade-right">
+                Pengajaran Mengaji untuk Anak-anak oleh Santri/Wati Pondok Pesantren Ashabul Kahfi
+            </h1>
             <p data-aos="fade-left">
-                Setiap minggu, seluruh santri putra dan santri putri Pondok Pesantren Ashabul Kahfi melaksanakan kegiatan ro’an atau kerja bakti sebagai bentuk tanggung jawab bersama dalam menjaga kebersihan dan keasrian lingkungan pesantren. Kegiatan ini bukan sekadar aktivitas fisik, tetapi juga bagian dari pembelajaran penting tentang nilai-nilai kebersamaan, tanggung jawab, dan kepekaan terhadap lingkungan.
+                Pondok Pesantren Mahasiswa Ashabul Kahfi juga menaungi sebuah lembaga Madrasah Diniah ASC. Al Qur'an Study Club (ASC) merupakan lembaga Madrasah Diniyah dengan metode <i>Bil Qalam</i>. Madin ASC merupakan tempat mengaji bagi anak-anak masyarakat sekitar yang termasuk dalam wujud nyata dakwah dan pengabdian pesantren untuk umat, sekaligus sebagai sarana bagi santri untuk mengamalkan ilmu yang telah mereka pelajari di pondok.
             </p>
 
-            <h5 data-aos="fade-right">Makna di Balik Kegiatan Ro’an</h5>
+            <h4 data-aos="fade-right">Tujuan dan Manfaat Program</h4>
             <p data-aos="fade-left">
-                Dalam tradisi pesantren, kebersihan adalah cerminan keimanan. Rasulullah SAW bersabda, “Kebersihan adalah sebagian dari iman.” Dengan semangat hadits ini, ro’an menjadi lebih dari sekadar rutinitas mingguan; ini adalah ibadah yang dilakukan dengan niat untuk menjaga amanah Allah SWT atas lingkungan yang telah diberikan kepada kita.
-            </p>
-            <p data-aos="fade-left">
-                Kegiatan ini juga diselingi dengan suasana keakraban, candaan ringan antar santri, dan terkadang diakhiri dengan hidangan sederhana dari dapur pesantren. Semua ini menciptakan suasana kerja yang menyenangkan dan penuh semangat.
+                Madrasah Diniyah ASC bertujuan untuk menciptakan generasi yang berakhlaqul karimah. Program ini dirancang untuk memberikan pendidikan agama sejak dini kepada anak-anak, agar mereka memiliki dasar yang kuat dalam membaca Al-Qur'an, memahami nilai-nilai Islam, dan menerapkannya dalam kehidupan sehari-hari. Selain itu, kegiatan ini juga melatih para santri untuk berinteraksi dengan masyarakat, mengasah kemampuan mereka dalam mengajar, dan menanamkan rasa tanggung jawab sosial.
             </p>
 
+            <h4 data-aos="fade-right">Metode Pengajaran yang Menyenangkan</h4>
+            <p data-aos="fade-left">
+                Para santri menggunakan metode yang disesuaikan dengan usia dan kemampuan anak-anak. ASC memiliki beberapa program yang dijalankan dengan pendekatan penuh kasih sayang dan sabar, untuk melaksanakan visi misi serta tujuan berupa:
+            </p>
             <ol data-aos="fade-up">
-                <li style="font-weight: bold;">Kebersihan Lingkungan Terjaga</li>
-                    <p>Pesantren menjadi tempat yang nyaman, sehat, dan asri untuk kegiatan belajar, beribadah, dan tinggal.</p>
-                <li style="font-weight: bold;">Meningkatkan Kebersamaan</li>
-                    <p>Santri belajar bekerja sama, saling membantu, dan mempererat ukhuwah Islamiyah dalam setiap aktivitas.</p>
-                <li style="font-weight: bold;">Menanamkan Nilai-Nilai Islami</li>
-                    <p>Ro’an menjadi sarana pembelajaran langsung tentang pentingnya kebersihan sebagai bagian dari iman.</p>
-                <li style="font-weight: bold;">Meningkatkan Kesadaran Lingkungan</li>
-                    <p>Dengan merawat lingkungan pesantren, santri belajar untuk peduli terhadap lingkungan alam sekitar, yang nantinya akan menjadi bekal dalam kehidupan bermasyarakat.</p>
+                <li>Program harian pembelajaran Al-Qur'an metode <i>Bil Qalam</i> dan kegiatan BCM (Bermain, Cerita, dan Menyanyi).</li>
+                <li>Program bulanan dalam memperingati hari besar Islam.</li>
+                <li>Program tahunan berupa kegiatan outbound seperti rihlah atau camping.</li>
             </ol>
 
             <p data-aos="fade-up">
-                Mari Jadikan Kebersihan sebagai Budaya. Kegiatan ro’an adalah contoh nyata bahwa menjaga kebersihan bukan hanya tanggung jawab individu, tetapi tugas bersama yang bisa menjadi ladang pahala dan kebahagiaan. Dengan lingkungan yang bersih, aktivitas pesantren berjalan lebih lancar, dan suasana belajar menjadi lebih kondusif.
+                Pengajaran mengaji ini menjadi salah satu bukti bahwa Pondok Pesantren Ashabul Kahfi tidak hanya berfokus pada pendidikan santri di dalam pesantren, tetapi juga memiliki semangat untuk berkontribusi secara langsung dalam mencerdaskan dan mendidik generasi muda di masyarakat. Mari bersama-sama mendukung kegiatan mulia ini, demi terciptanya generasi Qur’ani yang cerdas, berakhlak mulia, dan berdaya guna untuk agama, bangsa, dan negara.
             </p>
-            <h5 data-aos="fade-right">Pondok Pesantren Ashabul Kahfi: Bersih Lingkungannya, Bersih Hatinya, Berkah Hidupnya.</h5>
+
+            <!-- CTA Buttons -->
+            <div class="cta-buttons">
+                <a href="formAsc.html" class="cta-button primary-button">Daftar Sekarang →</a>
+            </div>
         </section>
     </div>
 

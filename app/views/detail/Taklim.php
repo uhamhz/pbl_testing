@@ -181,14 +181,43 @@
             <span class="logo-text">ASHABUL KAHFI</span>
         </div>
         <div class="nav-links">
-            <a href="/view/index.html" class="back-button">Kembali</a>
+            <a href="/app/views/umum/utama.html" class="back-button">Kembali</a>
         </div>
     </nav>
     <div class="container">
         <!-- section gambar  -->
         <section class="image-section mb-5">
-            <img src="/public/img/takilm.jpg" alt="Kegiatan Taklim Rutin" class="img-fluid mx-auto d-block" data-aos="fade-up">
+            <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel" data-aos="fade-up">
+                <!-- Indicators -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                </div>
+        
+                <!-- Carousel Items -->
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <img src="/public/img/putra.png" class="d-block w-100 img-fluid" alt="Kegiatan Taklim Rutin">
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <img src="/public/img/putri.png" class="d-block w-100 img-fluid" alt="Rihlah">
+                    </div>
+                </div>
+        
+                <!-- Controls (Optional: Next/Prev Buttons) -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </section>
+        
 
     <section class="content-section">
         <h1 data-aos="fade-right">Kegiatan Rutinan Pondok Pesantren Ashabul Kahfi</h1>
@@ -205,22 +234,22 @@
                 Taklim sendiri dijadwalkan setiap hari pada ba'da subuh hingga pukul 05.30 WIB dan ba'da maghrib sampai isya. Berikut jadwal taklim:
             </p>
             <div class="table-responsive" data-aos="fade-up">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" style="border: 3px solid black; border-collapse: collapse;">
                     <thead>
-                        <tr>
-                            <th>Waktu</th>
-                            <th>Senin</th>
-                            <th colspan="2">Selasa</th>
-                            <th>Rabu</th>
-                            <th>Kamis</th>
-                            <th colspan="2">Jumat</th>
-                            <th colspan="2">Sabtu</th>
-                            <th>Ahad</th>
+                        <tr style="text-align: center;">
+                            <th style="background-color: #6FA8A9; color: white;">Waktu</th>
+                            <th style="background-color: #6FA8A9; color: white;">Senin</th>
+                            <th colspan="2" style="background-color: #6FA8A9; color: white;">Selasa</th>
+                            <th style="background-color: #6FA8A9; color: white;">Rabu</th>
+                            <th style="background-color: #6FA8A9; color: white;">Kamis</th>
+                            <th colspan="2" style="background-color: #6FA8A9; color: white;">Jumat</th>
+                            <th colspan="2" style="background-color: #6FA8A9; color: white;">Sabtu</th>
+                            <th style="background-color: #6FA8A9; color: white;">Ahad</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Ba'da Subuh</td>
+                            <td style="background-color: yellow;">Ba'da Subuh</td>
                             <td>Idhotun Nasyiin</td>
                             <td colspan="2">Mukhtarul Hadist</td>
                             <td>Sirah An-Nabawiyyah</td>
@@ -230,7 +259,7 @@
                             <td>Targhib Wat Tarhib</td>
                         </tr>
                         <tr>
-                            <td>Ba'da Maghrib</td>
+                            <td style="background-color: yellow;">Ba'da Maghrib</td>
                             <td>At-Tibyan</td>
                             <td>Jawahirul Lu'luiyah</td>
                             <td>Jalalul Afham</td>
