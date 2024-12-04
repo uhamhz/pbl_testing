@@ -254,6 +254,8 @@
             vertical-align: middle;
         }
 
+
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
@@ -388,12 +390,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Email:</th>
-                            <th>Password:</th>
-                            <th>Nama Lengkap:</th>
-                            <th>Alamat:</th>
-                            <th>Nomor HP:</th>
-                            <th>Aksi:</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Nama Lengkap</th>
+                            <th>Alamat</th>
+                            <th>Nomor HP</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -407,6 +409,7 @@
                                 <td>
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                         data-id="<?= $admin['id'] ?>">
+                                        <button class="btn btn-primary">Edit</button>
                                         <input type="hidden" name="id" value="<?= $admin['id'] ?>">
                                         <button type="button" class="btn btn-danger hapus-admin"
                                             data-id="<?= $admin['id']; ?>">Hapus</button>
@@ -430,32 +433,45 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="formTambahAdmin">
+
+                            <form id="formTambahAdmin" action="<?= BASEURL; ?>/Admin/tambah" method="POST">
+
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    <input type="email" class="form-control" id="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <input type="password" class="form-control" id="password" required>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap:</label>
-                                    <input type="text" class="form-control" id="nama" required>
+                                    <input type="text" class="form-control" id="nama" name="nama_lengkap" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="alamat">Alamat:</label>
-                                    <input type="text" class="form-control" id="alamat" required>
+                                    <input type="text" class="form-control" id="alamat" name="alamat" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="hp">Nomor HP:</label>
-                                    <input type="tel" class="form-control" id="hp" required>
+                                    <input type="tel" class="form-control" id="hp" name="no_hp" required>
                                 </div>
-                            </form>
+
+                                <div class="form-group">
+                                    <label for="hp">Role :</label>
+                                    <input type="text" class="form-control" id="role" name="role" value="admin"
+                                        readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary" form="formTambahAdmin">Simpan</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -469,12 +485,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Email:</th>
-                            <th>Password:</th>
-                            <th>Nama Lengkap:</th>
-                            <th>Alamat:</th>
-                            <th>Nomor HP:</th>
-                            <th>Aksi:</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Nama Lengkap</th>
+                            <th>Alamat</th>
+                            <th>Nomor HP</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -488,6 +504,7 @@
                                 <td>
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                         data-id="<?= $santri['id'] ?>">
+                                        <button class="btn btn-primary">Edit</button>
                                         <input type="hidden" name="id" value="<?= $santri['id'] ?>">
                                         <button type="button" class="btn btn-danger hapus-santri"
                                             data-id="<?= $santri['id']; ?>">Hapus</button>
@@ -511,31 +528,44 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="formTambahSantri">
+                            <form id="formTambahSantri" action="<?= BASEURL; ?>/Admin/tambah" method="POST">
+
                                 <div class="form-group">
-                                    <label for="nis">NIS:</label>
-                                    <input type="text" class="form-control" id="nis" name="nis" required>
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap:</label>
-                                    <input type="text" class="form-control" id="nama" name="nama" required>
+                                    <input type="text" class="form-control" id="nama" name="nama_lengkap" required>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="kelas">Kelas:</label>
-                                    <input type="text" class="form-control" id="kelas" name="kelas" required>
+                                    <label for="alamat">Alamat:</label>
+                                    <input type="text" class="form-control" id="alamat" name="alamat" required>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="status">Status:</label>
-                                    <select class="form-control" id="status" name="status">
-                                        <option value="aktif">Aktif</option>
-                                        <option value="tidak aktif">Tidak Aktif</option>
-                                    </select>
+                                    <label for="hp">Nomor HP:</label>
+                                    <input type="tel" class="form-control" id="hp" name="no_hp" required>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="hp">Role :</label>
+                                    <input type="text" class="form-control" id="role" name="role" value="santri"
+                                        readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                <button type="submit" class="btn btn-primary" form="formTambahSantri">Simpan</button>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary" form="formTambahSantri">Simpan</button>
                         </div>
                     </div>
                 </div>
