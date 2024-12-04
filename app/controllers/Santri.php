@@ -62,13 +62,44 @@ class Santri extends Controller
         if ($this->model('PerizinanModel')->tambahDataPerizinan($data)) {
             // Berhasil
             error_log('Perizinan berhasil ditambahkan: ' . $data['tanggal_izin']);
-            header('Location: ' . BASEURL . '/Santri');
+            header('Location: ' . BASEURL . '/santri');
             exit;
         } else {
             // Gagal
             error_log('Gagal menambah perizinan: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal menambah perizinan";
-            header('Location: ' . BASEURL . '/Santri');
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        }
+    }
+
+    public function edit()
+    {
+        // Validasi input
+        // if (empty($_POST['email']) || empty($_POST['password'])) {
+        //     $_SESSION['error'] = "Email dan password wajib diisi";
+        //     header('Location: ' . BASEURL . '/Santri/#santri');
+        //     exit;
+        // }
+        $data = [
+            'email' => $_POST['email'],
+            'nama_lengkap' => $_POST['nama_lengkap'],
+            'alamat' => $_POST['alamat'],
+            'no_hp' => $_POST['no_hp'],
+            'role' => $_POST['role'], //
+            'password' => $_POST['password'],
+        ];
+        // Di controller
+        if ($this->model('UserModel')->editDataUser($data, $_POST['id'])) {
+            // Berhasil
+            error_log('User berhasil diubah: ' . $data['email']);
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal mengubah user: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal mengubah user";
+            header('Location: ' . BASEURL . '/santri');
             exit;
         }
     }

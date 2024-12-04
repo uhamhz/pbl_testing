@@ -381,7 +381,9 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="main-header">
-                <h1>Selamat Datang, <?= $data['users']['0']['nama_lengkap'] ?></h1>
+                <h1>Selamat Datang, <?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
+                </h1>
+                
                 <div class="user-info">
                     <h2 id="realTimeClock"></h2>
                 </div>
@@ -476,29 +478,30 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-                <form class="profile-form" style="display:none; action="" method=" post">
+                <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Santri/edit" method="post">
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>">
+                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>" name="nama_lengkap">
+                        <input type="hidden" class="form-control" id="id" name="id"value="<?= $data['users']['0']['id']  ?>">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly>
+                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly name="email">
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>" readonly>
+                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>"  name="alamat">
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>">
+                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>"  name="no_hp">
                     </div>
-
-                    <!-- Tombol Simpan dan Cancel -->
-                    <button type="submit">Simpan Perubahan</button>
+                               <!-- Tombol Simpan dan Cancel -->
+                <button type="submit">Simpan Perubahan</button>
                     <button type="button" id="cancel-button">Batal</button>
                 </form>
 
+                    
                 <!-- Tombol Ubah -->
                 <button type="button" id="edit-button">Ubah</button>
             </section>
@@ -835,6 +838,7 @@
     <script>
         // Ketika tombol "Ubah" diklik
         document.getElementById("edit-button").addEventListener("click", function () {
+            //console.log('oke');
             // Sembunyikan data teks biasa
             document.querySelector(".data-pribadi").style.display = "none";
 
@@ -842,11 +846,11 @@
             document.querySelector(".profile-form").style.display = "block";
 
             // Menyalin data dari teks ke input (untuk memulai editing)
-            document.getElementById("nis-input").value = document.getElementById("nis-text").innerText;
-            document.getElementById("nama-input").value = document.getElementById("nama-text").innerText;
-            document.getElementById("kelas-input").value = document.getElementById("kelas-text").innerText;
-            document.getElementById("alamat-input").value = document.getElementById("alamat-text").innerText;
-            document.getElementById("hp-input").value = document.getElementById("hp-text").innerText;
+           // document.getElementById("nis-input").value = document.getElementById("nis-text").innerText;
+           // document.getElementById("nama-input").value = document.getElementById("nama-text").innerText;
+            //document.getElementById("kelas-input").value = document.getElementById("kelas-text").innerText;
+            //document.getElementById("alamat-input").value = document.getElementById("alamat-text").innerText;
+            //document.getElementById("hp-input").value = document.getElementById("hp-text").innerText;
 
             // Ganti tombol "Ubah" menjadi tidak terlihat setelah klik
             document.getElementById("edit-button").style.display = "none";
