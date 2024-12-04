@@ -2,7 +2,7 @@
 class MataPelajaranModel
 {
     private $db;
-    
+
     public function getJadwalWithPelajaranAndUstadz()
     {
         // Membuka koneksi database
@@ -28,7 +28,7 @@ class MataPelajaranModel
 
         // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt);
-        
+
         // Memeriksa apakah query berhasil
         if (!$result) {
             die(print_r(sqlsrv_errors(), true));
@@ -36,7 +36,7 @@ class MataPelajaranModel
 
         // Menyiapkan array untuk menyimpan data
         $data = [];
-        
+
         // Mengambil hasil query dan menyimpannya dalam array
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
@@ -45,4 +45,34 @@ class MataPelajaranModel
         // Mengembalikan data
         return $data;
     }
+
+    public function tambahDataJadwal($data)
+    {
+        // Pastikan hari sudah dalam format kapital
+        $data['hari'] = ucfirst(strtolower($data['hari'])); // Sama seperti sebelumnya, formatkan menjadi kapital
+
+        // Membuka koneksi database
+        $this->db = new Connection;
+
+        // Query SQL untuk menambahkan data jadwal
+        $stmt = "
+        INSERT INTO jadwal (id_pelajaran, id_user, waktu, hari)
+        VALUES (?, ?, ?, ?)
+    ";
+
+        // Ubah menjadi array numerik
+        $params = [
+            $data['id_pelajaran'],  // id_pelajaran
+            $data['id_user'],        // id_user
+            $data['waktu'],          // waktu
+            $data['hari']            // hari
+        ];
+
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        if (!$result) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+    }
+
 }

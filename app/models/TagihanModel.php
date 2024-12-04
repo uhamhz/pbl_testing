@@ -110,4 +110,45 @@ class TagihanModel
         return ($row && $row['total'] > 0) ? $row['total'] : 0;
     }
 
+    public function deleteTagihan($id_tagihan)
+    {
+        $this->db = new Connection;
+        $stmt = "DELETE FROM tagihan WHERE id_tagihan = ?";
+        $params = [$id_tagihan];
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+        return $result;
+    }
+
+    public function tambahTagihan($data)
+    {
+        if (!$this->db || !$this->db->conn) {
+            $this->db = new Connection();
+        }
+
+        $query = "INSERT INTO tagihan (id_users, jenis_tagihan, jumlah, jatuh_tempo, status, bukti_pembayaran) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
+
+        $params = [
+            $data['id_users'],
+            $data['jenis_tagihan'],
+            $data['jumlah'],
+            $data['jatuh_tempo'],
+            $data['status'],
+            $data['bukti_pembayaran']
+        ];
+
+        try {
+            $stmt = sqlsrv_query($this->db->conn, $query, $params);
+
+            if ($stmt === false) {
+                $errors = sqlsrv_errors();
+                throw new Exception("Database error: " . print_r($errors, true));
+            }
+
+            return true;
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
 }

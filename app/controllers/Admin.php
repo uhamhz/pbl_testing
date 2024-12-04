@@ -73,5 +73,88 @@ class Admin extends Controller
             }
         }
     }
+
+    public function tambahTagihanSantri()
+    {
+        // Ensure JSON content type
+        header('Content-Type: application/json');
+
+        try {
+            // Extensive error checking
+            if (empty($_POST['id_users'])) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'ID Pengguna tidak boleh kosong'
+                ]);
+                exit;
+            }
+
+            // Your existing logic
+            $data = [
+                'id_users' => $_POST['id_users'],
+                'jenis_tagihan' => $_POST['jenis_tagihan'],
+                'jumlah' => $_POST['jumlah'],
+                'jatuh_tempo' => $_POST['jatuh_tempo'],
+                'status' => $_POST['status'],
+                'bukti_pembayaran' => null // Handle file upload separately
+            ];
+
+            // File upload handling
+            if (!empty($_FILES['bukti_pembayaran']['name'])) {
+                // Add your file upload logic here
+            }
+
+            // Model method call
+            $result = $this->model('TagihanModel')->tambahTagihan($data);
+
+            if ($result) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Tagihan berhasil ditambahkan'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Gagal menambahkan tagihan'
+                ]);
+            }
+            exit;
+
+        } catch (Exception $e) {
+            // Log the full error
+            error_log('Error in tambahTagihanSantri: ' . $e->getMessage());
+
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+            exit;
+        }
+    }
+
+    public function tambahJadwal()
+    {
+
+        $data = [
+            'id_pelajaran' => $_POST['id_pelajaran'],
+            'id_user' => $_POST['id_user'],
+            'waktu' => $_POST['waktu'],
+            'hari' => $_POST['hari']
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->tambahDataJadwal($data)) {
+            // Berhasil
+            error_log('jadwal berhasil ditambahkan: ' . $data['hari']);
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah user: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah jadwal";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
 }
 ?>

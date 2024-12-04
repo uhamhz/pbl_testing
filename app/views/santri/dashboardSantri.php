@@ -677,37 +677,51 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="formAjukanPerizinan">
+                            <form id="formAjukanPerizinan" action="<?= BASEURL; ?>/Santri/tambahPerizinan"
+                                method="POST">
+
+                                <div class="form-group">
+                                    <label for="NamaSantri">Nama Santri:</label>
+                                    <input type="text" class="form-control" id="NamaSantri" name="user_id"
+                                        value="<?= $data['users']['0']['id'] ?>" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tanggalIzin">Tanggal Mulai Izin:</label>
+                                    <input type="date" class="form-control" id="tanggalIzin" name="tanggal_izin"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tanggalKembali">Tanggal Kembali:</label>
+                                    <input type="date" class="form-control" id="tanggalKembali" name="tanggal_kembali"
+                                        required>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="jenisIzin">Jenis Izin:</label>
-                                    <select class="form-control" id="jenisIzin" name="jenisIzin" required>
+                                    <select class="form-control" id="jenisIzin" name="jenis_izin" required>
                                         <option value="">Pilih Jenis Izin</option>
                                         <option value="pulang">Pulang</option>
+                                        <option value="cuti">Cuti</option>
+                                        <option value="sakit">Sakit</option>
+                                        <option value="izin">Izin</option>
                                         <option value="tidak_masuk">Tidak Masuk</option>
                                         <option value="lainnya">Lainnya</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="tanggalIzin">Tanggal Mulai Izin:</label>
-                                    <input type="date" class="form-control" id="tanggalIzin" name="tanggalIzin"
-                                        required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggalKembali">Tanggal Kembali:</label>
-                                    <input type="date" class="form-control" id="tanggalKembali" name="tanggalKembali"
-                                        required>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="alasan">Alasan Izin:</label>
                                     <textarea class="form-control" id="alasan" name="alasan" rows="4"
                                         required></textarea>
                                 </div>
-                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary" form="formAjukanPerizinan">Ajukan
                                 Izin</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -896,28 +910,6 @@
 
         // Panggil satu kali saat halaman pertama dimuat untuk menampilkan waktu langsung
         updateClock();
-    </script>
-
-    <script>
-        document.getElementById('formAjukanPerizinan').addEventListener('submit', function (e) {
-            e.preventDefault(); // Mencegah reload halaman
-
-            // Ambil data dari form
-            const jenisIzin = document.getElementById('jenisIzin').value;
-            const tanggalIzin = document.getElementById('tanggalIzin').value;
-            const tanggalKembali = document.getElementById('tanggalKembali').value;
-            const alasan = document.getElementById('alasan').value;
-
-            // Simulasi pengiriman data ke server
-            console.log({ jenisIzin, tanggalIzin, tanggalKembali, alasan });
-
-            // Tampilkan pesan sukses (sesuaikan dengan kebutuhan)
-            alert('Perizinan berhasil diajukan!');
-
-            // Reset form dan tutup modal
-            this.reset();
-            $('#modalAjukanPerizinan').modal('hide');
-        });
     </script>
 
     <script>

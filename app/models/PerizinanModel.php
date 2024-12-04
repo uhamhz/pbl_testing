@@ -138,4 +138,28 @@ class PerizinanModel
 
         return true; // Penghapusan berhasil
     }
+
+    public function tambahDataPerizinan($data)
+    {
+        $this->db = new Connection;
+        $stmt = "INSERT INTO perizinan (user_id, tanggal_izin, tanggal_kembali, jenis_izin, alasan, status) VALUES (?, ?, ?, ?, ?, ?)";
+
+        // Verifikasi hasil query
+        $result = sqlsrv_query($this->db->conn, $stmt, [
+            $data['user_id'],
+            $data['tanggal_izin'],
+            $data['tanggal_kembali'],
+            $data['jenis_izin'],
+            $data['alasan'],
+            $data['status']
+        ]);
+
+        if ($result === false) {
+            die('Error executing query: ' . print_r(sqlsrv_errors(), true));
+        }
+
+        return true;
+    }
+
+
 }

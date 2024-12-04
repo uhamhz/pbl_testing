@@ -44,5 +44,33 @@ class Santri extends Controller
             }
         }
     }
+
+    public function tambahPerizinan()
+    {
+        $data = [
+            'user_id' => $_POST['user_id'],
+            'tanggal_izin' => $_POST['tanggal_izin'],
+            'tanggal_kembali' => $_POST['tanggal_kembali'],
+            'jenis_izin' => $_POST['jenis_izin'],
+            'alasan' => $_POST['alasan'],
+            'status' => 'pending'
+        ];
+
+        // Log data untuk memastikan data yang dikirim
+        error_log(print_r($data, true));
+
+        if ($this->model('PerizinanModel')->tambahDataPerizinan($data)) {
+            // Berhasil
+            error_log('Perizinan berhasil ditambahkan: ' . $data['tanggal_izin']);
+            header('Location: ' . BASEURL . '/Santri');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah perizinan: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah perizinan";
+            header('Location: ' . BASEURL . '/Santri');
+            exit;
+        }
+    }
 }
 ?>

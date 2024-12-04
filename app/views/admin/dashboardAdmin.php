@@ -561,10 +561,10 @@
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-primary" form="formTambahSantri">Simpan</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary" form="formTambahSantri">Simpan</button>
                             </form>
                         </div>
                     </div>
@@ -619,7 +619,7 @@
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <button class="btn btn-success btn-sm tambah-jadwal" data-day="<?= strtolower($hari) ?>">Tambah
+                            <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal" data-target="#modalJadwal" data-day="<?= strtolower($hari) ?>">Tambah
                                 Jadwal</button>
                         </div>
                     <?php endforeach; ?>
@@ -638,30 +638,35 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="formJadwal">
+                            <form id="formJadwal" action="<?= BASEURL; ?>/Admin/tambahJadwal" method="POST">
                                 <input type="hidden" id="jadwalId" name="jadwalId">
+
+                                <div class="form-group">
+                                    <label for="mataPelajaran">Mata Pelajaran:</label>
+                                    <input type="number" class="form-control" id="mataPelajaran" name="id_pelajaran"
+                                        required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ustadz">Ustadz:</label>
+                                    <input type="number" class="form-control" id="ustadz" name="id_user" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="waktu">Waktu:</label>
+                                    <input type="time" class="form-control" id="waktu" name="waktu" required>
+                            </div>
+
                                 <div class="form-group">
                                     <label for="hari">Hari:</label>
                                     <input type="text" class="form-control" id="hari" name="hari" readonly>
                                 </div>
-                                <div class="form-group">
-                                    <label for="jamMulai">Jam Mulai:</label>
-                                    <input type="time" class="form-control" id="jamMulai" name="jamMulai" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="jamSelesai">Jam Selesai:</label>
-                                    <input type="time" class="form-control" id="jamSelesai" name="jamSelesai" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="mataPelajaran">Mata Pelajaran:</label>
-                                    <input type="text" class="form-control" id="mataPelajaran" name="mataPelajaran"
-                                        required>
-                                </div>
-                            </form>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary" form="formJadwal">Simpan</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -872,44 +877,125 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form id="formBuatTagihan">
+                            <form id="formBuatTagihan" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="namaSantri">Nama Santri:</label>
-                                    <input type="text" class="form-control" id="namaSantri" name="namaSantri"
+                                    <input type="number" class="form-control" id="idUsers" name="id_users"
                                         placeholder="Masukkan nama santri" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="jenisTagihan">Jenis Tagihan:</label>
-                                    <input type="text" class="form-control" id="jenisTagihan" name="jenisTagihan"
+                                    <input type="text" class="form-control" id="jenisTagihan" name="jenis_tagihan"
                                         placeholder="Contoh: SPP Mei" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="jumlahTagihan">Jumlah:</label>
-                                    <input type="number" class="form-control" id="jumlahTagihan" name="jumlahTagihan"
+                                    <input type="number" class="form-control" id="jumlahTagihan" name="jumlah"
                                         placeholder="Masukkan jumlah tagihan" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="jatuhTempo">Jatuh Tempo:</label>
-                                    <input type="date" class="form-control" id="jatuhTempo" name="jatuhTempo" required>
+                                    <input type="date" class="form-control" id="jatuhTempo" name="jatuh_tempo" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="statusTagihan">Status:</label>
-                                    <select class="form-control" id="statusTagihan" name="statusTagihan">
+                                    <select class="form-control" id="statusTagihan" name="status">
                                         <option value="pending">Pending</option>
-                                        <option value="unpaid">Belum Lunas</option>
-                                        <option value="paid">Lunas</option>
+                                        <option value="belum lunas">Belum Lunas</option>
+                                        <option value="lunas">Lunas</option>
                                     </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="buktiPembayaran">Bukti Pembayaran:</label>
+                                    <input type="file" class="form-control-file" id="buktiPembayaran"
+                                        name="bukti_pembayaran">
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary" form="formBuatTagihan">Simpan</button>
+                            <button type="button" class="btn btn-primary" id="btnSimpanTagihan">Simpan</button>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#btnSimpanTagihan').on('click', function (e) {
+                        e.preventDefault();
+
+                        // Client-side validation
+                        var idUsers = $('#idUsers').val();
+                        var jenisTagihan = $('#jenisTagihan').val();
+                        var jumlah = $('#jumlahTagihan').val();
+                        var jatuhTempo = $('#jatuhTempo').val();
+
+                        if (!idUsers || !jenisTagihan || !jumlah || !jatuhTempo) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Validasi Gagal',
+                                text: 'Mohon lengkapi semua field yang diperlukan'
+                            });
+                            return;
+                        }
+
+                        var formData = new FormData($('#formBuatTagihan')[0]);
+
+                        $.ajax({
+                            url: '<?= BASEURL; ?>/Admin/tambahTagihanSantri',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (response) {
+                                console.log('Success Response:', response);
+                                if (response.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: response.message
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!',
+                                        text: response.message || 'Terjadi kesalahan'
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error Details:', {
+                                    status: status,
+                                    error: error,
+                                    responseText: xhr.responseText,
+                                    responseJSON: xhr.responseJSON
+                                });
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal!',
+                                    html: `
+                Status: ${status}<br>
+                Error: ${error}<br>
+                Response: ${xhr.responseText}
+            `
+                                });
+                            }
+                        });
+                    });
+                });
+            </script>
 
             <!-- Modal Lihat Bukti Pembayaran -->
             <div class="modal fade" id="modalBuktiPembayaran" tabindex="-1" role="dialog"
@@ -1363,7 +1449,6 @@
 
     </script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
