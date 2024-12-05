@@ -295,8 +295,7 @@
                     <li><a href="#jadwal">Jadwal</a></li>
                     <li><a href="#perizinan">Perizinan</a></li>
                     <li><a href="#tagihan">Tagihan</a></li>
-                    <li><a href="#pengaturan">Pengaturan</a></li>
-                    <li><a href="#beranda">Beranda</a></li>
+                    <li><a href="#beranda">Logout</a></li>
                 </ul>
             </nav>
         </aside>
@@ -351,30 +350,36 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-                <form class="profile-form" style="display:none;" action="<?= BASEURL; ?> ../models/UserModel.php"
-                    method="POST">
+                <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Admin/edit" method="POST">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" name="email" id="email-input" value="<?= $data['users'][0]['email'] ?>">
+                    </div>
                     <div class="form-group">
                         <label>Nama Lengkap</label>
                         <input type="text" name="nama_lengkap" id="nama-input"
-                            value="<?= $data['users']['0']['nama_lengkap'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="text" name="email" id="email-input" value="<?= $data['users']['0']['email'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Role</label>
-                        <input type="text" name="role" id="role-input" value="<?= $data['users']['0']['role'] ?>"
-                            readonly>
+                            value="<?= $data['users'][0]['nama_lengkap'] ?>">
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" name="alamat" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>">
+                        <input type="text" name="alamat" id="alamat-input" value="<?= $data['users'][0]['alamat'] ?>">
                     </div>
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" name="no_hp" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>">
+                        <input type="tel" name="no_hp" id="hp-input" value="<?= $data['users'][0]['no_hp'] ?>">
                     </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <input type="text" name="role" id="role-input" value="<?= $data['users'][0]['role'] ?>"
+                            readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" id="password-input" value="">
+                        <small>Isi jika ingin mengganti password</small>
+                    </div>
+                    <!-- Hidden input untuk ID -->
+                    <input type="hidden" name="id" value="<?= $data['users'][0]['id'] ?>">
 
                     <!-- Tombol Simpan dan Cancel -->
                     <button type="submit">Simpan Perubahan</button>
@@ -404,93 +409,97 @@
                     <tbody>
                         <?php foreach ($data['admin'] as $admin): ?>
                             <tr>
-                                <td><?= $admin['email'] ?></td>
-                                <td><?= $admin['password'] ?></td>
-                                <td><?= $admin['nama_lengkap'] ?></td>
-                                <td><?= $admin['alamat'] ?></td>
-                                <td><?= $admin['no_hp'] ?></td>
+                                <td><?= htmlspecialchars($admin['email'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($admin['password'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($admin['nama_lengkap'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($admin['alamat'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($admin['no_hp'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                         data-id="<?= $admin['id'] ?>">
-                                        <button class="btn btn-primary" type="button" data-toggle="modal"
-                                            data-target="#modalTambahAdminEdit<?= $admin['id'] ?>">
-                                            Edit
-                                        </button>
                                         <input type="hidden" name="id" value="<?= $admin['id'] ?>">
                                         <button type="button" class="btn btn-danger hapus-admin"
                                             data-id="<?= $admin['id']; ?>">Hapus</button>
                                     </form>
+                                    <button class="btn btn-warning" data-toggle="modal"
+                                        data-target="#modalEditAdmin<?= $admin['id'] ?>">Edit</button>
                                 </td>
                             </tr>
-                            <!-- ini modal edit -->
-                            <div class="modal fade" id="modalTambahAdminEdit<?= $admin['id'] ?>" tabindex="-1" role="dialog"
-                                aria-labelledby="tambahAdminLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
+
+                            <!-- Modal for Edit Admin -->
+                            <div class="modal fade" id="modalEditAdmin<?= $admin['id'] ?>" tabindex="-1" role="dialog"
+                                aria-labelledby="modalEditAdminLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="tambahAdminLabel">Edit Admin
-                                                <?= $admin['nama_lengkap'] ?></h5>
+                                            <h5 class="modal-title" id="modalEditAdminLabel">Edit Admin</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form id="formTambahAdmin" action="<?= BASEURL; ?>/Admin/edit" method="POST">
+                                            <form action="<?= BASEURL; ?>/Admin/edit" method="POST">
+                                                <input type="hidden" name="id" value="<?= $admin['id'] ?>">
 
+                                                <!-- Email Field -->
                                                 <div class="form-group">
-                                                    <label for="email">Email:</label>
+                                                    <label for="email">Email</label>
                                                     <input type="email" class="form-control" id="email" name="email"
-                                                        required value="<?= $admin['email'] ?>">
-                                                    <input type="hidden" class="form-control" id="id" name="id"
-                                                        value="<?= $admin['id'] ?>">
+                                                        value="<?= htmlspecialchars($admin['email'], ENT_QUOTES, 'UTF-8') ?>"
+                                                        required>
                                                 </div>
 
+                                                <!-- Nama Lengkap Field -->
                                                 <div class="form-group">
-                                                    <label for="nama">Nama Lengkap:</label>
-                                                    <input type="text" class="form-control" id="nama" name="nama_lengkap"
-                                                        required value="<?= $admin['nama_lengkap'] ?>">
+                                                    <label for="nama_lengkap">Nama Lengkap</label>
+                                                    <input type="text" class="form-control" id="nama_lengkap"
+                                                        name="nama_lengkap"
+                                                        value="<?= htmlspecialchars($admin['nama_lengkap'], ENT_QUOTES, 'UTF-8') ?>"
+                                                        required>
                                                 </div>
 
+                                                <!-- Alamat Field -->
                                                 <div class="form-group">
-                                                    <label for="alamat">Alamat:</label>
+                                                    <label for="alamat">Alamat</label>
                                                     <input type="text" class="form-control" id="alamat" name="alamat"
-                                                        required value="<?= $admin['alamat'] ?>">
+                                                        value="<?= htmlspecialchars($admin['alamat'], ENT_QUOTES, 'UTF-8') ?>"
+                                                        required>
                                                 </div>
 
+                                                <!-- Nomor HP Field -->
                                                 <div class="form-group">
-                                                    <label for="hp">Nomor HP:</label>
-                                                    <input type="tel" class="form-control" id="hp" name="no_hp" required
-                                                        value="<?= $admin['no_hp'] ?>">
+                                                    <label for="no_hp">Nomor HP</label>
+                                                    <input type="text" class="form-control" id="no_hp" name="no_hp"
+                                                        value="<?= htmlspecialchars($admin['no_hp'], ENT_QUOTES, 'UTF-8') ?>"
+                                                        required>
                                                 </div>
 
+                                                <!-- Role Field (Read-Only) -->
                                                 <div class="form-group">
-                                                    <label for="hp">Role :</label>
+                                                    <label for="role">Role</label>
                                                     <input type="text" class="form-control" id="role" name="role"
-                                                        value="admin" readonly>
+                                                        value="<?= htmlspecialchars($admin['role'], ENT_QUOTES, 'UTF-8') ?>"
+                                                        readonly>
                                                 </div>
 
+                                                <!-- Password Field (Optional) -->
                                                 <div class="form-group">
-                                                    <label for="password">Password:</label>
+                                                    <label for="password">Password (Leave blank if not changing)</label>
                                                     <input type="password" class="form-control" id="password"
-                                                        name="password" required value="<?= $admin['password'] ?>">
+                                                        name="password">
                                                 </div>
 
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Tutup</button>
-                                            <button type="submit" class="btn btn-primary"
-                                                form="formTambahAdmin">Simpan</button>
+                                                <button type="submit" class="btn btn-primary">Update Admin</button>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- ini modal edit akhir -->
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </section>
+
 
             <!-- Modal Tambah Admin -->
             <div class="modal fade" id="modalTambahAdmin" tabindex="-1" role="dialog" aria-labelledby="tambahAdminLabel"
@@ -553,7 +562,7 @@
                 <h2>Data Santri</h2>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahSantri">Tambah
                     Santri</button>
-                <table>
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Email</th>
@@ -567,17 +576,21 @@
                     <tbody>
                         <?php foreach ($data['santri'] as $santri): ?>
                             <tr>
-                                <td><?= $santri['email'] ?></td>
-                                <td><?= $santri['password'] ?></td>
-                                <td><?= $santri['nama_lengkap'] ?></td>
-                                <td><?= $santri['alamat'] ?></td>
-                                <td><?= $santri['no_hp'] ?></td>
+                                <td><?= htmlspecialchars($santri['email'], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td>*****</td> <!-- Hide the password for security purposes -->
+                                <td><?= htmlspecialchars($santri['nama_lengkap'], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($santri['alamat'], ENT_QUOTES, 'UTF-8') ?></td>
+                                <td><?= htmlspecialchars($santri['no_hp'], ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
+                                    <!-- Edit Button (opens modal) -->
+                                    <button class="btn btn-warning" data-toggle="modal"
+                                        data-target="#modalEditSantri<?= $santri['id'] ?>">Edit</button>
+
+                                    <!-- Delete Button (trigger form submission) -->
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                         data-id="<?= $santri['id'] ?>">
-                                        <button class="btn btn-primary">Edit</button>
                                         <input type="hidden" name="id" value="<?= $santri['id'] ?>">
-                                        <button type="button" class="btn btn-danger hapus-santri"
+                                        <button type="button" class="btn btn-danger hapus-admin"
                                             data-id="<?= $santri['id']; ?>">Hapus</button>
                                     </form>
                                 </td>
@@ -586,6 +599,7 @@
                     </tbody>
                 </table>
             </section>
+
 
             <!-- Modal Tambah Santri -->
             <div class="modal fade" id="modalTambahSantri" tabindex="-1" role="dialog"
@@ -598,49 +612,118 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+
                         <div class="modal-body">
                             <form id="formTambahSantri" action="<?= BASEURL; ?>/Admin/tambah" method="POST">
-
+                                <!-- Email -->
                                 <div class="form-group">
                                     <label for="email">Email:</label>
                                     <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
 
+                                <!-- Nama Lengkap -->
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap:</label>
                                     <input type="text" class="form-control" id="nama" name="nama_lengkap" required>
                                 </div>
 
+                                <!-- Alamat -->
                                 <div class="form-group">
                                     <label for="alamat">Alamat:</label>
                                     <input type="text" class="form-control" id="alamat" name="alamat" required>
                                 </div>
 
+                                <!-- Nomor HP -->
                                 <div class="form-group">
-                                    <label for="hp">Nomor HP:</label>
-                                    <input type="tel" class="form-control" id="hp" name="no_hp" required>
+                                    <label for="no_hp">Nomor HP:</label>
+                                    <input type="text" class="form-control" id="no_hp" name="no_hp" required>
                                 </div>
 
+                                <!-- Role -->
                                 <div class="form-group">
-                                    <label for="hp">Role :</label>
+                                    <label for="role">Role:</label>
                                     <input type="text" class="form-control" id="role" name="role" value="santri"
                                         readonly>
                                 </div>
 
+                                <!-- Password -->
                                 <div class="form-group">
                                     <label for="password">Password:</label>
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary" form="formTambahSantri">Simpan</button>
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary">Tambah Santri</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+            <!-- Modal Edit Santri -->
+            <?php foreach ($data['santri'] as $santri): ?>
+                <div class="modal fade" id="modalEditSantri<?= $santri['id'] ?>" tabindex="-1" role="dialog"
+                    aria-labelledby="editSantriLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSantriLabel">Edit Data Santri</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="<?= BASEURL; ?>/Admin/edit" method="POST">
+                                    <input type="hidden" name="id" value="<?= $santri['id'] ?>">
+
+                                    <div class="form-group">
+                                        <label for="email">Email:</label>
+                                        <input type="email" class="form-control" name="email"
+                                            value="<?= htmlspecialchars($santri['email'], ENT_QUOTES, 'UTF-8') ?>" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="nama_lengkap">Nama Lengkap:</label>
+                                        <input type="text" class="form-control" name="nama_lengkap"
+                                            value="<?= htmlspecialchars($santri['nama_lengkap'], ENT_QUOTES, 'UTF-8') ?>"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="alamat">Alamat:</label>
+                                        <input type="text" class="form-control" name="alamat"
+                                            value="<?= htmlspecialchars($santri['alamat'], ENT_QUOTES, 'UTF-8') ?>"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="no_hp">Nomor HP:</label>
+                                        <input type="text" class="form-control" name="no_hp"
+                                            value="<?= htmlspecialchars($santri['no_hp'], ENT_QUOTES, 'UTF-8') ?>" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="role">Role:</label>
+                                        <input type="text" class="form-control" name="role" value="santri" readonly>
+                                    </div>
+
+
+                                    <!-- Password Field (Optional) -->
+                                    <div class="form-group">
+                                        <label for="password">Password (Leave blank if not changing)</label>
+                                        <input type="password" class="form-control" id="password" name="password">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+
+
 
 
             <section id="jadwal" class="content-section">
@@ -794,15 +877,17 @@
                                             style="display:inline-block;">
                                             <input type="hidden" name="id" value="<?= $izin['id']; ?>">
                                             <input type="hidden" name="status" value="setuju">
-                                            <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin menyetujui perizinan ini?')" >Approve</button>
+                                            <button type="submit" class="btn btn-success"
+                                                onclick="return confirm('Apakah Anda yakin ingin menyetujui perizinan ini?')">Approve</button>
                                         </form>
 
-                                       
-                                            <form action="<?= BASEURL; ?>/Admin/approvePerizinan" method="POST"
+
+                                        <form action="<?= BASEURL; ?>/Admin/approvePerizinan" method="POST"
                                             style="display:inline-block;">
                                             <input type="hidden" name="id" value="<?= $izin['id']; ?>">
                                             <input type="hidden" name="status" value="tidak setuju">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak perizinan ini?')">Reject</button>
+                                            <button type="submit" class="btn btn-danger"
+                                                onclick="return confirm('Apakah Anda yakin ingin menolak perizinan ini?')">Reject</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -1153,23 +1238,6 @@
                 </div>
             </div>
 
-
-            <!-- Settings Section -->
-            <section id="pengaturan" class="content-section">
-                <h2>Pengaturan</h2>
-                <form>
-                    <div class="form-group">
-                        <label>Password Baru</label>
-                        <input type="password" placeholder="Masukkan password baru" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Konfirmasi Password</label>
-                        <input type="password" placeholder="Konfirmasi password baru" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Password</button>
-                </form>
-            </section>
-
             <!-- Kembali ke home Section -->
             <div id="exitConfirmationModal" class="modal" style="display: none;">
                 <div class="modal-content">
@@ -1183,6 +1251,34 @@
 
         </main>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            // Ketika tombol Edit diklik
+            $('.edit-santri').on('click', function () {
+                var id = $(this).data('id'); // Ambil ID santri dari data-id tombol
+                var row = $(this).closest('tr'); // Mendapatkan baris (tr) tempat tombol Edit berada
+
+                // Ambil data santri dari tabel
+                var email = row.find('td:eq(0)').text();
+                var nama_lengkap = row.find('td:eq(2)').text();
+                var alamat = row.find('td:eq(3)').text();
+                var no_hp = row.find('td:eq(4)').text();
+                var role = row.find('td:eq(5)').text(); // Role ada di kolom terakhir, sesuaikan dengan kolom role yang ada
+
+                // Isi data di modal edit
+                $('#edit-id').val(id);
+                $('#edit-email').val(email);
+                $('#edit-nama').val(nama_lengkap);
+                $('#edit-alamat').val(alamat);
+                $('#edit-hp').val(no_hp);
+                $('#edit-role').val(role);
+
+                // Tampilkan modal Edit Santri
+                $('#modalEditSantri').modal('show');
+            });
+        });
+    </script>
 
     <script>
         // Ketika tombol "Ubah" diklik

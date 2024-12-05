@@ -200,40 +200,51 @@ class UserModel
         if (!$this->db || !$this->db->conn) {
             $this->db = new Connection();
         }
-    
+
+        // Jangan hash password, biarkan sebagai string biasa
+        if (empty($data['password'])) {
+            unset($data['password']);  // Jika tidak ada password, jangan update password
+        }
+
         // Query untuk mengupdate data user
         $query = "UPDATE users 
                   SET email = ?, 
                       nama_lengkap = ?, 
                       alamat = ?, 
-                      no_hp = ?
-                    --   role = ?, 
-                    --   password = ?
-                  WHERE id = ?";
-    
-        // Parameter untuk query
-        $params = array(
+                      no_hp = ?,
+                      role = ?";
+
+        // Tentukan parameter untuk query
+        $params = [
             $data['email'],
             $data['nama_lengkap'],
             $data['alamat'],
             $data['no_hp'],
-            // $data['role'],
-            // $data['password'],
-            $id
-        );
-    
+            $data['role']
+        ];
+
+        // Jika password ada, tambahkan ke query dan params
+        if (!empty($data['password'])) {
+            $query .= ", password = ?";  // Update password jika diberikan
+            $params[] = $data['password'];  // Gunakan password langsung (bukan hash)
+        }
+
+        // Menambahkan WHERE clause untuk memastikan hanya user tertentu yang diupdate
+        $query .= " WHERE id = ?";
+
+        // Menambahkan id ke parameter untuk WHERE clause
+        $params[] = $id;
+
         // Eksekusi query
         $stmt = sqlsrv_query($this->db->conn, $query, $params);
-    
+
+        // Cek apakah query berhasil
         if ($stmt === false) {
-            // Tampilkan error database untuk diagnosa
-            $errors = sqlsrv_errors();
-            error_log(print_r($errors, true));
-            return false;
+            die(print_r(sqlsrv_errors(), true));  // Menampilkan error jika query gagal
         }
-    
-        return true;
+
+        return true;  // Jika berhasil, return true
     }
-    
+
 }
 ?>

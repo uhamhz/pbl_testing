@@ -64,35 +64,55 @@ class Admin extends Controller
     public function edit()
     {
         // Validasi input
-        if (empty($_POST['email']) || empty($_POST['password'])) {
-            $_SESSION['error'] = "Email dan password wajib diisi";
-            header('Location: ' . BASEURL . '/Admin/#admin');
+        if (empty($_POST['email']) || empty($_POST['nama_lengkap']) || empty($_POST['no_hp']) || empty($_POST['alamat'])) {
+            $_SESSION['error'] = "Semua field wajib diisi";
+            header('Location: ' . BASEURL . '/admin');
             exit;
         }
 
+        // Menyiapkan data yang akan diupdate
         $data = [
             'email' => $_POST['email'],
             'nama_lengkap' => $_POST['nama_lengkap'],
             'alamat' => $_POST['alamat'],
             'no_hp' => $_POST['no_hp'],
-            'role' => $_POST['role'], //
-            'password' => $_POST['password'],
+            'role' => $_POST['role']
         ];
 
-        // Di controller
-        if ($this->model('UserModel')->editDataUser($data, $_POST['id'])) {
-            // Berhasil
-            error_log('User berhasil diubah: ' . $data['email']);
-            header('Location: ' . BASEURL . '/Admin');
-            exit;
-        } else {
-            // Gagal
-            error_log('Gagal mengubah user: ' . print_r($data, true));
-            $_SESSION['error'] = "Gagal mengubah user";
-            header('Location: ' . BASEURL . '/Admin');
+        // Jika password diberikan, simpan password sebagai string biasa (tidak di-hash)
+        if (!empty($_POST['password'])) {
+            $data['password'] = $_POST['password'];
+        }
+
+        // Jika password null (tidak diubah), hapus dari data untuk update
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        // Cek apakah data berhasil diperbarui
+        $userModel = $this->model('UserModel');
+
+        try {
+            if ($userModel->editDataUser($data, $_POST['id'])) {
+                // Berhasil memperbarui data user
+                $_SESSION['success'] = "Data berhasil diperbarui.";
+                header('Location: ' . BASEURL . '/admin');
+                exit;
+            } else {
+                // Gagal memperbarui data
+                $_SESSION['error'] = "Gagal memperbarui data.";
+                header('Location: ' . BASEURL . '/admin');
+                exit;
+            }
+        } catch (Exception $e) {
+            $_SESSION['error'] = "Terjadi kesalahan: " . $e->getMessage();
+            header('Location: ' . BASEURL . '/admin');
             exit;
         }
     }
+
+
+
 
     public function hapus()
     {
@@ -199,15 +219,15 @@ class Admin extends Controller
             header('Location: ' . BASEURL . '/Admin/#admin');
             exit;
         }
-    
+
         $data = [
-            'status' =>$_POST['status'], // Mengubah status menjadi approve
+            'status' => $_POST['status'], // Mengubah status menjadi approve
         ];
-       // echo var_dump($data);
-       // Mengupdate status di database
+        // echo var_dump($data);
+        // Mengupdate status di database
         if ($this->model('PerizinanModel')->updateStatusPerizinan($data, $_POST['id'])) {
-          //  echo 'success';
-           // Berhasil
+            //  echo 'success';
+            // Berhasil
             error_log('Perizinan berhasil diubah menjadi approve: ID ' . $_POST['id']);
             $_SESSION['success'] = "Perizinan berhasil disetujui";
             header('Location: ' . BASEURL . '/Admin');
@@ -221,6 +241,6 @@ class Admin extends Controller
             exit;
         }
     }
-    
+
 }
 ?>

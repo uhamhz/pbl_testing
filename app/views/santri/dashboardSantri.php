@@ -372,7 +372,6 @@
                     <li><a href="#jadwal">Jadwal</a></li>
                     <li><a href="#perizinan">Perizinan</a></li>
                     <li><a href="#pembayaran">Pembayaran</a></li>
-                    <li><a href="#pengaturan">Pengaturan</a></li>
                     <li><a href="#beranda">Logout</a></li>
                 </ul>
             </nav>
@@ -381,9 +380,10 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="main-header">
-                <h1>Selamat Datang, <?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
+                <h1>Selamat Datang,
+                    <?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
                 </h1>
-                
+
                 <div class="user-info">
                     <h2 id="realTimeClock"></h2>
                 </div>
@@ -474,34 +474,48 @@
                     <p><strong>Email:</strong><?= $data['users']['0']['email'] ?></p>
                     <p><strong>Alamat:</strong> <?= $data['users']['0']['alamat'] ?></p>
                     <p><strong>No. HP:</strong> <?= $data['users']['0']['no_hp'] ?></p>
-                    <p><strong>Password:</strong> <?= $data['users']['0']['password'] ?></p>
+                   <p><strong>Password:</strong> ********</p>
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
                 <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Santri/edit" method="post">
+                    
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>" name="nama_lengkap">
-                        <input type="hidden" class="form-control" id="id" name="id"value="<?= $data['users']['0']['id']  ?>">
+                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>"
+                            name="nama_lengkap">
+                        <input type="hidden" class="form-control" id="id" name="id"
+                            value="<?= $data['users']['0']['id'] ?>">
                     </div>
+
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly name="email">
+                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly
+                            name="email">
                     </div>
+
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>"  name="alamat">
+                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>" name="alamat">
                     </div>
+
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>"  name="no_hp">
+                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>" name="no_hp">
                     </div>
-                               <!-- Tombol Simpan dan Cancel -->
-                <button type="submit">Simpan Perubahan</button>
+
+                    <!-- Password Field (Optional) -->
+                    <div class="form-group">
+                        <label for="password">Password (Leave blank if not changing)</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+
+                    <!-- Tombol Simpan dan Cancel -->
+                    <button type="submit">Simpan Perubahan</button>
                     <button type="button" id="cancel-button">Batal</button>
                 </form>
 
-                    
+
                 <!-- Tombol Ubah -->
                 <button type="button" id="edit-button">Ubah</button>
             </section>
@@ -578,7 +592,7 @@
                             <th>Jenis Izin</th>
                             <th>Alasan</th>
                             <th>Status</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -631,12 +645,12 @@
 
                                 // Kolom Aksi: tombol Hapus
                                 //echo "<td>
-                        //<form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
-                            //<input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
-                            //<button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
-                       // </form>
-                    //</td>";
-
+                                //<form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
+                                //<input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
+                                //<button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
+                                // </form>
+                                //</td>";
+                        
                                 echo "</tr>";
                             }
                         } else {
@@ -801,22 +815,6 @@
                 </div>
             </section>
 
-            <!-- Settings Section -->
-            <section id="pengaturan" class="content-section">
-                <h2>Pengaturan</h2>
-                <form>
-                    <div class="form-group">
-                        <label>Password Baru</label>
-                        <input type="password" placeholder="Masukkan password baru">
-                    </div>
-                    <div class="form-group">
-                        <label>Konfirmasi Password</label>
-                        <input type="password" placeholder="Konfirmasi password baru">
-                    </div>
-                    <button type="submit">Update Password</button>
-                </form>
-            </section>
-
             <!-- Kembali ke home Section -->
             <div id="exitConfirmationModal" class="modal" style="display: none;">
                 <div class="modal-content">
@@ -846,8 +844,8 @@
             document.querySelector(".profile-form").style.display = "block";
 
             // Menyalin data dari teks ke input (untuk memulai editing)
-           // document.getElementById("nis-input").value = document.getElementById("nis-text").innerText;
-           // document.getElementById("nama-input").value = document.getElementById("nama-text").innerText;
+            // document.getElementById("nis-input").value = document.getElementById("nis-text").innerText;
+            // document.getElementById("nama-input").value = document.getElementById("nama-text").innerText;
             //document.getElementById("kelas-input").value = document.getElementById("kelas-text").innerText;
             //document.getElementById("alamat-input").value = document.getElementById("alamat-text").innerText;
             //document.getElementById("hp-input").value = document.getElementById("hp-text").innerText;
