@@ -1048,9 +1048,15 @@
                         <div class="modal-body">
                             <form id="formBuatTagihan" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label for="namaSantri">Nama Santri:</label>
-                                    <input type="number" class="form-control" id="idUsers" name="id_users"
-                                        placeholder="Masukkan nama santri" required>
+                                    <label for="idUsers">Nama Santri:</label>
+                                    <select class="form-control" id="idUsers" name="id_users" required>
+                                        <option value="">Pilih Santri</option> <!-- Default option -->
+                                        <?php foreach ($data['santri'] as $user): ?>
+                                            <option value="<?= $user['id']; ?>">
+                                                <?= htmlspecialchars($user['nama_lengkap'], ENT_QUOTES, 'UTF-8'); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
