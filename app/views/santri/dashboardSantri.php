@@ -495,39 +495,51 @@
 
                     <div class="form-group">
                         <label>Nama Lengkap</label>
-                        <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>"
+                        <input type="text" id="nama-input"
+                            value="<?= htmlspecialchars($data['users'][0]['nama_lengkap'], ENT_QUOTES, 'UTF-8') ?>"
                             name="nama_lengkap">
                         <input type="hidden" class="form-control" id="id" name="id"
-                            value="<?= $data['users']['0']['id'] ?>">
+                            value="<?= htmlspecialchars($data['users'][0]['id'], ENT_QUOTES, 'UTF-8') ?>">
                     </div>
 
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="text" id="email-input" value="<?= $data['users']['0']['email'] ?>" readonly
+                        <input type="text" id="email-input"
+                            value="<?= htmlspecialchars($data['users'][0]['email'], ENT_QUOTES, 'UTF-8') ?>" readonly
                             name="email">
                     </div>
 
                     <div class="form-group">
                         <label>Alamat</label>
-                        <input type="text" id="alamat-input" value="<?= $data['users']['0']['alamat'] ?>" name="alamat">
+                        <input type="text" id="alamat-input"
+                            value="<?= htmlspecialchars($data['users'][0]['alamat'], ENT_QUOTES, 'UTF-8') ?>"
+                            name="alamat">
                     </div>
 
                     <div class="form-group">
                         <label>No. HP</label>
-                        <input type="tel" id="hp-input" value="<?= $data['users']['0']['no_hp'] ?>" name="no_hp">
+                        <input type="tel" id="hp-input"
+                            value="<?= htmlspecialchars($data['users'][0]['no_hp'], ENT_QUOTES, 'UTF-8') ?>"
+                            name="no_hp">
                     </div>
 
-                    <!-- Password Field (Optional) -->
+                    <div class="form-group" style="display:none;">
+                        <label for="role-input">Role</label>
+                        <input type="hidden" id="role-input" name="role"
+                            value="<?= htmlspecialchars($data['users'][0]['role'], ENT_QUOTES, 'UTF-8') ?>">
+                    </div>
+
+
                     <div class="form-group">
-                        <label for="password">Password (Leave blank if not changing)</label>
-                        <input type="password" class="form-control" id="password" name="password">
+                        <label>Password</label>
+                        <input type="password" id="password-input"
+                            placeholder="Enter new password (leave blank to keep current)" name="password">
                     </div>
 
-                    <!-- Tombol Simpan dan Cancel -->
-                    <button type="submit">Simpan Perubahan</button>
-                    <button type="button" id="cancel-button">Batal</button>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
                 </form>
-
 
                 <!-- Tombol Ubah -->
                 <button type="button" id="edit-button">Ubah</button>
