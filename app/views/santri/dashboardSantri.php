@@ -474,12 +474,12 @@
                     <p><strong>Email:</strong><?= $data['users']['0']['email'] ?></p>
                     <p><strong>Alamat:</strong> <?= $data['users']['0']['alamat'] ?></p>
                     <p><strong>No. HP:</strong> <?= $data['users']['0']['no_hp'] ?></p>
-                   <p><strong>Password:</strong> ********</p>
+                    <p><strong>Password:</strong> ********</p>
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
                 <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Santri/edit" method="post">
-                    
+
                     <div class="form-group">
                         <label>Nama Lengkap</label>
                         <input type="text" id="nama-input" value="<?= $data['users']['0']['nama_lengkap'] ?>"
@@ -643,13 +643,14 @@
 
                                 echo "<td><span class='status-badge $statusClass'>" . htmlspecialchars($statusText) . "</span></td>";
 
-                                // Kolom Aksi: tombol Hapus
-                                //echo "<td>
-                                //<form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
-                                //<input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
-                                //<button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
-                                // </form>
-                                //</td>";
+                                if ($row['status'] == 'pending') {
+                                    echo "<td>
+                                    <form action='" . BASEURL . "/Santri/hapusPerizinan' method='POST' class='form-hapus' data-id='" . htmlspecialchars($row['id']) . "'>
+                                    <input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "'>
+                                    <button type='button' class='btn btn-danger hapus-perizinan' data-id='" . htmlspecialchars($row['id']) . "'>Hapus</button>
+                                    </form>
+                                    </td>";
+                                }
                         
                                 echo "</tr>";
                             }
@@ -683,6 +684,7 @@
 
             </section>
 
+            <!-- Modal Ajukan Perizinan -->
             <div class="modal fade" id="modalAjukanPerizinan" tabindex="-1" role="dialog"
                 aria-labelledby="modalPerizinanLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -697,52 +699,60 @@
                             <form id="formAjukanPerizinan" action="<?= BASEURL; ?>/Santri/tambahPerizinan"
                                 method="POST">
 
+                                <!-- Nama Santri (readonly) -->
                                 <div class="form-group">
                                     <label for="NamaSantri">Nama Santri:</label>
-                                    <input type="text" class="form-control" id="NamaSantri" name="user_id"
-                                        value="<?= $data['users']['0']['id'] ?>" readonly>
+                                    <!-- Display nama_lengkap in the form but send the user_id -->
+                                    <input type="text" class="form-control" id="NamaSantri" name="nama_lengkap"
+                                        value="<?= htmlspecialchars($data['users']['0']['nama_lengkap'], ENT_QUOTES, 'UTF-8') ?>"
+                                        readonly>
+
+                                    <!-- Hidden input for user_id to be sent with the form -->
+                                    <input type="hidden" name="user_id" value="<?= $data['users']['0']['id'] ?>">
                                 </div>
 
+
+                                <!-- Tanggal Mulai Izin -->
                                 <div class="form-group">
                                     <label for="tanggalIzin">Tanggal Mulai Izin:</label>
                                     <input type="date" class="form-control" id="tanggalIzin" name="tanggal_izin"
                                         required>
                                 </div>
 
+                                <!-- Tanggal Kembali -->
                                 <div class="form-group">
                                     <label for="tanggalKembali">Tanggal Kembali:</label>
                                     <input type="date" class="form-control" id="tanggalKembali" name="tanggal_kembali"
                                         required>
                                 </div>
 
+                                <!-- Jenis Izin -->
                                 <div class="form-group">
                                     <label for="jenisIzin">Jenis Izin:</label>
                                     <select class="form-control" id="jenisIzin" name="jenis_izin" required>
-                                        <option value="">Pilih Jenis Izin</option>
-                                        <option value="pulang">Pulang</option>
-                                        <option value="cuti">Cuti</option>
-                                        <option value="sakit">Sakit</option>
-                                        <option value="izin">Izin</option>
-                                        <option value="tidak_masuk">Tidak Masuk</option>
-                                        <option value="lainnya">Lainnya</option>
+                                        <option value="Sakit">Sakit</option>
+                                        <option value="Cuti">Cuti</option>
+                                        <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
 
+                                <!-- Alasan -->
                                 <div class="form-group">
-                                    <label for="alasan">Alasan Izin:</label>
-                                    <textarea class="form-control" id="alasan" name="alasan" rows="4"
+                                    <label for="alasan">Alasan:</label>
+                                    <textarea class="form-control" id="alasan" name="alasan" rows="3"
                                         required></textarea>
                                 </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary" form="formAjukanPerizinan">Ajukan
-                                Izin</button>
+
+                                <!-- Submit Button -->
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Ajukan Izin</button>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
 
 
             <section id="pembayaran" class="content-section">
@@ -776,15 +786,15 @@
                             $statusText = ""; // Menentukan teks untuk status tagihan
                     
                             // Perbaiki pengecekan status sesuai dengan nilai yang ada di database
-                            if ($status == 'belum lunas') {
+                            if ($status == 'pending') {
                                 $statusClass = "status-pending";
-                                $statusText = "Menunggu Pembayaran";
-                            } elseif ($status == 'Lunas') {
+                                $statusText = "Menunggu Verifikasi Admin";
+                            } elseif ($status == 'lunas') {
                                 $statusClass = "status-approved";
                                 $statusText = "Lunas";
-                            } elseif ($status == 'diTolak') {
+                            } elseif ($status == 'belum lunas') {
                                 $statusClass = "status-rejected";
-                                $statusText = "Ditolak";
+                                $statusText = "Menunggu Pembayaran";
                             } else {
                                 $statusClass = "status-unknown";  // Jika status tidak dikenali
                                 $statusText = "Status Tidak Dikenali";
@@ -798,7 +808,7 @@
                                 echo "<input type='file' id='paymentProof{$tagihan['id_tagihan']}' name='paymentProof' accept='image/*'>";
                                 echo "<button type='button' onclick='uploadPaymentProof({$tagihan['id_tagihan']})'>Kirim Bukti Pembayaran</button>";
                                 echo "</form>";
-                            } else {
+                            } else if ($status == 'lunas' || $status == 'pending') {
                                 // Jika sudah lunas atau ditolak, tampilkan bukti pembayaran yang sudah diunggah
                                 $buktiPembayaran = htmlspecialchars($tagihan['bukti_pembayaran']);
                                 if (!empty($buktiPembayaran)) {
