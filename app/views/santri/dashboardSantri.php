@@ -399,12 +399,25 @@
                     </div>
                     <div class="stat-card">
                         <h3>Tagihan Aktif</h3>
-                        <?= $data['tagihan']
-                            ? '<p>' . number_format($data['tagihan']['0']['jumlah'], 0, ',', '.') . '</p>
-                        <small>Total tagihan bulan ini</small>'
-                            : '<p>0</p>
-                        <small>Total tagihan bulan ini</small>'
+
+                        <?php if (!empty($data['tagihan'])): ?>
+                            <?php
+                            $totalTagihan = 0; // Variable to store total amount
+                            foreach ($data['tagihan'] as $tagihan) {
+                                // Only consider tagihan with 'status' as 'belum lunas'
+                                if ($tagihan['status'] == 'belum lunas') {
+                                    $totalTagihan += $tagihan['jumlah']; // Add each unpaid tagihan's amount to total
+                                }
+                            }
                             ?>
+
+                            <p><?= number_format($totalTagihan, 0, ',', '.') ?></p>
+                            <small>Total tagihan bulan ini</small>
+
+                        <?php else: ?>
+                            <p>0</p>
+                            <small>Tidak ada tagihan</small>
+                        <?php endif; ?>
                     </div>
                     <div class="stat-card">
                         <h3>Perizinan</h3>
@@ -651,7 +664,7 @@
                                     </form>
                                     </td>";
                                 }
-                        
+
                                 echo "</tr>";
                             }
                         } else {
