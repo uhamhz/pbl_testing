@@ -10,6 +10,7 @@ class Admin extends Controller
                 $data['users'] = $this->model("UserModel")->getUserData($_SESSION['email']);
                 $data['admin'] = $this->model("UserModel")->getAdminData();
                 $data['santri'] = $this->model("UserModel")->getSantriData();
+                $data['ustadz'] = $this->model("UserModel")->getUstadzData();
                 $data['perizinan'] = $this->model("PerizinanModel")->getAllDataPerizinan();
                 $data['jumlahSantri'] = $this->model("UserModel")->getJumlahSantri();
                 $data['jumlahIzin'] = $this->model("PerizinanModel")->getJumlahIzinPending();

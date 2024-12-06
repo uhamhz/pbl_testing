@@ -65,6 +65,20 @@ class UserModel
         return $data;
     }
 
+    public function getUstadzData()
+    {
+        $this->db = new Connection;
+        $stmt = "SELECT * FROM users WHERE role = 'ustadz'";
+        $result = sqlsrv_query($this->db->conn, $stmt);
+
+        $data = [];
+
+        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+        return $data;
+    }
+
 
     public function getUserData($email)
     {

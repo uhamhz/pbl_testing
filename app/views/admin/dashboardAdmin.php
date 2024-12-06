@@ -876,15 +876,23 @@
                                         <!-- Looping untuk menampilkan mata pelajaran -->
                                         <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
                                             <option value="<?= $pelajaran['id_pelajaran'] ?>">
-                                                <?= $pelajaran['nama_pelajaran'] ?></option>
+                                                <?= $pelajaran['nama_pelajaran'] ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
 
-
                                 <div class="form-group">
                                     <label for="ustadz">Ustadz:</label>
-                                    <input type="number" class="form-control" id="ustadz" name="id_user" required>
+                                    <select class="form-control" id="ustadz" name="id_user" required>
+                                        <option value="" disabled selected>Pilih Ustadz</option>
+                                        <!-- Looping untuk menampilkan nama ustadz -->
+                                        <?php foreach ($data['ustadz'] as $ustadz): ?>
+                                            <option value="<?= $ustadz['id'] ?>">
+                                                <?= $ustadz['nama_lengkap'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
