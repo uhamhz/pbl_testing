@@ -18,6 +18,7 @@ class Admin extends Controller
                 $data['tagihan'] = $this->model("TagihanModel")->getAllDataTagihan();
                 $data['jumlahTagihan'] = $this->model("TagihanModel")->getJumlahTagihanPending();
                 $data['totalTagihan'] = $this->model("TagihanModel")->getTotalTagihanPending();
+                $data['mataPelajaran'] = $this->model("MataPelajaranModel")->getMataPelajaran();
 
                 $this->view('admin/dashboardAdmin', $data);
             } else if ($role == "pengurus") {
@@ -239,6 +240,27 @@ class Admin extends Controller
             // Gagal
             error_log('Gagal mengubah perizinan: ID ' . $_POST['id']);
             $_SESSION['error'] = "Gagal menyetujui perizinan";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+
+    public function tambahMataPelajaran()
+    {
+        $data = [
+            'nama_pelajaran' => $_POST['nama_pelajaran'],
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->tambahDataMataPelajaran($data)) {
+            // Berhasil
+            error_log('mata pelajaran berhasil ditambahkan: ' . $data['nama_pelajaran']);
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah mata pelajaran: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah mata pelajaran";
             header('Location: ' . BASEURL . '/Admin');
             exit;
         }

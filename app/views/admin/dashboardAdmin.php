@@ -292,6 +292,7 @@
                     <li><a href="#pribadi">Data Pribadi</a></li>
                     <li><a href="#admin">Data Admin</a></li>
                     <li><a href="#santri">Data Santri</a></li>
+                    <li><a href="#pelajaran">Mata Pelajaran</a></li>
                     <li><a href="#jadwal">Jadwal</a></li>
                     <li><a href="#perizinan">Perizinan</a></li>
                     <li><a href="#tagihan">Tagihan</a></li>
@@ -738,6 +739,63 @@
                 </div>
             <?php endforeach; ?>
 
+            <!-- Mata Pelajaran Section -->
+            <section id="pelajaran" class="content-section">
+                <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
+                <div class="pelajaran-container row">
+                    <!-- Menampilkan daftar mata pelajaran -->
+                    <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="pelajaran-card card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $pelajaran['nama_pelajaran'] ?></h5>
+                                    <p class="card-text"><strong>ID Pelajaran:</strong> <?= $pelajaran['id_pelajaran'] ?>
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                            data-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">Edit</button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                            data-target="#modalHapusPelajaran<?= $pelajaran['id_pelajaran'] ?>">Hapus</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Tombol untuk membuka modal tambah mata pelajaran -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">Tambah Mata
+                        Pelajaran</button>
+                </div>
+            </section>
+
+
+            <!-- Modal untuk menambah mata pelajaran -->
+            <div class="modal fade" id="modalTambahPelajaran" tabindex="-1" role="dialog"
+                aria-labelledby="modalTambahPelajaranLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTambahPelajaranLabel">Tambah Mata Pelajaran</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form untuk tambah pelajaran -->
+                            <form action="<?= BASEURL; ?>/Admin/tambahMataPelajaran" method="POST">
+                                <div class="form-group">
+                                    <label for="nama_pelajaran">Nama Pelajaran</label>
+                                    <input type="text" class="form-control" id="nama_pelajaran" name="nama_pelajaran"
+                                        required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Tambah</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -802,7 +860,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalJadwalLabel">Tambah/Edit Jadwal</h5>
+                            <h5 class="modal-title" id="modalJadwalLabel">Tambah Jadwal</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -813,9 +871,16 @@
 
                                 <div class="form-group">
                                     <label for="mataPelajaran">Mata Pelajaran:</label>
-                                    <input type="number" class="form-control" id="mataPelajaran" name="id_pelajaran"
-                                        required>
+                                    <select class="form-control" id="mataPelajaran" name="id_pelajaran" required>
+                                        <option value="" disabled selected>Pilih Mata Pelajaran</option>
+                                        <!-- Looping untuk menampilkan mata pelajaran -->
+                                        <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
+                                            <option value="<?= $pelajaran['id_pelajaran'] ?>">
+                                                <?= $pelajaran['nama_pelajaran'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
+
 
                                 <div class="form-group">
                                     <label for="ustadz">Ustadz:</label>
