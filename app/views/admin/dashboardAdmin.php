@@ -754,8 +754,13 @@
                                     <div class="d-flex justify-content-between">
                                         <button class="btn btn-primary btn-sm" data-toggle="modal"
                                             data-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">Edit</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                            data-target="#modalHapusPelajaran<?= $pelajaran['id_pelajaran'] ?>">Hapus</button>
+                                        <form action="<?= BASEURL; ?>/Admin/hapusMataPelajaran" method="POST"
+                                            style="display: inline;">
+                                            <!-- Menggunakan input hidden untuk mengirimkan id_pelajaran ke controller -->
+                                            <input type="hidden" name="id_pelajaran"
+                                                value="<?= $pelajaran['id_pelajaran'] ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -797,7 +802,40 @@
                 </div>
             </div>
 
+            <!-- Modal Edit Mata Pelajaran -->
+            <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
+                <div class="modal fade" id="modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>" tabindex="-1" role="dialog"
+                    aria-labelledby="modalEditPelajaranLabel<?= $pelajaran['id_pelajaran'] ?>" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditPelajaranLabel<?= $pelajaran['id_pelajaran'] ?>">Edit
+                                    Mata Pelajaran</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Form untuk edit pelajaran -->
+                                <form action="<?= BASEURL; ?>/Admin/editMataPelajaran" method="POST">
+                                    <!-- Pastikan ID mata pelajaran dikirimkan dengan benar -->
+                                    <input type="hidden" name="id_pelajaran" value="<?= $pelajaran['id_pelajaran'] ?>">
 
+                                    <div class="form-group">
+                                        <label for="editNamaPelajaran<?= $pelajaran['id_pelajaran'] ?>">Nama
+                                            Pelajaran</label>
+                                        <input type="text" class="form-control"
+                                            id="editNamaPelajaran<?= $pelajaran['id_pelajaran'] ?>" name="nama_pelajaran"
+                                            value="<?= $pelajaran['nama_pelajaran'] ?>" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
 
             <section id="jadwal" class="content-section">
                 <h2>Jadwal</h2>
@@ -841,22 +879,27 @@
                                         </span> -
                                         <strong><?= $jadwal['nama_pelajaran'] ?></strong> -
                                         <strong><?= $jadwal['nama_lengkap'] ?></strong>
-                                        <button class="btn btn-primary btn-sm edit-jadwal">Edit</button>
+                                        <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal"
+                                            data-target="#modalEditJadwal" data-id="<?= $jadwal['id_jadwal'] ?>"
+                                            data-pelajaran="<?= $jadwal['id_pelajaran'] ?>"
+                                            data-ustadz="<?= $jadwal['id_user'] ?>"
+                                            data-waktu="<?= $jadwal['waktu']->format('H:i') ?>"
+                                            data-hari="<?= $jadwal['hari'] ?>">Edit</button>
                                         <button class="btn btn-danger btn-sm delete-jadwal">Hapus</button>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                             <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal"
-                                data-target="#modalJadwal" data-day="<?= strtolower($hari) ?>">Tambah
+                                data-target="#modalTambahJadwal" data-day="<?= strtolower($hari) ?>">Tambah
                                 Jadwal</button>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </section>
 
-            <!-- Modal Edit Jadwal -->
-            <div class="modal fade" id="modalJadwal" tabindex="-1" role="dialog" aria-labelledby="modalJadwalLabel"
-                aria-hidden="true">
+            <!-- Modal Tambah Jadwal -->
+            <div class="modal fade" id="modalTambahJadwal" tabindex="-1" role="dialog"
+                aria-labelledby="modalJadwalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -915,7 +958,65 @@
                 </div>
             </div>
 
+            <!-- Modal Edit Jadwal -->
+            <div class="modal fade" id="modalEditJadwal" tabindex="-1" role="dialog"
+                aria-labelledby="modalEditJadwalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalEditJadwalLabel">Edit Jadwal</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formEditJadwal" action="<?= BASEURL; ?>/Admin/editJadwal" method="POST">
+                                <input type="hidden" id="editJadwalId" name="jadwalId">
 
+                                <div class="form-group">
+                                    <label for="editMataPelajaran">Mata Pelajaran:</label>
+                                    <select class="form-control" id="editMataPelajaran" name="id_pelajaran" required>
+                                        <option value="" disabled selected>Pilih Mata Pelajaran</option>
+                                        <!-- Looping untuk menampilkan mata pelajaran -->
+                                        <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
+                                            <option value="<?= $pelajaran['id_pelajaran'] ?>">
+                                                <?= $pelajaran['nama_pelajaran'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editUstadz">Ustadz:</label>
+                                    <select class="form-control" id="editUstadz" name="id_user" required>
+                                        <option value="" disabled selected>Pilih Ustadz</option>
+                                        <?php foreach ($data['ustadz'] as $ustadz): ?>
+                                            <option value="<?= $ustadz['id'] ?>">
+                                                <?= $ustadz['nama_lengkap'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editWaktu">Waktu:</label>
+                                    <input type="time" class="form-control" id="editWaktu" name="waktu" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="editHari">Hari:</label>
+                                    <input type="text" class="form-control" id="editHari" name="hari" readonly>
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary" form="formEditJadwal">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Perizinan Section -->
             <section id="perizinan" class="content-section">
@@ -1370,6 +1471,27 @@
 
                 // Tampilkan modal Edit Santri
                 $('#modalEditSantri').modal('show');
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Ketika tombol edit diklik
+            $('.tambah-jadwal').click(function () {
+                // Ambil data dari tombol
+                var idJadwal = $(this).data('id');
+                var idPelajaran = $(this).data('pelajaran');
+                var idUstadz = $(this).data('ustadz');
+                var waktu = $(this).data('waktu');
+                var hari = $(this).data('hari');
+
+                // Isi data ke dalam modal
+                $('#editJadwalId').val(idJadwal);
+                $('#editMataPelajaran').val(idPelajaran);
+                $('#editUstadz').val(idUstadz);
+                $('#editWaktu').val(waktu);
+                $('#editHari').val(hari);
             });
         });
     </script>

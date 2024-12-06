@@ -267,5 +267,39 @@ class Admin extends Controller
         }
     }
 
+    public function editMataPelajaran()
+    {
+        // Pastikan nama input form sama dengan yang digunakan di modal
+        $data = [
+            'id_pelajaran' => $_POST['id_pelajaran'],  // Sesuaikan dengan name pada form
+            'nama_pelajaran' => $_POST['nama_pelajaran'],
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->editDataMataPelajaran($data['id_pelajaran'], $data['nama_pelajaran'])) {
+            // Berhasil
+            error_log('Mata pelajaran berhasil diubah: ' . $data['id_pelajaran']);
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal mengubah mata pelajaran: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal mengubah mata pelajaran";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+
+    public function hapusMataPelajaran()
+    {
+        if (isset($_POST['id_pelajaran'])) {
+            $id_pelajaran = $_POST['id_pelajaran'];
+            $this->model('MataPelajaranModel')->hapusDataMataPelajaran($id_pelajaran);
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+
+
 }
 ?>

@@ -125,4 +125,50 @@ class MataPelajaranModel
         }
     }
 
+    public function editDataMataPelajaran($id, $nama_pelajaran)
+    {
+        // Membuka koneksi database
+        $this->db = new Connection;
+
+        // Query SQL untuk mengupdate data mata pelajaran
+        $stmt = "UPDATE mata_pelajaran SET nama_pelajaran = ? WHERE id_pelajaran = ?";
+
+        // Ubah menjadi array numerik
+        $params = [
+            $nama_pelajaran,  // Isi dengan nama pelajaran yang baru
+            $id               // ID pelajaran yang akan diupdate
+        ];
+
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Memeriksa apakah query berhasil
+        if (!$result) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+        return $result;
+    }
+
+    public function hapusDataMataPelajaran($id)
+    {
+        // Membuka koneksi database
+        $this->db = new Connection;
+
+        // Query SQL untuk menghapus data mata pelajaran
+        $stmt = "DELETE FROM mata_pelajaran WHERE id_pelajaran = ?";
+
+        // Ubah menjadi array numerik
+        $params = [
+            $id,  // ID pelajaran yang akan dihapus
+        ];
+
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Memeriksa apakah query berhasil
+        if (!$result) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+    }
+
 }
