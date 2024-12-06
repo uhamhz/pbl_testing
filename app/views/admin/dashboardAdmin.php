@@ -393,9 +393,14 @@
             <!-- Data Admin Section -->
             <section id="admin" class="content-section">
                 <h2>Data Admin</h2>
+
+                <!-- Search Bar -->
+                <input type="text" id="searchAdmin" class="form-control mb-3" placeholder="Cari Admin..."
+                    onkeyup="searchData('admin')">
+
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahAdmin">Tambah
                     Admin</button>
-                <table>
+                <table id="adminTable">
                     <thead>
                         <tr>
                             <th>Email</th>
@@ -410,19 +415,24 @@
                         <?php foreach ($data['admin'] as $admin): ?>
                             <tr>
                                 <td><?= htmlspecialchars($admin['email'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
-                                <td><?= htmlspecialchars($admin['password'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                                <td>*****</td> <!-- Hide the password for security purposes -->
                                 <td><?= htmlspecialchars($admin['nama_lengkap'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($admin['alamat'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
                                 <td><?= htmlspecialchars($admin['no_hp'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
-                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
-                                        data-id="<?= $admin['id'] ?>">
-                                        <input type="hidden" name="id" value="<?= $admin['id'] ?>">
-                                        <button type="button" class="btn btn-danger hapus-admin"
-                                            data-id="<?= $admin['id']; ?>">Hapus</button>
-                                    </form>
-                                    <button class="btn btn-warning" data-toggle="modal"
-                                        data-target="#modalEditAdmin<?= $admin['id'] ?>">Edit</button>
+                                    <?php if ($data['users'][0]['id'] != $admin['id']): ?>
+                                        <!-- Only show Edit and Delete buttons if not the logged-in user -->
+                                        <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
+                                            data-id="<?= $admin['id'] ?>">
+                                            <input type="hidden" name="id" value="<?= $admin['id'] ?>">
+                                            <button type="button" class="btn btn-danger hapus-admin"
+                                                data-id="<?= $admin['id']; ?>">Hapus</button>
+                                        </form>
+                                        <button class="btn btn-warning" data-toggle="modal"
+                                            data-target="#modalEditAdmin<?= $admin['id'] ?>">Edit</button>
+                                    <?php else: ?>
+                                        <!-- Hide Edit and Delete buttons for the logged-in admin -->
+                                    <?php endif; ?>
                                 </td>
                             </tr>
 
@@ -501,6 +511,7 @@
             </section>
 
 
+
             <!-- Modal Tambah Admin -->
             <div class="modal fade" id="modalTambahAdmin" tabindex="-1" role="dialog" aria-labelledby="tambahAdminLabel"
                 aria-hidden="true">
@@ -556,13 +567,17 @@
                     </div>
                 </div>
             </div>
-
             <!-- Data Santri Section -->
             <section id="santri" class="content-section">
                 <h2>Data Santri</h2>
+
+                <!-- Search Bar -->
+                <input type="text" id="searchSantri" class="form-control mb-3" placeholder="Cari Santri..."
+                    onkeyup="searchData('santri')">
+
                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahSantri">Tambah
                     Santri</button>
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="santriTable">
                     <thead>
                         <tr>
                             <th>Email</th>
@@ -1317,6 +1332,47 @@
             document.getElementById("edit-button").style.display = "inline-block";
         });
     </script>
+
+    <!-- Fungsional Search Bar -->
+    <script>
+        function searchData(section) {
+            // Menentukan ID berdasarkan section (admin atau santri)
+            let input = document.getElementById('search' + capitalizeFirstLetter(section));
+            let filter = input.value.toLowerCase();
+            let table = document.getElementById(section + 'Table');
+            let tr = table.getElementsByTagName('tr');
+
+            // Loop through all rows in the table, except the first (header)
+            for (let i = 1; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName('td');
+                let match = false;
+
+                // Loop through each td (column) in the row and check if any matches the search term
+                for (let j = 0; j < td.length - 1; j++) { // -1 to skip the last action column
+                    if (td[j]) {
+                        if (td[j].innerText.toLowerCase().includes(filter)) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Display the row if match found, otherwise hide it
+                if (match) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        // Function to capitalize first letter of the string
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    </script>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

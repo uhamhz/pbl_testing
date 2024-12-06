@@ -5,6 +5,7 @@ class Admin extends Controller
     {
         if (isset($_SESSION['role'])) {
             $role = $_SESSION['role'];
+
             if ($role == "admin") {
                 $data['users'] = $this->model("UserModel")->getUserData($_SESSION['email']);
                 $data['admin'] = $this->model("UserModel")->getAdminData();
@@ -17,6 +18,7 @@ class Admin extends Controller
                 $data['tagihan'] = $this->model("TagihanModel")->getAllDataTagihan();
                 $data['jumlahTagihan'] = $this->model("TagihanModel")->getJumlahTagihanPending();
                 $data['totalTagihan'] = $this->model("TagihanModel")->getTotalTagihanPending();
+
                 $this->view('admin/dashboardAdmin', $data);
             } else if ($role == "pengurus") {
                 header("location:http://localhost/public/Pengurus");

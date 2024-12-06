@@ -528,8 +528,7 @@
                         <input type="hidden" id="role-input" name="role"
                             value="<?= htmlspecialchars($data['users'][0]['role'], ENT_QUOTES, 'UTF-8') ?>">
                     </div>
-
-
+                    
                     <div class="form-group">
                         <label>Password</label>
                         <input type="password" id="password-input"
