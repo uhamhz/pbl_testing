@@ -301,5 +301,51 @@ class Admin extends Controller
     }
 
 
+    public function editJadwal()
+    {
+        $data = [
+            'id_jadwal' => $_POST['jadwalId'],    // Mengambil id_jadwal dari form
+            'id_pelajaran' => $_POST['id_pelajaran'],
+            'id_user' => $_POST['id_user'],
+            'waktu' => $_POST['waktu'],
+            'hari' => $_POST['hari']
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->editDataJadwal($data['id_jadwal'], $data['id_pelajaran'], $data['id_user'], $data['waktu'], $data['hari'])) {
+            // Berhasil
+            error_log('Jadwal berhasil diubah: ' . $data['id_jadwal']);
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal mengubah jadwal: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal mengubah jadwal";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+
+    public function hapusJadwal()
+    {
+        if (isset($_POST['id_jadwal'])) {
+            $id_jadwal = $_POST['id_jadwal'];
+
+            // Panggil model untuk menghapus jadwal
+            $this->model('MataPelajaranModel')->hapusDataJadwal($id_jadwal);
+
+            // Redirect setelah berhasil
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        } else {
+            // Jika tidak ada ID jadwal
+            $_SESSION['error'] = "Tidak ada jadwal yang dipilih untuk dihapus";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
+
+
+
 }
 ?>

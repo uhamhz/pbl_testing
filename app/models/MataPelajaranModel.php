@@ -171,4 +171,52 @@ class MataPelajaranModel
         }
     }
 
+    public function editDataJadwal($id_jadwal, $id_pelajaran, $id_user, $waktu, $hari)
+    {
+        // Membuka koneksi database
+        $this->db = new Connection;
+
+        // Query SQL untuk mengupdate data jadwal
+        $stmt = "UPDATE jadwal SET id_pelajaran = ?, id_user = ?, waktu = ?, hari = ? WHERE id_jadwal = ?";
+
+        // Ubah menjadi array numerik
+        $params = [
+            $id_pelajaran,  // ID pelajaran yang baru
+            $id_user,       // ID user yang baru
+            $waktu,         // Waktu yang baru
+            $hari,          // Hari yang baru
+            $id_jadwal      // ID jadwal yang akan diupdate
+        ];
+
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Memeriksa apakah query berhasil
+        if (!$result) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+    }
+
+    public function hapusDataJadwal($id_jadwal)
+    {
+        // Membuka koneksi database
+        $this->db = new Connection;
+
+        // Query SQL untuk menghapus data jadwal
+        $stmt = "DELETE FROM jadwal WHERE id_jadwal = ?";
+
+        // Ubah menjadi array numerik
+        $params = [
+            $id_jadwal,  // ID jadwal yang akan dihapus
+        ];
+
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Memeriksa apakah query berhasil
+        if (!$result) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+    }
+
 }

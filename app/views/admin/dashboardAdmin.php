@@ -885,7 +885,12 @@
                                             data-ustadz="<?= $jadwal['id_user'] ?>"
                                             data-waktu="<?= $jadwal['waktu']->format('H:i') ?>"
                                             data-hari="<?= $jadwal['hari'] ?>">Edit</button>
-                                        <button class="btn btn-danger btn-sm delete-jadwal">Hapus</button>
+                                        <form action="<?= BASEURL; ?>/Admin/hapusJadwal" method="POST" style="display: inline;">
+                                            <!-- Menggunakan input hidden untuk mengirimkan id_jadwal ke controller -->
+                                            <input type="hidden" name="id_jadwal" value="<?= $jadwal['id_jadwal'] ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -970,6 +975,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            <!-- Form untuk Edit Jadwal -->
                             <form id="formEditJadwal" action="<?= BASEURL; ?>/Admin/editJadwal" method="POST">
                                 <input type="hidden" id="editJadwalId" name="jadwalId">
 
@@ -977,7 +983,6 @@
                                     <label for="editMataPelajaran">Mata Pelajaran:</label>
                                     <select class="form-control" id="editMataPelajaran" name="id_pelajaran" required>
                                         <option value="" disabled selected>Pilih Mata Pelajaran</option>
-                                        <!-- Looping untuk menampilkan mata pelajaran -->
                                         <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
                                             <option value="<?= $pelajaran['id_pelajaran'] ?>">
                                                 <?= $pelajaran['nama_pelajaran'] ?>
