@@ -151,4 +151,73 @@ class TagihanModel
             return false;
         }
     }
+
+    public function tambahDataBuktiPembayaran($data, $id)
+    {
+        // Pastikan koneksi database valid
+        if (!$this->db || !$this->db->conn) {
+            $this->db = new Connection();  // Inisialisasi koneksi jika belum ada
+        }
+
+        // Menyusun query untuk update bukti pembayaran
+        $query = "UPDATE tagihan SET bukti_pembayaran = ? WHERE id_tagihan = ?";
+
+        // Parameter yang akan diikatkan ke query
+        $params = [
+            $data['bukti_pembayaran'], // Path bukti pembayaran
+            $id                         // ID tagihan
+        ];
+
+        try {
+            // Menjalankan query dengan sqlsrv_query
+            $stmt = sqlsrv_query($this->db->conn, $query, $params);
+
+            if ($stmt === false) {
+                // Jika query gagal, tampilkan error
+                $errors = sqlsrv_errors();
+                throw new Exception("Database error: " . print_r($errors, true));
+            }
+
+            // Jika berhasil, kembalikan true
+            return true;
+        } catch (Exception $e) {
+            // Tangani error dan catat di log
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateStatusTagihan($data)
+    {
+        $this->db = new Connection;
+
+        // Query untuk memperbarui status tagihan berdasarkan id_tagihan
+        $stmt = "
+        UPDATE tagihan
+        SET status = ?
+        WHERE id_tagihan = ?
+        ";
+
+        error_log("Query yang dijalankan: " . $stmt);
+
+        // Bind parameter dan jalankan query
+        $query = sqlsrv_query($this->db->conn, $stmt, array(
+            $data['status'],  // Status baru
+            $data['id_tagihan'] // ID tagihan yang ingin diperbarui
+        ));
+
+        if ($query === false) {
+            // Jika query gagal, log error
+            error_log('Gagal mengubah status tagihan: ' . print_r(sqlsrv_errors(), true));
+            return false;
+        }
+
+        // Log bahwa status tagihan berhasil diperbarui
+        error_log("Status tagihan dengan ID " . $data['id_tagihan'] . " berhasil diperbarui.");
+
+        
+
+        return true;  // Jika berhasil
+    }
+
 }

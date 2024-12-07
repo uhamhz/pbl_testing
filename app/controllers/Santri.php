@@ -103,5 +103,72 @@ class Santri extends Controller
             exit;
         }
     }
+
+    public function tambahBuktiPembayaran()
+    {
+        // Pastikan file di-upload
+        if (!isset($_FILES['paymentProof']) || $_FILES['paymentProof']['error'] != UPLOAD_ERR_OK) {
+            $_SESSION['error'] = "Bukti pembayaran tidak boleh kosong atau terjadi error saat upload!";
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        }
+
+        // Menangani file yang di-upload
+        $file = $_FILES['paymentProof'];
+        $fileNameOriginal = basename($file['name']); // Nama asli file
+        $fileTmpName = $file['tmp_name'];
+        $fileSize = $file['size'];
+        $fileType = $file['type'];
+
+        // Validasi tipe file dan ukuran file
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxSize = 5 * 1024 * 1024; // 5MB
+        if (!in_array($fileType, $allowedTypes) || $fileSize > $maxSize) {
+            $_SESSION['error'] = "Format file tidak didukung atau ukuran file terlalu besar.";
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        }
+
+        // Buat nama file unik
+        $uniqueFileName = uniqid() . '-' . str_replace(' ', '_', $fileNameOriginal); // Hindari spasi
+        $uploadPath = '../public/img/buktiPembayaran/';
+
+        // Pastikan folder penyimpanan ada
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);  // Membuat folder jika belum ada
+        }
+
+        // Path lengkap untuk menyimpan file di server
+        $filePath = $uploadPath . $uniqueFileName;
+
+        // Pindahkan file dari lokasi sementara ke lokasi penyimpanan
+        if (move_uploaded_file($fileTmpName, $filePath)) {
+            error_log("File berhasil dipindahkan ke: " . $filePath);
+        } else {
+            error_log("Gagal memindahkan file ke: " . $filePath);
+            $_SESSION['error'] = "Gagal menyimpan bukti pembayaran.";
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        }
+
+        // Simpan hanya nama file di database
+        $data = ['bukti_pembayaran' => $uniqueFileName];
+
+        // Panggil model untuk menambahkan bukti pembayaran
+        if ($this->model('TagihanModel')->tambahDataBuktiPembayaran($data, $_POST['id'])) {
+            // Jika berhasil
+            error_log('Bukti pembayaran berhasil ditambahkan untuk ID: ' . $_POST['id']);
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        } else {
+            // Jika gagal
+            error_log('Gagal menambahkan bukti pembayaran untuk ID: ' . $_POST['id']);
+            $_SESSION['error'] = "Gagal menambahkan bukti pembayaran";
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        }
+    }
+
+
 }
 ?>

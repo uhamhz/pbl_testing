@@ -528,7 +528,7 @@
                         <input type="hidden" id="role-input" name="role"
                             value="<?= htmlspecialchars($data['users'][0]['role'], ENT_QUOTES, 'UTF-8') ?>">
                     </div>
-                    
+
                     <div class="form-group">
                         <label>Password</label>
                         <input type="password" id="password-input"
@@ -777,8 +777,6 @@
                 </div>
             </div>
 
-
-
             <section id="pembayaran" class="content-section">
                 <h2>Pembayaran</h2>
                 <div class="dashboard-stats">
@@ -809,7 +807,6 @@
                             $statusClass = "";
                             $statusText = ""; // Menentukan teks untuk status tagihan
                     
-                            // Perbaiki pengecekan status sesuai dengan nilai yang ada di database
                             if ($status == 'pending') {
                                 $statusClass = "status-pending";
                                 $statusText = "Menunggu Verifikasi Admin";
@@ -828,9 +825,11 @@
 
                             // Jika status 'belum lunas', tampilkan form untuk mengirim bukti pembayaran
                             if ($status == 'belum lunas') {
-                                echo "<form id='paymentForm{$tagihan['id_tagihan']}' method='post' enctype='multipart/form-data'>";
+                                // Form untuk upload bukti pembayaran
+                                echo "<form id='paymentForm{$tagihan['id_tagihan']}' action='" . BASEURL . "/Santri/tambahBuktiPembayaran' method='POST' enctype='multipart/form-data'>";
+                                echo "<input type='hidden' name='id' value='{$tagihan['id_tagihan']}'>"; // Input tersembunyi untuk id_tagihan
                                 echo "<input type='file' id='paymentProof{$tagihan['id_tagihan']}' name='paymentProof' accept='image/*'>";
-                                echo "<button type='button' onclick='uploadPaymentProof({$tagihan['id_tagihan']})'>Kirim Bukti Pembayaran</button>";
+                                echo "<button type='submit'>Kirim Bukti Pembayaran</button>";
                                 echo "</form>";
                             } else if ($status == 'lunas' || $status == 'pending') {
                                 // Jika sudah lunas atau ditolak, tampilkan bukti pembayaran yang sudah diunggah
@@ -899,24 +898,6 @@
             // Ganti tombol "Ubah" menjadi terlihat kembali
             document.getElementById("edit-button").style.display = "inline-block";
         });
-    </script>
-
-    <script>
-        function uploadPaymentProof(month) {
-            var formId = 'paymentForm' + month;
-            var formData = new FormData(document.getElementById(formId));
-            fetch('url_server_anda_untuk_mengunggah/' + month, {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert('Bukti pembayaran untuk ' + month + ' berhasil diunggah!');
-                })
-                .catch(error => {
-                    alert('Terjadi kesalahan saat mengunggah bukti pembayaran untuk ' + month + '.');
-                });
-        }
     </script>
 
     <script>

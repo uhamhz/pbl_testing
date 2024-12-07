@@ -1090,6 +1090,7 @@
                 </table>
             </section>
 
+            <!-- Tagihan Section -->
             <section id="tagihan" class="content-section">
                 <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalBuatTagihan">Buat Tagihan
                     Baru</button>
@@ -1119,42 +1120,36 @@
                                 <!-- Tanggal Jatuh Tempo -->
                                 <td>
                                     <?php
-                                    // Pastikan jatuh_tempo ada dan valid
                                     if (isset($tagihan['jatuh_tempo']) && !empty($tagihan['jatuh_tempo'])) {
-                                        // Cek apakah jatuh_tempo sudah dalam bentuk objek DateTime
-                                        if ($tagihan['jatuh_tempo'] instanceof DateTime) {
-                                            // Jika sudah DateTime, format langsung
-                                            echo $tagihan['jatuh_tempo']->format('d F Y');
-                                        } else {
-                                            // Jika bukan DateTime (misalnya string), coba buat objek DateTime
+                                        // Cek apakah jatuh_tempo merupakan string yang valid
+                                        $jatuhTempo = $tagihan['jatuh_tempo'];
+
+                                        // Pastikan format tanggal valid sebelum diubah ke DateTime
+                                        if (is_string($jatuhTempo)) {
                                             try {
-                                                $date = new DateTime($tagihan['jatuh_tempo']);
-                                                echo $date->format('d F Y');
+                                                $date = new DateTime($jatuhTempo);  // Konversi string menjadi objek DateTime
+                                                echo $date->format('d F Y');  // Formatkan ke tanggal yang lebih mudah dibaca
                                             } catch (Exception $e) {
-                                                echo "Format Tanggal Salah";
+                                                echo "Format Tanggal Salah";  // Menampilkan pesan jika format salah
                                             }
+                                        } else {
+                                            echo "Format Tanggal Tidak Valid";  // Tampilkan pesan jika bukan string
                                         }
                                     } else {
-                                        echo "Tanggal Tidak Tersedia"; // Tampilkan pesan jika jatuh_tempo kosong atau NULL
+                                        echo "Tanggal Tidak Tersedia";  // Tampilkan pesan jika jatuh_tempo kosong
                                     }
                                     ?>
                                 </td>
 
                                 <!-- Status -->
-                                <td>
-                                    <?php
-                                    $status = ucfirst($tagihan['status']); // Mengubah status menjadi kapital
-                                    echo $status;
-                                    ?>
-                                </td>
+                                <td><?php echo ucfirst($tagihan['status']); ?></td>
 
                                 <!-- Bukti Pembayaran -->
                                 <td>
                                     <?php if (!empty($tagihan['bukti_pembayaran'])): ?>
-                                        <!-- Tombol Lihat Bukti Pembayaran -->
                                         <button class="btn btn-secondary btn-sm" data-toggle="modal"
                                             data-target="#modalLihatBukti"
-                                            data-url="<?php echo htmlspecialchars($tagihan['bukti_pembayaran']); ?>">
+                                            data-url="<?php echo BASEURL . '/img/buktiPembayaran/' . htmlspecialchars($tagihan['bukti_pembayaran']); ?>">
                                             Lihat Bukti
                                         </button>
                                     <?php else: ?>
@@ -1191,10 +1186,93 @@
                 </table>
             </section>
 
+            <script>
+                function ubahStatus(idTagihan, status) {
+                    var data = {
+                        id_tagihan: idTagihan,
+                        status: status
+                    };
+
+                    $.ajax({
+                        url: "<?php echo BASEURL; ?>/Admin/editStatusTagihan",  // Endpoint controller
+                        type: "POST",  // Menggunakan metode POST
+                        data: data,  // Data yang dikirim
+                        dataType: "json",  // Pastikan server merespons dalam format JSON
+                        success: function (response) {
+                            if (response.success) {
+                                // Mengubah status berdasarkan status baru yang diterima
+                                var statusLabel = getStatusLabel(response.status);
+                                var statusBadgeClass = getStatusBadgeClass(response.status);
+
+                                // Memperbarui status pada elemen dengan ID yang sesuai
+                                $('#statusTagihan_' + idTagihan).html('<span class="badge ' + statusBadgeClass + '">' + statusLabel + '</span>');
+
+                                // Menampilkan SweetAlert dengan notifikasi sukses
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Status Tagihan Berhasil Diubah',
+                                    text: 'Status tagihan berhasil diperbarui menjadi ' + statusLabel,
+                                    showConfirmButton: true,
+                                    timer: 3000  // Menampilkan alert selama 3 detik
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                // Menampilkan SweetAlert dengan notifikasi error
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal Mengubah Status',
+                                    text: 'Terjadi kesalahan saat mengubah status tagihan.',
+                                    showConfirmButton: true
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Menampilkan SweetAlert dengan notifikasi error jika AJAX gagal
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi Kesalahan',
+                                text: 'Gagal menghubungi server. Coba lagi nanti.',
+                                showConfirmButton: true
+                            });
+                        }
+                    });
+                }
+            </script>
+
+            <script>
+                function getStatusLabel(status) {
+                    switch (status) {
+                        case 'lunas':
+                            return 'Lunas';
+                        case 'pending':
+                            return 'Pending';
+                        case 'belum lunas':
+                            return 'Belum Lunas';
+                        default:
+                            return 'Status Tidak Dikenal';
+                    }
+                }
+
+                function getStatusBadgeClass(status) {
+                    switch (status) {
+                        case 'lunas':
+                            return 'badge-success';
+                        case 'pending':
+                            return 'badge-warning';
+                        case 'belum lunas':
+                            return 'badge-danger';
+                        default:
+                            return 'badge-secondary';
+                    }
+                }
+            </script>
+
+
             <!-- Modal untuk melihat bukti pembayaran -->
             <div class="modal fade" id="modalLihatBukti" tabindex="-1" role="dialog"
                 aria-labelledby="modalLihatBuktiLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalLihatBuktiLabel">Lihat Bukti Pembayaran</h5>
@@ -1202,31 +1280,15 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <img id="buktiImage" src="" alt="Bukti Pembayaran" class="img-fluid" />
+                        <div class="modal-body text-center">
+                            <img id="buktiPembayaranImg" src="" alt="Bukti Pembayaran" class="img-fluid">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <script>
-                // JavaScript untuk melihat bukti pembayaran
-                $('#modalLihatBukti').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget); // Tombol yang memicu modal
-                    var url = button.data('url'); // Ambil URL bukti pembayaran
-                    var modal = $(this);
-                    modal.find('#buktiImage').attr('src', url); // Set URL ke gambar bukti
-                });
-
-                // JavaScript untuk mengubah status
-                function ubahStatus(id, status) {
-                    if (confirm("Apakah Anda yakin ingin mengubah status tagihan ini menjadi " + status + "?")) {
-                        // Kirim request ke server untuk mengubah status
-                        window.location.href = "ubah_status.php?id=" + id + "&status=" + status;
-                    }
-                }
-            </script>
-
 
             <!-- Modal Buat Tagihan Baru -->
             <div class="modal fade" id="modalBuatTagihan" tabindex="-1" role="dialog"
@@ -1244,7 +1306,7 @@
                                 <div class="form-group">
                                     <label for="idUsers">Nama Santri:</label>
                                     <select class="form-control" id="idUsers" name="id_users" required>
-                                        <option value="">Pilih Santri</option> <!-- Default option -->
+                                        <option value="">Pilih Santri</option>
                                         <?php foreach ($data['santri'] as $user): ?>
                                             <option value="<?= $user['id']; ?>">
                                                 <?= htmlspecialchars($user['nama_lengkap'], ENT_QUOTES, 'UTF-8'); ?>
@@ -1298,6 +1360,16 @@
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 $(document).ready(function () {
+                    // Tangani event klik tombol 'Lihat Bukti'
+                    $('#modalLihatBukti').on('show.bs.modal', function (event) {
+                        var button = $(event.relatedTarget); // Tombol yang diklik
+                        var imageUrl = button.data('url');   // Ambil URL gambar dari data-url tombol
+
+                        // Setel URL gambar di modal
+                        var modal = $(this);
+                        modal.find('#buktiPembayaranImg').attr('src', imageUrl);
+                    });
+
                     $('#btnSimpanTagihan').on('click', function (e) {
                         e.preventDefault();
 
@@ -1326,13 +1398,12 @@
                             contentType: false,
                             dataType: 'json',
                             success: function (response) {
-                                console.log('Success Response:', response);
                                 if (response.status === 'success') {
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Berhasil!',
                                         text: response.message
-                                    }).then((result) => {
+                                    }).then(() => {
                                         location.reload();
                                     });
                                 } else {
@@ -1344,21 +1415,14 @@
                                 }
                             },
                             error: function (xhr, status, error) {
-                                console.error('Error Details:', {
-                                    status: status,
-                                    error: error,
-                                    responseText: xhr.responseText,
-                                    responseJSON: xhr.responseJSON
-                                });
-
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal!',
                                     html: `
-                Status: ${status}<br>
-                Error: ${error}<br>
-                Response: ${xhr.responseText}
-            `
+                            Status: ${status}<br>
+                            Error: ${error}<br>
+                            Response: ${xhr.responseText}
+                        `
                                 });
                             }
                         });
@@ -1366,77 +1430,6 @@
                 });
             </script>
 
-            <!-- Modal Lihat Bukti Pembayaran -->
-            <div class="modal fade" id="modalBuktiPembayaran" tabindex="-1" role="dialog"
-                aria-labelledby="buktiPembayaranLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="buktiPembayaranLabel">Bukti Pembayaran</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body text-center">
-                            <img id="buktiPembayaranImg" src="" alt="Bukti Pembayaran" class="img-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Modal Buat Tagihan Baru -->
-            <div class="modal fade" id="modalBuatTagihan" tabindex="-1" role="dialog" aria-labelledby="buatTagihanLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="buatTagihanLabel">Buat Tagihan Baru</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="formBuatTagihan">
-                                <div class="form-group">
-                                    <label for="santri">Santri:</label>
-                                    <input type="text" class="form-control" id="santri" name="santri"
-                                        placeholder="Masukkan nama santri" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="jenisTagihan">Jenis Tagihan:</label>
-                                    <input type="text" class="form-control" id="jenisTagihan" name="jenisTagihan"
-                                        placeholder="Contoh: SPP Mei" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="jumlahTagihan">Jumlah:</label>
-                                    <input type="number" class="form-control" id="jumlahTagihan" name="jumlahTagihan"
-                                        placeholder="Masukkan jumlah tagihan" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="statusTagihan">Status:</label>
-                                    <select class="form-control" id="statusTagihan" name="statusTagihan">
-                                        <option value="pending">Pending</option>
-                                        <option value="paid">Paid</option>
-                                        <option value="unpaid">Unpaid</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="jatuhTempo">Jatuh Tempo:</label>
-                                    <input type="date" class="form-control" id="jatuhTempo" name="jatuhTempo" required>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary" form="formBuatTagihan">Simpan</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Kembali ke home Section -->
             <div id="exitConfirmationModal" class="modal" style="display: none;">

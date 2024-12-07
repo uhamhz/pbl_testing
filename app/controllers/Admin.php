@@ -345,6 +345,30 @@ class Admin extends Controller
         }
     }
 
+    public function editStatusTagihan()
+    {
+        // Ambil data dari POST
+        $id_tagihan = $_POST['id_tagihan'];
+        $status = $_POST['status'];
+
+        // Log data yang diterima untuk debugging
+        error_log("Data diterima - ID Tagihan: " . $id_tagihan . " | Status: " . $status);
+
+        $data = [
+            'id_tagihan' => $id_tagihan,
+            'status' => $status
+        ];
+
+        // Pastikan model ini menangani update status tagihan
+        if ($this->model('TagihanModel')->updateStatusTagihan($data)) {
+            // Mengirimkan response JSON dengan status success
+            echo json_encode(['success' => true, 'status' => $status]);
+        } else {
+            // Jika gagal, log kesalahan dan kirimkan response error
+            error_log("Gagal memperbarui status tagihan dengan ID: " . $id_tagihan);
+            echo json_encode(['success' => false]);
+        }
+    }
 
 
 }
