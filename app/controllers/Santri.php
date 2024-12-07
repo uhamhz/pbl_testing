@@ -156,19 +156,30 @@ class Santri extends Controller
 
         // Panggil model untuk menambahkan bukti pembayaran
         if ($this->model('TagihanModel')->tambahDataBuktiPembayaran($data, $_POST['id'])) {
-            // Jika berhasil
-            error_log('Bukti pembayaran berhasil ditambahkan untuk ID: ' . $_POST['id']);
-            header('Location: ' . BASEURL . '/santri');
-            exit;
+            // Setelah menambahkan bukti pembayaran, update status menjadi 'pending'
+            $statusData = [
+                'status' => 'pending',  // Status baru
+                'id_tagihan' => $_POST['id'] // ID tagihan yang ingin diperbarui
+            ];
+
+            // Memperbarui status tagihan menjadi 'pending'
+            if ($this->model('TagihanModel')->updateStatusTagihan($statusData)) {
+                // Jika berhasil
+                error_log('Bukti pembayaran berhasil ditambahkan dan status diubah menjadi pending untuk ID: ' . $_POST['id']);
+                header('Location: ' . BASEURL . '/santri');
+                exit;
+            } else {
+                $_SESSION['error'] = "Gagal memperbarui status tagihan.";
+                header('Location: ' . BASEURL . '/santri');
+                exit;
+            }
         } else {
-            // Jika gagal
+            // Jika gagal menambahkan bukti pembayaran
             error_log('Gagal menambahkan bukti pembayaran untuk ID: ' . $_POST['id']);
             $_SESSION['error'] = "Gagal menambahkan bukti pembayaran";
             header('Location: ' . BASEURL . '/santri');
             exit;
         }
     }
-
-
 }
 ?>

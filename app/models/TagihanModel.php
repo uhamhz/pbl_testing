@@ -198,8 +198,6 @@ class TagihanModel
         WHERE id_tagihan = ?
         ";
 
-        error_log("Query yang dijalankan: " . $stmt);
-
         // Bind parameter dan jalankan query
         $query = sqlsrv_query($this->db->conn, $stmt, array(
             $data['status'],  // Status baru
@@ -214,8 +212,6 @@ class TagihanModel
 
         // Log bahwa status tagihan berhasil diperbarui
         error_log("Status tagihan dengan ID " . $data['id_tagihan'] . " berhasil diperbarui.");
-
-        
 
         return true;  // Jika berhasil
     }

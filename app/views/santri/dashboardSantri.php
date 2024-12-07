@@ -823,21 +823,26 @@
 
                             echo "<p>Status: <span class='status-badge $statusClass'>" . htmlspecialchars($statusText) . "</span></p>";
 
-                            // Jika status 'belum lunas', tampilkan form untuk mengirim bukti pembayaran
+                            // If the status is 'belum lunas', display the payment proof form
                             if ($status == 'belum lunas') {
-                                // Form untuk upload bukti pembayaran
+                                // Form for uploading the payment proof
                                 echo "<form id='paymentForm{$tagihan['id_tagihan']}' action='" . BASEURL . "/Santri/tambahBuktiPembayaran' method='POST' enctype='multipart/form-data'>";
-                                echo "<input type='hidden' name='id' value='{$tagihan['id_tagihan']}'>"; // Input tersembunyi untuk id_tagihan
+                                echo "<input type='hidden' name='id' value='{$tagihan['id_tagihan']}'>"; // Hidden input for id_tagihan
                                 echo "<input type='file' id='paymentProof{$tagihan['id_tagihan']}' name='paymentProof' accept='image/*'>";
                                 echo "<button type='submit'>Kirim Bukti Pembayaran</button>";
                                 echo "</form>";
                             } else if ($status == 'lunas' || $status == 'pending') {
-                                // Jika sudah lunas atau ditolak, tampilkan bukti pembayaran yang sudah diunggah
-                                $buktiPembayaran = htmlspecialchars($tagihan['bukti_pembayaran']);
+                                // If already paid or pending, display the uploaded payment proof
+                                $buktiPembayaran = $tagihan['bukti_pembayaran'];
                                 if (!empty($buktiPembayaran)) {
-                                    echo "<p>Bukti Pembayaran: <a href='$buktiPembayaran' target='_blank'>Lihat Bukti</a></p>";
+                                    // Use htmlspecialchars only if $buktiPembayaran is not null
+                                    $buktiPembayaran = htmlspecialchars($buktiPembayaran, ENT_QUOTES, 'UTF-8');
+                                    echo "<p>Bukti Pembayaran: <button class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#modalLihatBuktiSantri' data-url='" . BASEURL . "/img/buktiPembayaran/" . htmlspecialchars($buktiPembayaran) . "'>Lihat Bukti</button></p>";
+                                } else {
+                                    echo "<button class='btn btn-secondary btn-sm' disabled>Bukti Tidak Tersedia</button>";
                                 }
                             }
+
 
                             echo "</div>"; // End of stat-card
                         }
@@ -847,6 +852,28 @@
                     ?>
                 </div>
             </section>
+
+            <!-- Modal untuk melihat bukti pembayaran -->
+            <div class="modal fade" id="modalLihatBuktiSantri" tabindex="-1" role="dialog"
+                aria-labelledby="modalLihatBuktiSantriLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalLihatBuktiSantriLabel">Lihat Bukti Pembayaran</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img id="buktiPembayaranImgSantri" src="" alt="Bukti Pembayaran" class="img-fluid">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Kembali ke home Section -->
             <div id="exitConfirmationModal" class="modal" style="display: none;">
@@ -864,6 +891,17 @@
 
         </main>
     </div>
+    
+    <script>
+        $(document).ready(function () {
+            $('#modalLihatBuktiSantri').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Tombol yang memicu modal
+                var imgUrl = button.data('url'); // Ambil info dari data-url
+                var modal = $(this);
+                modal.find('.modal-body img').attr('src', imgUrl); // Ganti sumber gambar modal
+            });
+        });
+    </script>
 
 
     <script>
