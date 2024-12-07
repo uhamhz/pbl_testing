@@ -1120,23 +1120,35 @@
                                 <!-- Tanggal Jatuh Tempo -->
                                 <td>
                                     <?php
+                                    // Pastikan jatuh_tempo ada dan valid
                                     if (isset($tagihan['jatuh_tempo']) && !empty($tagihan['jatuh_tempo'])) {
-                                        // Cek apakah jatuh_tempo merupakan string yang valid
-                                        $jatuhTempo = $tagihan['jatuh_tempo'];
-
-                                        // Pastikan format tanggal valid sebelum diubah ke DateTime
-                                        if (is_string($jatuhTempo)) {
-                                            try {
-                                                $date = new DateTime($jatuhTempo);  // Konversi string menjadi objek DateTime
-                                                echo $date->format('d F Y');  // Formatkan ke tanggal yang lebih mudah dibaca
-                                            } catch (Exception $e) {
-                                                echo "Format Tanggal Salah";  // Menampilkan pesan jika format salah
-                                            }
+                                        // Cek apakah jatuh_tempo sudah dalam bentuk objek DateTime
+                                        if ($tagihan['jatuh_tempo'] instanceof DateTime) {
+                                            // Jika sudah DateTime, format langsung
+                                            echo $tagihan['jatuh_tempo']->format('d F Y');
                                         } else {
-                                            echo "Format Tanggal Tidak Valid";  // Tampilkan pesan jika bukan string
+                                            // Jika bukan objek DateTime (misalnya string), coba buat objek DateTime
+                                            $jatuhTempo = $tagihan['jatuh_tempo'];
+
+                                            // Pastikan format tanggal valid sebelum diubah ke DateTime
+                                            if (is_string($jatuhTempo)) {
+                                                try {
+                                                    // Mengonversi string menjadi objek DateTime
+                                                    $date = new DateTime($jatuhTempo);
+                                                    // Formatkan objek DateTime menjadi string yang bisa ditampilkan
+                                                    echo $date->format('d F Y');
+                                                } catch (Exception $e) {
+                                                    // Menampilkan pesan jika format tanggal tidak valid
+                                                    echo "Format Tanggal Salah";
+                                                }
+                                            } else {
+                                                // Jika jatuh_tempo bukan string
+                                                echo "Format Tanggal Tidak Valid";
+                                            }
                                         }
                                     } else {
-                                        echo "Tanggal Tidak Tersedia";  // Tampilkan pesan jika jatuh_tempo kosong
+                                        // Jika jatuh_tempo kosong atau NULL
+                                        echo "Tanggal Tidak Tersedia";
                                     }
                                     ?>
                                 </td>
