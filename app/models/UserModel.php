@@ -215,38 +215,33 @@ class UserModel
             $this->db = new Connection();
         }
 
-        // Jangan hash password, biarkan sebagai string biasa
-        if (empty($data['password'])) {
-            unset($data['password']);  // Jika tidak ada password, jangan update password
-        }
-
-        // Query untuk mengupdate data user
+        // Query dasar untuk update data user
         $query = "UPDATE users 
-                  SET email = ?, 
-                      nama_lengkap = ?, 
-                      alamat = ?, 
-                      no_hp = ?,
-                      role = ?";
+              SET email = ?, 
+                  nama_lengkap = ?, 
+                  alamat = ?, 
+                  no_hp = ?, 
+                  role = ?,
+                  picture = ?";  // Menambahkan kolom picture
 
-        // Tentukan parameter untuk query
+        // Parameter untuk query
         $params = [
             $data['email'],
             $data['nama_lengkap'],
             $data['alamat'],
             $data['no_hp'],
-            $data['role']
+            $data['role'],
+            $data['picture']  // Menambahkan path gambar profil
         ];
 
-        // Jika password ada, tambahkan ke query dan params
+        // Jika ada perubahan password, tambahkan ke query dan params
         if (!empty($data['password'])) {
-            $query .= ", password = ?";  // Update password jika diberikan
-            $params[] = $data['password'];  // Gunakan password langsung (bukan hash)
+            $query .= ", password = ?";
+            $params[] = $data['password'];
         }
 
-        // Menambahkan WHERE clause untuk memastikan hanya user tertentu yang diupdate
+        // Menambahkan WHERE clause
         $query .= " WHERE id = ?";
-
-        // Menambahkan id ke parameter untuk WHERE clause
         $params[] = $id;
 
         // Eksekusi query

@@ -75,21 +75,52 @@ class Santri extends Controller
 
     public function edit()
     {
-        // Validasi input
-        // if (empty($_POST['email']) || empty($_POST['password'])) {
-        //     $_SESSION['error'] = "Email dan password wajib diisi";
-        //     header('Location: ' . BASEURL . '/Santri/#santri');
-        //     exit;
-        // }
+        // Validasi input dasar
+        if (empty($_POST['nama_lengkap']) || empty($_POST['alamat']) || empty($_POST['no_hp'])) {
+            $_SESSION['error'] = "Nama lengkap, alamat, dan no hp wajib diisi";
+            header('Location: ' . BASEURL . '/santri');
+            exit;
+        }
+
+        // Menyiapkan data yang akan diupdate
         $data = [
-            'email' => $_POST['email'],
+            'email' => $_POST['email'],  // Email biasanya tidak diubah, tetap terima dari form
             'nama_lengkap' => $_POST['nama_lengkap'],
             'alamat' => $_POST['alamat'],
             'no_hp' => $_POST['no_hp'],
-            'role' => $_POST['role'], //
-            'password' => $_POST['password'],
+            'role' => $_POST['role'],  // Role biasanya tidak diubah, tetap terima dari form
         ];
-        // Di controller
+
+        // Handle profile picture upload
+        if (!empty($_FILES['picture']['name'])) {
+            $fileTmpPath = $_FILES['picture']['tmp_name'];
+            $fileName = $_FILES['picture']['name'];
+            $fileSize = $_FILES['picture']['size'];
+            $fileType = $_FILES['picture']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
+
+            if (in_array($fileExtension, $allowedfileExtensions) && $fileSize < 5000000) {
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                $uploadFileDir = '../public/img/Profile/';
+                $dest_path = $uploadFileDir . $newFileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $data['picture'] = $newFileName;
+                } else {
+                    $_SESSION['error'] = 'Error dalam mengupload file.';
+                    header('Location: ' . BASEURL . '/santri');
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = 'Upload gagal. Tipe file tidak didukung atau file terlalu besar.';
+                header('Location: ' . BASEURL . '/santri');
+                exit;
+            }
+        }
+
+        // Update data user
         if ($this->model('UserModel')->editDataUser($data, $_POST['id'])) {
             // Berhasil
             error_log('User berhasil diubah: ' . $data['email']);

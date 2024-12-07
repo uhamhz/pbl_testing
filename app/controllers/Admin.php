@@ -67,7 +67,7 @@ class Admin extends Controller
 
     public function edit()
     {
-        // Validasi input
+        // Validasi input dasar
         if (empty($_POST['email']) || empty($_POST['nama_lengkap']) || empty($_POST['no_hp']) || empty($_POST['alamat'])) {
             $_SESSION['error'] = "Semua field wajib diisi";
             header('Location: ' . BASEURL . '/admin');
@@ -80,30 +80,52 @@ class Admin extends Controller
             'nama_lengkap' => $_POST['nama_lengkap'],
             'alamat' => $_POST['alamat'],
             'no_hp' => $_POST['no_hp'],
-            'role' => $_POST['role']
+            'role' => $_POST['role'],
+            'picture' => null // Inisialisasi null untuk foto profil
         ];
 
-        // Jika password diberikan, simpan password sebagai string biasa (tidak di-hash)
+        // Jika password diberikan, simpan password
         if (!empty($_POST['password'])) {
-            $data['password'] = $_POST['password'];
+            $data['password'] = $_POST['password'];  // Tanpa perubahan pada password
         }
 
-        // Jika password null (tidak diubah), hapus dari data untuk update
-        if (empty($data['password'])) {
-            unset($data['password']);
+        // Menangani upload gambar profil
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['profile_pic']['tmp_name'];
+            $fileName = $_FILES['profile_pic']['name'];
+            $fileSize = $_FILES['profile_pic']['size'];
+            $fileType = $_FILES['profile_pic']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
+
+            if (in_array($fileExtension, $allowedfileExtensions) && $fileSize < 5000000) {
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                $uploadFileDir = '../public/img/Profile/';
+                $dest_path = $uploadFileDir . $newFileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $data['picture'] = $newFileName;  // Simpan hanya nama file
+                } else {
+                    $_SESSION['error'] = 'Error dalam mengupload file.';
+                    header('Location: ' . BASEURL . '/admin');
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = 'Upload gagal. Tipe file tidak didukung atau file terlalu besar.';
+                header('Location: ' . BASEURL . '/admin');
+                exit;
+            }
         }
 
         // Cek apakah data berhasil diperbarui
         $userModel = $this->model('UserModel');
-
         try {
             if ($userModel->editDataUser($data, $_POST['id'])) {
-                // Berhasil memperbarui data user
                 $_SESSION['success'] = "Data berhasil diperbarui.";
                 header('Location: ' . BASEURL . '/admin');
                 exit;
             } else {
-                // Gagal memperbarui data
                 $_SESSION['error'] = "Gagal memperbarui data.";
                 header('Location: ' . BASEURL . '/admin');
                 exit;
@@ -114,8 +136,6 @@ class Admin extends Controller
             exit;
         }
     }
-
-
 
 
     public function hapus()
@@ -370,6 +390,49 @@ class Admin extends Controller
         }
     }
 
+    public function editProfilePicture()
+    {
+        if (!isset($_FILES['profile_pic']) || $_FILES['profile_pic']['error'] != UPLOAD_ERR_OK) {
+            $_SESSION['error'] = "Terjadi kesalahan upload!";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
 
+        $file = $_FILES['profile_pic'];
+        $fileNameOriginal = basename($file['name']);
+        $fileExtension = strtolower(pathinfo($fileNameOriginal, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpeg', 'jpg', 'png'];
+
+        if (!in_array($fileExtension, $allowedTypes) || $file['size'] > (5 * 1024 * 1024)) {
+            $_SESSION['error'] = "File tidak valid atau terlalu besar!";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+
+        $newFileName = uniqid('img_', true) . '.' . $fileExtension;
+        $uploadPath = '../public/img/Profile/';
+
+        // Membuat folder jika belum ada
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        $filePath = $uploadPath . $newFileName;
+
+        if (move_uploaded_file($file['tmp_name'], $filePath)) {
+            if ($this->model('UserModel')->editProfilePicture($_POST['id'], $newFileName)) {
+                header('Location: ' . BASEURL . '/Admin');
+                exit;
+            } else {
+                $_SESSION['error'] = "Gagal mengubah profile picture";
+                header('Location: ' . BASEURL . '/Admin');
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "Gagal menyimpan file!";
+            header('Location: ' . BASEURL . '/Admin');
+            exit;
+        }
+    }
 }
 ?>

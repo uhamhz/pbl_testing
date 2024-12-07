@@ -113,6 +113,21 @@
             margin-bottom: 2rem;
         }
 
+        .santri-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            padding: 3px;
+            background: var(--card-color);
+            transition: var(--transition);
+        }
+
+        .santri-avatar:hover {
+            transform: scale(1.05);
+        }
+
         .stat-card {
             background: var(--card-color);
             padding: 1.5rem;
@@ -360,9 +375,20 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="/api/placeholder/100/100" alt="Santri Avatar" class="santri-avatar">
-                <h2 id="santriName"><?= $data['users']['0']['nama_lengkap'] ?></h2>
-                <p>Kelas 10</p>
+                <!-- Profil Pengguna -->
+                <td>
+                    <?php if (!empty($data['users']['0']['picture'])): ?>
+                        <img src="<?php echo BASEURL . '/img/Profile/' . htmlspecialchars($data['users']['0']['picture']); ?>"
+                            alt="Admin Avatar" class="santri-avatar">
+                    <?php else: ?>
+                        <img src="<?php echo BASEURL . '/img/Profile/default-avatar.png'; ?>" alt="Default Avatar"
+                            class="santri-avatar">
+                    <?php endif; ?>
+                </td>
+
+                <h2><?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
+                </h2>
+                <p><?= !isset($data['users']['0']['role']) ? 'Not Found' : $data['users']['0']['role'] ?></p>
             </div>
 
             <nav>
@@ -491,7 +517,12 @@
                 </div>
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
-                <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Santri/edit" method="post">
+                <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Santri/edit" method="post"
+                    enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="profile-pic">Foto Profil:</label>
+                        <input type="file" id="profile-pic" name="picture">
+                    </div>
 
                     <div class="form-group">
                         <label>Nama Lengkap</label>
@@ -891,7 +922,7 @@
 
         </main>
     </div>
-    
+
     <script>
         $(document).ready(function () {
             $('#modalLihatBuktiSantri').on('show.bs.modal', function (event) {
