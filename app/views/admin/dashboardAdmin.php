@@ -788,6 +788,7 @@
 
 
 
+
         <!-- Modal Tambah Admin -->
         <div class="modal fade" id="modalTambahAdmin" tabindex="-1" role="dialog" aria-labelledby="tambahAdminLabel"
             aria-hidden="true">
@@ -1220,7 +1221,16 @@
 
                             <div class="form-group">
                                 <label for="hari">Hari:</label>
-                                <input type="text" class="form-control" id="hari" name="hari" readonly>
+                                <select class="form-control" id="hari" name="hari" required>
+                                    <option value="" disabled selected>Pilih Hari</option>
+                                    <option value="Senin">Senin</option>
+                                    <option value="Selasa">Selasa</option>
+                                    <option value="Rabu">Rabu</option>
+                                    <option value="Kamis">Kamis</option>
+                                    <option value="Jumat">Jumat</option>
+                                    <option value="Sabtu">Sabtu</option>
+                                    <option value="Minggu">Minggu</option>
+                                </select>
                             </div>
 
                     </div>
@@ -1639,6 +1649,7 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <script>
             $(document).ready(function () {
                 // Tangani event klik tombol 'Lihat Bukti'
@@ -1776,6 +1787,51 @@
     </script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const homeLink = document.querySelector('a[href="#beranda"]');
+
+            homeLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You want to exit the application?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, exit it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // AJAX call to the server to handle logout
+                        fetch('<?= BASEURL; ?>/Umum/logout') // Sesuaikan URL dengan endpoint logout Anda
+                            .then(() => {
+                                Swal.fire({
+                                    title: "Logged Out",
+                                    text: "You have exited the application successfully.",
+                                    icon: "success"
+                                }).then(() => {
+                                    window.location.href = '<?= BASEURL; ?>';
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Logout failed:', error);
+                                Swal.fire("Error!", "An error occurred while trying to logout.", "error");
+                            });
+                    } else {
+                        Swal.fire({
+                            title: "Cancelled!",
+                            text: "You have canceled the exit process.",
+                            icon: "error"
+                        }).then(() => {
+                            window.location.href = '<?= BASEURL; ?> /Admin'; // Arahkan kembali ke dashboard jika pengguna membatalkan
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
         // Ketika tombol "Ubah" diklik
         document.getElementById("edit-button").addEventListener("click", function () {
             // Sembunyikan data teks biasa
@@ -1854,14 +1910,14 @@
             const sections = document.querySelectorAll('.content-section');
 
             function setActiveSection(activeId) {
-                $('.modal').modal('hide'); // Menutup semua modal yang aktif
+                $('.modal').modal('hide');
                 sections.forEach(section => {
-                    section.style.display = 'none'; // Hide all sections
+                    section.style.display = 'none';
                 });
 
                 const activeSection = document.getElementById(activeId);
                 if (activeSection) {
-                    activeSection.style.display = 'block'; // Show only the active section
+                    activeSection.style.display = 'block';
                 }
 
                 links.forEach(link => {
@@ -1872,17 +1928,20 @@
                 });
             }
 
-            // Event listeners for sidebar navigation
             links.forEach(link => {
                 link.addEventListener('click', function (event) {
                     event.preventDefault();
                     const targetId = this.getAttribute('href').substring(1);
                     setActiveSection(targetId);
+                    window.location.hash = targetId; // Update the URL hash
                 });
             });
 
-            // Activate the first section by default
-            if (sections.length > 0) {
+            // Check URL hash on load and set the active section accordingly
+            const initialSection = window.location.hash.substring(1);
+            if (initialSection) {
+                setActiveSection(initialSection);
+            } else if (sections.length > 0) {
                 setActiveSection('dashboard');
             }
         });
@@ -1989,48 +2048,6 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const homeLink = document.querySelector('a[href="#beranda"]');
-
-            homeLink.addEventListener('click', function (event) {
-                event.preventDefault();
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You want to exit the application?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, exit it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // AJAX call to the server to handle logout
-                        fetch('<?= BASEURL; ?>/Umum/logout') // Sesuaikan URL dengan endpoint logout Anda
-                            .then(() => {
-                                Swal.fire({
-                                    title: "Logged Out",
-                                    text: "You have exited the application successfully.",
-                                    icon: "success"
-                                }).then(() => {
-                                    window.location.href = '<?= BASEURL; ?>';
-                                });
-                            })
-                            .catch(error => {
-                                console.error('Logout failed:', error);
-                                Swal.fire("Error!", "An error occurred while trying to logout.", "error");
-                            });
-                    } else {
-                        Swal.fire({
-                            title: "Cancelled!",
-                            text: "You have canceled the exit process.",
-                            icon: "error"
-                        }).then(() => {
-                            window.location.href = '<?= BASEURL; ?> /Admin'; // Arahkan kembali ke dashboard jika pengguna membatalkan
-                        });
-                    }
-                });
-            });
-        });
 
         document.addEventListener('DOMContentLoaded', function () {
             const jadwalContainer = document.querySelector('.jadwal-container');
@@ -2134,7 +2151,7 @@
             const tbody = document.querySelector('#tagihanAdmin table tbody');
 
             formBuatTagihan.addEventListener('submit', function (e) {
-                e.preventDefault(); // Mencegah reload halaman
+                header('Location: '.BASEURL. '/admin#tagihan');
 
                 // Ambil data dari form
                 const namaSantri = document.getElementById('namaSantri').value;

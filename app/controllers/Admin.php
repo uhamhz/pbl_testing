@@ -54,7 +54,7 @@ class Admin extends Controller
         if ($this->model('UserModel')->tambahDataUsers($data)) {
             // Berhasil
             error_log('User berhasil ditambahkan: ' . $data['email']);
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/Admin#admin');
             exit;
         } else {
             // Gagal
@@ -120,18 +120,17 @@ class Admin extends Controller
 
         // Cek apakah data berhasil diperbarui
         $userModel = $this->model('UserModel');
-        try {
-            if ($userModel->editDataUser($data, $_POST['id'])) {
-                $_SESSION['success'] = "Data berhasil diperbarui.";
-                header('Location: ' . BASEURL . '/admin');
-                exit;
+        if ($userModel->editDataUser($data, $_POST['id'])) {
+            $_SESSION['success'] = "Data berhasil diperbarui.";
+            // Misal, arahkan admin ke dashboard dan pengguna biasa ke halaman profil mereka
+            if ($_SESSION['role'] === 'admin') {
+                header('Location: ' . BASEURL . '/admin#admin');
             } else {
-                $_SESSION['error'] = "Gagal memperbarui data.";
-                header('Location: ' . BASEURL . '/admin');
-                exit;
+                header('Location: ' . BASEURL . '/profile?id=' . $_POST['id']);
             }
-        } catch (Exception $e) {
-            $_SESSION['error'] = "Terjadi kesalahan: " . $e->getMessage();
+            exit;
+        } else {
+            $_SESSION['error'] = "Gagal memperbarui data.";
             header('Location: ' . BASEURL . '/admin');
             exit;
         }
@@ -145,7 +144,7 @@ class Admin extends Controller
                 $id = $_POST['id'];
                 $userModel = $this->model('UserModel');
                 $userModel->deleteUser($id);
-                header('Location: ' . BASEURL . '/Admin/#admin');  // Redirect ke halaman admin setelah penghapusan
+                header('Location: ' . BASEURL . '/admin#admin');  // Redirect ke halaman admin setelah penghapusan
                 exit;
             }
         }
@@ -223,13 +222,13 @@ class Admin extends Controller
         if ($this->model('MataPelajaranModel')->tambahDataJadwal($data)) {
             // Berhasil
             error_log('jadwal berhasil ditambahkan: ' . $data['hari']);
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#jadwal');
             exit;
         } else {
             // Gagal
             error_log('Gagal menambah user: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal menambah jadwal";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#jadwal');
             exit;
         }
     }
@@ -254,14 +253,14 @@ class Admin extends Controller
             // Berhasil
             error_log('Perizinan berhasil diubah menjadi approve: ID ' . $_POST['id']);
             $_SESSION['success'] = "Perizinan berhasil disetujui";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#perizinan');
             exit;
         } else {
             //echo 'gagal';
             // Gagal
             error_log('Gagal mengubah perizinan: ID ' . $_POST['id']);
             $_SESSION['error'] = "Gagal menyetujui perizinan";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#perizinan');
             exit;
         }
     }
@@ -276,13 +275,13 @@ class Admin extends Controller
         if ($this->model('MataPelajaranModel')->tambahDataMataPelajaran($data)) {
             // Berhasil
             error_log('mata pelajaran berhasil ditambahkan: ' . $data['nama_pelajaran']);
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#pelajaran');
             exit;
         } else {
             // Gagal
             error_log('Gagal menambah mata pelajaran: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal menambah mata pelajaran";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#pelajaran');
             exit;
         }
     }
@@ -299,13 +298,13 @@ class Admin extends Controller
         if ($this->model('MataPelajaranModel')->editDataMataPelajaran($data['id_pelajaran'], $data['nama_pelajaran'])) {
             // Berhasil
             error_log('Mata pelajaran berhasil diubah: ' . $data['id_pelajaran']);
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#pelajaran');
             exit;
         } else {
             // Gagal
             error_log('Gagal mengubah mata pelajaran: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal mengubah mata pelajaran";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#pelajaran');
             exit;
         }
     }
@@ -315,7 +314,7 @@ class Admin extends Controller
         if (isset($_POST['id_pelajaran'])) {
             $id_pelajaran = $_POST['id_pelajaran'];
             $this->model('MataPelajaranModel')->hapusDataMataPelajaran($id_pelajaran);
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#pelajaran');
             exit;
         }
     }
@@ -335,13 +334,13 @@ class Admin extends Controller
         if ($this->model('MataPelajaranModel')->editDataJadwal($data['id_jadwal'], $data['id_pelajaran'], $data['id_user'], $data['waktu'], $data['hari'])) {
             // Berhasil
             error_log('Jadwal berhasil diubah: ' . $data['id_jadwal']);
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#jadwal');
             exit;
         } else {
             // Gagal
             error_log('Gagal mengubah jadwal: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal mengubah jadwal";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#jadwal');
             exit;
         }
     }
@@ -355,12 +354,12 @@ class Admin extends Controller
             $this->model('MataPelajaranModel')->hapusDataJadwal($id_jadwal);
 
             // Redirect setelah berhasil
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#jadwal');
             exit;
         } else {
             // Jika tidak ada ID jadwal
             $_SESSION['error'] = "Tidak ada jadwal yang dipilih untuk dihapus";
-            header('Location: ' . BASEURL . '/Admin');
+            header('Location: ' . BASEURL . '/admin#jadwal');
             exit;
         }
     }
