@@ -1990,13 +1990,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const homeLink = document.querySelector('a[href="#beranda"]'); // Link that triggers the modal
-            const modal = document.getElementById('exitConfirmationModal'); // The modal for confirmation
-            const confirmExit = document.getElementById('confirmExit'); // Button to confirm the exit
-            const closeModalButton = document.querySelector('.modal .closeModal'); // Button to close the modal
+            const homeLink = document.querySelector('a[href="#beranda"]');
 
-            // Event to show the modal
             homeLink.addEventListener('click', function (event) {
+                event.preventDefault();
                 Swal.fire({
                     title: "Are you sure?",
                     text: "You want to exit the application?",
@@ -2007,20 +2004,28 @@
                     confirmButtonText: "Yes, exit it!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Success!",
-                            text: "You have exited the application successfully.",
-                            icon: "success"
-                        }).then(() => {
-                            window.location.href = '<?= BASEURL; ?>';
-                        });
+                        // AJAX call to the server to handle logout
+                        fetch('<?= BASEURL; ?>/Umum/logout') // Sesuaikan URL dengan endpoint logout Anda
+                            .then(() => {
+                                Swal.fire({
+                                    title: "Logged Out",
+                                    text: "You have exited the application successfully.",
+                                    icon: "success"
+                                }).then(() => {
+                                    window.location.href = '<?= BASEURL; ?>';
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Logout failed:', error);
+                                Swal.fire("Error!", "An error occurred while trying to logout.", "error");
+                            });
                     } else {
                         Swal.fire({
                             title: "Cancelled!",
                             text: "You have canceled the exit process.",
                             icon: "error"
                         }).then(() => {
-                            window.location.href = 'dashboardAdmin.html';
+                            window.location.href = '<?= BASEURL; ?> /Admin'; // Arahkan kembali ke dashboard jika pengguna membatalkan
                         });
                     }
                 });

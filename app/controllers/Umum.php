@@ -50,6 +50,20 @@ class Umum extends Controller
         }
     }
 
+    public function logout()
+    {
+        // Menghapus semua data session
+        session_start(); // Memastikan session dimulai sebelum membersihkannya
+        session_unset(); // Menghapus semua variabel session
+        session_destroy(); // Menghancurkan session
+
+        // Mengarahkan kembali ke halaman login atau beranda
+        $url = BASEURL;
+        header("location:$url");
+        exit;
+    }
+
+
     public function isAdmin(): bool
     {
         $userModel = $this->model("UserModel");
@@ -73,7 +87,7 @@ class Umum extends Controller
 
         return $user && $user['role'] === 'santri';
     }
-    
+
     public function isLihatFormulir(): bool
     {
         $this->view('umum/formulir');

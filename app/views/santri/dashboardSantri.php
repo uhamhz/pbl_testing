@@ -1133,15 +1133,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const homeLink = document.querySelector('a[href="#beranda"]'); // Link that triggers the modal
-            const modal = document.getElementById('exitConfirmationModal'); // The modal for confirmation
-            const confirmExit = document.getElementById('confirmExit'); // Button to confirm the exit
-            const closeModalButton = document.querySelector('.modal .closeModal'); // Button to close the modal
 
-            // Event to show the modal
             homeLink.addEventListener('click', function (event) {
+                event.preventDefault(); // Mencegah tindakan default dari link
                 Swal.fire({
                     title: "Are you sure?",
-                    text: "You want to exit the application?",
+                    text: "Do you want to exit the application?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -1149,26 +1146,44 @@
                     confirmButtonText: "Yes, exit it!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Success!",
-                            text: "You have exited the application successfully.",
-                            icon: "success"
-                        }).then(() => {
-                            window.location.href = '<?= BASEURL; ?>';
-                        });
+                        // AJAX call to the server to handle logout
+                        fetch('<?= BASEURL; ?>/Umum/logout', { // Sesuaikan dengan URL sebenarnya untuk logout.php
+                            method: 'GET' // Gunakan GET atau POST sesuai konfigurasi server Anda
+                        })
+                            .then(response => {
+                                // Pastikan server merespons dengan benar
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.text(); // atau response.json() jika server merespon dengan JSON
+                            })
+                            .then(() => {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: "You have exited the application successfully.",
+                                    icon: "success"
+                                }).then(() => {
+                                    window.location.href = '<?= BASEURL; ?>'; // Arahkan kembali ke halaman utama atau login
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Logout failed:', error);
+                                Swal.fire("Error!", "An error occurred while trying to logout.", "error");
+                            });
                     } else {
                         Swal.fire({
                             title: "Cancelled!",
                             text: "You have canceled the exit process.",
                             icon: "error"
                         }).then(() => {
-                            window.location.href = 'dashboardSantri.html';
+                            window.location.href = '<?= BASEURL; ?> /Santri'; // Arahkan kembali ke dashboard jika pengguna membatalkan
                         });
                     }
                 });
             });
         });
     </script>
+
 
 </body>
 
