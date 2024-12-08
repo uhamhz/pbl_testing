@@ -93,6 +93,32 @@ class Umum extends Controller
         $this->view('umum/formulir');
         return true;
     }
+
+    public function Taklim()
+    {
+        $this->view('detail/Taklim');
+        return true;
+    }
+
+    public function Alquran()
+    {
+        $this->view('detail/asc');
+        return true;
+    }
+
+    public function KerjaBakti()
+    {
+        $this->view('detail/kerjaBakti');
+        return true;
+    }
+
+    public function Rihlah()
+    {
+        $this->view('detail/rihlah');
+        return true;
+    }
+
+    
 }
 
 ?>

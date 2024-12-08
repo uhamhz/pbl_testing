@@ -153,7 +153,7 @@
             <span class="logo-text">ASHABUL KAHFI</span>
         </div>
         <div class="nav-links">
-            <a href="/app/views/umum/utama.html" class="back-button">Kembali</a>
+            <a href="<?= BASEURL; ?>/umum" class="back-button">Kembali</a>
         </div>
     </nav>
 

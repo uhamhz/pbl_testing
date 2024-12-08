@@ -347,7 +347,7 @@
                         berakhlak mulia, berpegang teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin
                         dalam setiap aspek kehidupan.</p>
                     <div class="cta-buttons">
-                        <a href="/app/views/umum/formulir.html" class="cta-button primary-button">Daftar Sekarang
+                        <a href="<?= BASEURL; ?>/Umum/isLihatFormulir" class="cta-button primary-button">Daftar Sekarang
                             →</a>
                         <a href="#kegiatan" class="cta-button secondary-button">Pelajari Lebih Lanjut</a>
                     </div>
@@ -388,9 +388,9 @@
     <section id="ustadz" class="py-5">
         <div class="container">
             <h2 class="text-center mb-5" data-aos="fade-up">Pengasuh dan Asatidz</h2>
-            <p class="text-center mb-5" data-aos="fade-up">Para asatidz dan pengasuh di Ashabul Kahfi 
-                adalah sosok-sosok berpengalaman dan berdedikasi dalam membimbing santri menuju akhlak mulia 
-                dan pemahaman agama yang mendalam. Mereka berperan aktif dalam memberikan ilmu, teladan, dan 
+            <p class="text-center mb-5" data-aos="fade-up">Para asatidz dan pengasuh di Ashabul Kahfi
+                adalah sosok-sosok berpengalaman dan berdedikasi dalam membimbing santri menuju akhlak mulia
+                dan pemahaman agama yang mendalam. Mereka berperan aktif dalam memberikan ilmu, teladan, dan
                 arahan yang sesuai dengan nilai-nilai Islam.</p>
 
             <div class="swiper" data-aos="fade-up">
@@ -425,7 +425,7 @@
                             <img src="/public/img/usHusein.png" alt="Kajian Harian" class="activity-image">
                             <div class="activity-content">
                                 <h3>Ustadz Husein</h3>
-                               
+
                             </div>
                             <div class="activity-content2">
                                 <p>At-Tibyan fi Adabi Hamlatil Qur'an</p>
@@ -439,7 +439,7 @@
                             <img src="/public/img/usSyaiful.png" alt="Kegiatan Akademik" class="activity-image">
                             <div class="activity-content">
                                 <h3>Ustadz Syaiful Anhsori</h3>
-                                
+
                             </div>
                             <div class="activity-content2">
                                 <p>Arbain An Nawawi</p>
@@ -447,13 +447,13 @@
                         </div>
                     </div>
 
-                     <!-- Ustadz Oemar -->
-                     <div class="swiper-slide col me-3 " style="min-width: 250px;">
+                    <!-- Ustadz Oemar -->
+                    <div class="swiper-slide col me-3 " style="min-width: 250px;">
                         <div class="activity-card">
                             <img src="/public/img/usUmar.png" alt="Kajian Harian" class="activity-image">
                             <div class="activity-content">
                                 <h3>Ustadz H. Umar Faruq, S.Hum, M.Pd.</h3>
-                                
+
                             </div>
                             <div class="activity-content2">
                                 <p>Tarikhul Hawadist wa Ahwal An Nabawiyyah</p>
@@ -467,21 +467,21 @@
                             <img src="/public/img/usLudzfi.png" alt="Kegiatan Akademik" class="activity-image">
                             <div class="activity-content">
                                 <h3>Ustadz Luthfi</h3>
-                                
+
                             </div>
                             <div class="activity-content2">
                                 <p>Bil Qolam</p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Habib Alwi Alaydrus -->
                     <div class="swiper-slide col me-3 " style="min-width: 250px;">
                         <div class="activity-card">
                             <img src="/public/img/habibA.png" alt="Rihlah" class="activity-image">
                             <div class="activity-content">
                                 <h3>Habib Alwi Alaydrus</h3>
-                                
+
                             </div>
                             <div class="activity-content2">
                                 <p>Adabul Islam fii Nadzomil Usro'</p>
@@ -495,7 +495,7 @@
                             <img src="/public/img/habibB.png" alt="Rihlah" class="activity-image">
                             <div class="activity-content">
                                 <h3>Habib Alwi bin Husein Al-Haddad</h3>
-                                
+
                             </div>
                             <div class="activity-content2">
                                 <p>Wasailul wusul ila syamail rosul</p>
@@ -515,7 +515,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Ustadz Ikhwan -->
                     <div class="swiper-slide col me-3 " style="min-width: 250px;">
                         <div class="activity-card">
@@ -557,7 +557,8 @@
                                 <h3>Kegiatan Taklim Rutin</h3>
                                 <p>Kegiatan rutinan yang diikuti oleh seluruh santri/wati Pondok Pesantren Ashabul Kahfi
                                     dan dibimbing oleh asatidz dengan sanad yang jelas.</p>
-                                <a href="/app/views/detail/Taklim.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
+                                <a href="<?= BASEURL; ?>/Umum/taklim"
+                                    class="btn btn-outline-success">Pelajari lebih lanjut →</a>
                             </div>
                         </div>
                     </div>
@@ -570,7 +571,8 @@
                                 <h3>Alquran Study Club</h3>
                                 <p>Pengajaran mengaji anak-anak dari masyarakat sekitar oleh santri/wati Pondok
                                     Pesantren Ashabul Kahfi.</p>
-                                <a href="/app/views/detail/asc.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
+                                <a href="<?= BASEURL; ?>/Umum/alquran" class="btn btn-outline-success">Pelajari lebih
+                                    lanjut →</a>
                             </div>
                         </div>
                     </div>
@@ -583,7 +585,8 @@
                                 <h3>Ro'an/Kerja Bakti</h3>
                                 <p>Kegiatan bersih-bersih lingkungan internal pondok setiap minggu untuk menjaga
                                     kebersihan dan keasrian pesantren</p>
-                                <a href="/app/views/detail/kerjaBakti.html" class="btn btn-outline-success">Pelajari lebih lanjut
+                                <a href="<?= BASEURL; ?>/Umum/kerjaBakti" class="btn btn-outline-success">Pelajari
+                                    lebih lanjut
                                     →</a>
                             </div>
                         </div>
@@ -597,7 +600,8 @@
                                 <h3>Rihlah</h3>
                                 <p>Liburan para santri saat liburan semester ke tempat wisata edukasi dan islami sebagai
                                     tadabur alam.</p>
-                                <a href="/app/views/detail/rihlah.html" class="btn btn-outline-success">Pelajari lebih lanjut →</a>
+                                <a href="<?= BASEURL; ?>/Umum/Rihlah" class="btn btn-outline-success">Pelajari lebih
+                                    lanjut →</a>
                             </div>
                         </div>
                     </div>
@@ -620,9 +624,9 @@
                     <div class="profile-card">
                         <div class="profile-icon">📚</div>
                         <h3>Visi dan Misi</h3>
-                        <p>Mencetak generasi Islam yang shalih dan shalihah 
-                            berarti membentuk individu berakhlak mulia, berpegang 
-                            teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin 
+                        <p>Mencetak generasi Islam yang shalih dan shalihah
+                            berarti membentuk individu berakhlak mulia, berpegang
+                            teguh pada ajaran Islam, dan mengikuti tradisi Salafush Sholihin
                             dalam setiap aspek kehidupan.</p>
                     </div>
                 </div>
@@ -631,7 +635,8 @@
                     <div class="profile-card">
                         <div class="profile-icon">🎯</div>
                         <h3>Program Unggulan</h3>
-                        <p>Taklim Rutin, Sholat dan Dzikir Berjamaah, Ro'an/Kerja Bakti, Khotmil Qur'an, Bersholawat Bersama, Rihlah</p>
+                        <p>Taklim Rutin, Sholat dan Dzikir Berjamaah, Ro'an/Kerja Bakti, Khotmil Qur'an, Bersholawat
+                            Bersama, Rihlah</p>
                     </div>
                 </div>
 
@@ -668,8 +673,10 @@
                             <div class="contact-icon">📱</div>
                             <div>
                                 <h4>Telepon</h4>
-                                <p>Santri Putra : <a href="https://wa.me/081333277496" target="_blank">081333277496</a>  (Raihan)<br>
-                                    Santri Putri : <a href="https://wa.me/085784880315" target="_blank">085784880315</a> (Lily)</p>
+                                <p>Santri Putra : <a href="https://wa.me/081333277496" target="_blank">081333277496</a>
+                                    (Raihan)<br>
+                                    Santri Putri : <a href="https://wa.me/085784880315" target="_blank">085784880315</a>
+                                    (Lily)</p>
                             </div>
                         </div>
 
@@ -677,7 +684,8 @@
                             <div class="contact-icon">✉️</div>
                             <div>
                                 <h4>Email</h4>
-                                <p> <a href="mailto:humas.ashkahf@gmail.com" target="_blank"></a>humas.ashkahf@gmail.com</p>
+                                <p> <a href="mailto:humas.ashkahf@gmail.com" target="_blank"></a>humas.ashkahf@gmail.com
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -729,14 +737,14 @@
                     <h3>Sosial Media</h3>
                     <ul class="list-unstyled d-flex justify-content-center gap-2">
                         <li>
-                            <a href="https://m.youtube.com/@PESMAASKAHF?fbclid=PAY2xjawG8rTFleHRuA2FlbQIxMAABpv2yAAskbxWQQo30LR5HHvheXgRQ1vlL9qDOGID8SzKlq1n7ZeV32frQdg_aem_lCwDjUl1laCSqVTkD6TAsQ" target="_blank"
-                                class="social-icon youtube">
+                            <a href="https://m.youtube.com/@PESMAASKAHF?fbclid=PAY2xjawG8rTFleHRuA2FlbQIxMAABpv2yAAskbxWQQo30LR5HHvheXgRQ1vlL9qDOGID8SzKlq1n7ZeV32frQdg_aem_lCwDjUl1laCSqVTkD6TAsQ"
+                                target="_blank" class="social-icon youtube">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.instagram.com/ppashabulkahfi_malang/profilecard/?igsh=MTZkN20yMDFkNjkzOQ==" target="_blank"
-                                class="social-icon instagram">
+                            <a href="https://www.instagram.com/ppashabulkahfi_malang/profilecard/?igsh=MTZkN20yMDFkNjkzOQ=="
+                                target="_blank" class="social-icon instagram">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         </li>
