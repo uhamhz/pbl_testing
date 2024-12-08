@@ -46,7 +46,7 @@ class Admin extends Controller
             'nama_lengkap' => $_POST['nama_lengkap'],
             'alamat' => $_POST['alamat'],
             'no_hp' => $_POST['no_hp'],
-            'role' => $_POST['role'], //
+            'role' => $_POST['role'], // Role dari form
             'password' => $_POST['password'],
         ];
 
@@ -54,7 +54,21 @@ class Admin extends Controller
         if ($this->model('UserModel')->tambahDataUsers($data)) {
             // Berhasil
             error_log('User berhasil ditambahkan: ' . $data['email']);
-            header('Location: ' . BASEURL . '/Admin#admin');
+
+            // Redirect berdasarkan role
+            switch ($data['role']) {
+                case 'ustadz':
+                    header('Location: ' . BASEURL . '/Admin#ustadz');
+                    break;
+                case 'santri':
+                    header('Location: ' . BASEURL . '/Admin#santri');
+                    break;
+                case 'pribadi':
+                    header('Location: ' . BASEURL . '/Admin#pribadi');
+                    break;
+                default:
+                    header('Location: ' . BASEURL . '/Admin#admin');
+            }
             exit;
         } else {
             // Gagal
@@ -122,15 +136,31 @@ class Admin extends Controller
         $userModel = $this->model('UserModel');
         if ($userModel->editDataUser($data, $_POST['id'])) {
             $_SESSION['success'] = "Data berhasil diperbarui.";
-            // Misal, arahkan admin ke dashboard dan pengguna biasa ke halaman profil mereka
-            if ($_SESSION['role'] === 'admin') {
-                header('Location: ' . BASEURL . '/admin#admin');
-            } else {
-                header('Location: ' . BASEURL . '/profile?id=' . $_POST['id']);
+
+            // Arahkan ke bagian yang sesuai berdasarkan role
+            switch ($data['role']) {
+                case 'admin':
+                    header('Location: ' . BASEURL . '/admin#admin');
+                    break;
+                case 'ustadz':
+                    // Pastikan bahwa #ustadz sesuai dengan ID atau tab di halaman yang relevan
+                    header('Location: ' . BASEURL . '/admin#ustadz');
+                    break;
+                case 'santri':
+                    header('Location: ' . BASEURL . '/admin#santri');
+                    break;
+                case 'pribadi':
+                    // Untuk data pribadi, arahkan ke halaman profil atau dashboard
+                    header('Location: ' . BASEURL . '/admin#pribadi');
+                    break;
+                default:
+                    // Jika tidak ada role yang cocok, arahkan ke halaman admin default
+                    header('Location: ' . BASEURL . '/admin');
             }
             exit;
         } else {
             $_SESSION['error'] = "Gagal memperbarui data.";
+            // Kembali ke halaman admin jika update gagal
             header('Location: ' . BASEURL . '/admin');
             exit;
         }
@@ -140,12 +170,33 @@ class Admin extends Controller
     public function hapus()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            if (isset($_POST['id'])) {
+            if (isset($_POST['id']) && isset($_POST['role'])) {
                 $id = $_POST['id'];
+                $role = $_POST['role'];  // Ambil role dari POST
+
+                // Panggil model untuk menghapus user berdasarkan ID
                 $userModel = $this->model('UserModel');
-                $userModel->deleteUser($id);
-                header('Location: ' . BASEURL . '/admin#admin');  // Redirect ke halaman admin setelah penghapusan
-                exit;
+                if ($userModel->deleteUser($id)) {
+                    // Jika berhasil, lakukan redirect berdasarkan role
+                    switch ($role) {
+                        case 'ustadz':
+                            header('Location: ' . BASEURL . '/admin#ustadz');
+                            break;
+                        case 'santri':
+                            header('Location: ' . BASEURL . '/admin#santri');
+                            break;
+                        case 'pribadi':
+                            header('Location: ' . BASEURL . '/admin#pribadi');
+                            break;
+                        default:
+                            header('Location: ' . BASEURL . '/admin#admin');
+                    }
+                    exit;
+                } else {
+                    $_SESSION['error'] = "Gagal menghapus user.";
+                    header('Location: ' . BASEURL . '/admin');
+                    exit;
+                }
             }
         }
     }

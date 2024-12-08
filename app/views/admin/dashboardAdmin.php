@@ -536,6 +536,7 @@
                     <li><a href="#dashboard" class="active">Dashboard</a></li>
                     <li><a href="#pribadi">Data Pribadi</a></li>
                     <li><a href="#admin">Data Admin</a></li>
+                    <li><a href="#ustadz">Data Ustadz</a></li>
                     <li><a href="#santri">Data Santri</a></li>
                     <li><a href="#pelajaran">Mata Pelajaran</a></li>
                     <li><a href="#jadwal">Jadwal</a></li>
@@ -699,11 +700,11 @@
                             <td>
                                 <?php if ($data['users'][0]['id'] != $admin['id']): ?>
                                     <!-- Only show Edit and Delete buttons if not the logged-in user -->
-                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
-                                        data-id="<?= $admin['id'] ?>">
+                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST">
                                         <input type="hidden" name="id" value="<?= $admin['id'] ?>">
-                                        <button type="button" class="btn btn-danger hapus-admin"
-                                            data-id="<?= $admin['id']; ?>">Hapus</button>
+                                        <input type="hidden" name="role" value="<?= $admin['role'] ?>">
+                                        <!-- Tambahkan input role -->
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
                                     </form>
                                     <button class="btn btn-warning" data-toggle="modal"
                                         data-target="#modalEditAdmin<?= $admin['id'] ?>">Edit</button>
@@ -786,9 +787,6 @@
             </table>
         </section>
 
-
-
-
         <!-- Modal Tambah Admin -->
         <div class="modal fade" id="modalTambahAdmin" tabindex="-1" role="dialog" aria-labelledby="tambahAdminLabel"
             aria-hidden="true">
@@ -843,6 +841,181 @@
                 </div>
             </div>
         </div>
+
+        <!-- Data Ustadz Section -->
+        <section id="ustadz" class="content-section">
+            <h2>Data Ustadz</h2>
+
+            <!-- Search Bar -->
+            <input type="text" id="searchUstadz" class="form-control mb-3" placeholder="Cari Ustadz..."
+                onkeyup="searchData('ustadz')">
+
+            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahUstadz">Tambah Ustadz</button>
+            <table id="ustadzTable">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Nama Lengkap</th>
+                        <th>Alamat</th>
+                        <th>Nomor HP</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($data['ustadz'] as $ustadz): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($ustadz['email'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                            <td>*****</td> <!-- Hide the password for security purposes -->
+                            <td><?= htmlspecialchars($ustadz['nama_lengkap'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($ustadz['alamat'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= htmlspecialchars($ustadz['no_hp'] ?? 'N/A', ENT_QUOTES, 'UTF-8') ?></td>
+                            <td>
+                                <?php if ($data['users'][0]['id'] != $ustadz['id']): ?>
+                                    <!-- Only show Edit and Delete buttons if not the logged-in user -->
+                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
+                                        data-id="<?= $ustadz['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $ustadz['id'] ?>">
+                                        <input type="hidden" name="role" value="<?= $ustadz['role'] ?>">
+                                        <button type="button" class="btn btn-danger hapus-ustadz"
+                                            data-id="<?= $ustadz['id']; ?>">Hapus</button>
+                                    </form>
+                                    <button class="btn btn-warning" data-toggle="modal"
+                                        data-target="#modalEditUstadz<?= $ustadz['id'] ?>">Edit</button>
+                                <?php else: ?>
+                                    <!-- Hide Edit and Delete buttons for the logged-in ustadz -->
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+
+                        <!-- Modal for Edit Ustadz -->
+                        <div class="modal fade" id="modalEditUstadz<?= $ustadz['id'] ?>" tabindex="-1" role="dialog"
+                            aria-labelledby="modalEditUstadzLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalEditUstadzLabel">Edit Ustadz</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="<?= BASEURL; ?>/Admin/edit" method="POST">
+                                            <input type="hidden" name="id" value="<?= $ustadz['id'] ?>">
+
+                                            <!-- Email Field -->
+                                            <div class="form-group">
+                                                <label for="email">Email</label>
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                    value="<?= htmlspecialchars($ustadz['email'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    required>
+                                            </div>
+
+                                            <!-- Nama Lengkap Field -->
+                                            <div class="form-group">
+                                                <label for="nama_lengkap">Nama Lengkap</label>
+                                                <input type="text" class="form-control" id="nama_lengkap"
+                                                    name="nama_lengkap"
+                                                    value="<?= htmlspecialchars($ustadz['nama_lengkap'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    required>
+                                            </div>
+
+                                            <!-- Alamat Field -->
+                                            <div class="form-group">
+                                                <label for="alamat">Alamat</label>
+                                                <input type="text" class="form-control" id="alamat" name="alamat"
+                                                    value="<?= htmlspecialchars($ustadz['alamat'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    required>
+                                            </div>
+
+                                            <!-- Nomor HP Field -->
+                                            <div class="form-group">
+                                                <label for="no_hp">Nomor HP</label>
+                                                <input type="text" class="form-control" id="no_hp" name="no_hp"
+                                                    value="<?= htmlspecialchars($ustadz['no_hp'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    required>
+                                            </div>
+
+                                            <!-- Role Field (Read-Only) -->
+                                            <div class="form-group">
+                                                <label for="role">Role</label>
+                                                <input type="text" class="form-control" id="role" name="role"
+                                                    value="<?= htmlspecialchars($ustadz['role'], ENT_QUOTES, 'UTF-8') ?>"
+                                                    readonly>
+                                            </div>
+
+                                            <!-- Password Field (Optional) -->
+                                            <div class="form-group">
+                                                <label for="password">Password (Leave blank if not changing)</label>
+                                                <input type="password" class="form-control" id="password" name="password">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Update Ustadz</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Modal Tambah Ustadz -->
+        <div class="modal fade" id="modalTambahUstadz" tabindex="-1" role="dialog" aria-labelledby="tambahUstadzLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahUstadzLabel">Tambah Ustadz Baru</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form id="formTambahUstadz" action="<?= BASEURL; ?>/Admin/tambah" method="POST">
+
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nama">Nama Lengkap:</label>
+                                <input type="text" class="form-control" id="nama" name="nama_lengkap" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="alamat">Alamat:</label>
+                                <input type="text" class="form-control" id="alamat" name="alamat" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="hp">Nomor HP:</label>
+                                <input type="tel" class="form-control" id="hp" name="no_hp" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="role">Role:</label>
+                                <input type="text" class="form-control" id="role" name="role" value="ustadz" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary" form="formTambahUstadz">Simpan</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Data Santri Section -->
         <section id="santri" class="content-section">
             <h2>Data Santri</h2>
@@ -881,6 +1054,7 @@
                                 <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                     data-id="<?= $santri['id'] ?>">
                                     <input type="hidden" name="id" value="<?= $santri['id'] ?>">
+                                    <input type="hidden" name="role" value="<?= $santri['role'] ?>">
                                     <button type="button" class="btn btn-danger hapus-admin"
                                         data-id="<?= $santri['id']; ?>">Hapus</button>
                                 </form>
@@ -1990,6 +2164,35 @@
 
         // Menambahkan event listener untuk tombol "Hapus Admin"
         document.querySelectorAll(".hapus-admin").forEach(button => {
+            button.addEventListener("click", function () {
+                const idToDelete = this.getAttribute("data-id"); // Mengambil ID dari tombol
+                const form = this.closest("form"); // Mendapatkan form yang terkait dengan tombol
+
+                // Menampilkan SweetAlert konfirmasi sebelum hapus
+                swalWithBootstrapButtons.fire({
+                    title: "Apakah Anda yakin?",
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel!",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Mengirimkan form untuk penghapusan
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire({
+                            title: "Cancelled",
+                            text: "Data tidak jadi dihapus.",
+                            icon: "error"
+                        });
+                    }
+                });
+            });
+        });
+
+        // Menambahkan event listener untuk tombol "Hapus Admin"
+        document.querySelectorAll(".hapus-ustadz").forEach(button => {
             button.addEventListener("click", function () {
                 const idToDelete = this.getAttribute("data-id"); // Mengambil ID dari tombol
                 const form = this.closest("form"); // Mendapatkan form yang terkait dengan tombol
