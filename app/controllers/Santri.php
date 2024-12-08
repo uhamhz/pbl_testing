@@ -35,7 +35,7 @@ class Santri extends Controller
 
                 if ($result) {
                     // Redirect ke halaman perizinan setelah berhasil menghapus
-                    header('Location: ' . BASEURL . '/Santri');
+                    header('Location: ' . BASEURL . '/Santri/index#perizinan');
                     exit;
                 } else {
                     // Tampilkan pesan jika penghapusan gagal
@@ -62,13 +62,13 @@ class Santri extends Controller
         if ($this->model('PerizinanModel')->tambahDataPerizinan($data)) {
             // Berhasil
             error_log('Perizinan berhasil ditambahkan: ' . $data['tanggal_izin']);
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#perizinan');
             exit;
         } else {
             // Gagal
             error_log('Gagal menambah perizinan: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal menambah perizinan";
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#perizinan');
             exit;
         }
     }
@@ -124,13 +124,13 @@ class Santri extends Controller
         if ($this->model('UserModel')->editDataUser($data, $_POST['id'])) {
             // Berhasil
             error_log('User berhasil diubah: ' . $data['email']);
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#profile');
             exit;
         } else {
             // Gagal
             error_log('Gagal mengubah user: ' . print_r($data, true));
             $_SESSION['error'] = "Gagal mengubah user";
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#profile');
             exit;
         }
     }
@@ -140,7 +140,7 @@ class Santri extends Controller
         // Pastikan file di-upload
         if (!isset($_FILES['paymentProof']) || $_FILES['paymentProof']['error'] != UPLOAD_ERR_OK) {
             $_SESSION['error'] = "Bukti pembayaran tidak boleh kosong atau terjadi error saat upload!";
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#pembayaran');
             exit;
         }
 
@@ -156,7 +156,7 @@ class Santri extends Controller
         $maxSize = 5 * 1024 * 1024; // 5MB
         if (!in_array($fileType, $allowedTypes) || $fileSize > $maxSize) {
             $_SESSION['error'] = "Format file tidak didukung atau ukuran file terlalu besar.";
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#pembayaran');
             exit;
         }
 
@@ -178,7 +178,7 @@ class Santri extends Controller
         } else {
             error_log("Gagal memindahkan file ke: " . $filePath);
             $_SESSION['error'] = "Gagal menyimpan bukti pembayaran.";
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#pembayaran');
             exit;
         }
 
@@ -197,18 +197,18 @@ class Santri extends Controller
             if ($this->model('TagihanModel')->updateStatusTagihan($statusData)) {
                 // Jika berhasil
                 error_log('Bukti pembayaran berhasil ditambahkan dan status diubah menjadi pending untuk ID: ' . $_POST['id']);
-                header('Location: ' . BASEURL . '/santri');
+                header('Location: ' . BASEURL . '/Santri/index#pembayaran');
                 exit;
             } else {
                 $_SESSION['error'] = "Gagal memperbarui status tagihan.";
-                header('Location: ' . BASEURL . '/santri');
+                header('Location: ' . BASEURL . '/Santri/index#pembayaran');
                 exit;
             }
         } else {
             // Jika gagal menambahkan bukti pembayaran
             error_log('Gagal menambahkan bukti pembayaran untuk ID: ' . $_POST['id']);
             $_SESSION['error'] = "Gagal menambahkan bukti pembayaran";
-            header('Location: ' . BASEURL . '/santri');
+            header('Location: ' . BASEURL . '/Santri/index#pembayaran');
             exit;
         }
     }

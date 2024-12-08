@@ -1044,44 +1044,40 @@
             const links = document.querySelectorAll('.sidebar nav ul li a');
             const sections = document.querySelectorAll('.content-section');
 
-            // Function to remove active class from all sections
-            function hideAllSections() {
+            function setActiveSection(activeId) {
+                $('.modal').modal('hide');
                 sections.forEach(section => {
-                    section.style.display = 'none'; // Hide all sections
+                    section.style.display = 'none';
+                });
+
+                const activeSection = document.getElementById(activeId);
+                if (activeSection) {
+                    activeSection.style.display = 'block';
+                }
+
+                links.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === activeId) {
+                        link.classList.add('active');
+                    }
                 });
             }
 
-            // Function to show the active section
-            function showActiveSection(activeSectionId) {
-                const activeSection = document.getElementById(activeSectionId);
-                if (activeSection) {
-                    activeSection.style.display = 'block'; // Show only active section
-                }
-            }
-
-            // Adding click event to all sidebar links
             links.forEach(link => {
                 link.addEventListener('click', function (event) {
-                    event.preventDefault(); // Prevent the default anchor link behavior
-                    const targetId = this.getAttribute('href').substring(1); // Get the target section ID
-
-                    // Set all links to inactive
-                    links.forEach(lnk => {
-                        lnk.classList.remove('active');
-                    });
-
-                    // Set clicked link to active
-                    this.classList.add('active');
-
-                    // Hide all sections and show the targeted one
-                    hideAllSections();
-                    showActiveSection(targetId);
+                    event.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    setActiveSection(targetId);
+                    window.location.hash = targetId; // Update the URL hash
                 });
             });
 
-            // Activate the first section by default
-            if (links.length > 0) {
-                links[0].click();
+            // Check URL hash on load and set the active section accordingly
+            const initialSection = window.location.hash.substring(1);
+            if (initialSection) {
+                setActiveSection(initialSection);
+            } else if (sections.length > 0) {
+                setActiveSection('dashboard');
             }
         });
     </script>
