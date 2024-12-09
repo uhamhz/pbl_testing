@@ -5,177 +5,207 @@ class UserModel
 
     public function getAllDataUser()
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT * FROM users";
+
+        // Menyiapkan query untuk memanggil stored procedure
+        $stmt = "EXEC GetAllUsers";
+
+        // Menjalankan query menggunakan sqlsrv_query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Array untuk menampung hasil data
         $data = [];
 
+        // Mengambil hasil query dan menambahkan ke array
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
+
+        // Mengembalikan data
         return $data;
     }
 
     public function getAdminData()
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT * FROM users WHERE role = 'admin'";
+
+        // Menyiapkan query untuk memanggil stored procedure
+        $stmt = "EXEC GetAdminData";
+
+        // Menjalankan query menggunakan sqlsrv_query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Array untuk menampung hasil data
         $data = [];
 
+        // Mengambil hasil query dan menambahkan ke array
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
+
+        // Mengembalikan data
         return $data;
     }
 
     public function getJumlahAdmin()
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT COUNT(*) AS jumlah FROM users WHERE role = 'admin'";
+
+        // Menyiapkan query untuk memanggil stored procedure
+        $stmt = "EXEC GetJumlahAdmin";
+
+        // Menjalankan query menggunakan sqlsrv_query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Mengambil hasil query
         $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+        // Mengembalikan jumlah admin
         return $row['jumlah'];
     }
 
     public function getJumlahSantri()
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT COUNT(*) AS jumlah FROM users WHERE role = 'santri'";
+
+        // Menyiapkan query untuk memanggil stored procedure
+        $stmt = "EXEC GetJumlahSantri";
+
+        // Menjalankan query menggunakan sqlsrv_query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Mengambil hasil query
         $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
+
+        // Mengembalikan jumlah santri
         return $row['jumlah'];
     }
 
     public function getSantriData()
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT * FROM users WHERE role = 'santri'";
+
+        // Menyiapkan query untuk memanggil stored procedure
+        $stmt = "EXEC GetSantriData";
+
+        // Menjalankan query menggunakan sqlsrv_query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Array untuk menampung hasil data
         $data = [];
 
+        // Mengambil hasil query dan menambahkan ke array
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
+
+        // Mengembalikan data
         return $data;
     }
 
     public function getUstadzData()
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT * FROM users WHERE role = 'ustadz'";
+
+        // Menyiapkan query untuk memanggil stored procedure
+        $stmt = "EXEC GetUstadzData";
+
+        // Menjalankan query menggunakan sqlsrv_query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Array untuk menampung hasil data
         $data = [];
 
+        // Mengambil hasil query dan menambahkan ke array
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
+
+        // Mengembalikan data
         return $data;
     }
 
-
     public function getUserData($email)
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT * FROM users where email = '$email'";
-        $result = sqlsrv_query($this->db->conn, $stmt);
 
+        // Menyiapkan query untuk memanggil stored procedure dengan parameter
+        $stmt = "EXEC GetUserDataByEmail @Email = ?";
+
+        // Menyiapkan parameter untuk query
+        $params = array($email);
+
+        // Menjalankan query menggunakan sqlsrv_query dan passing parameter
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Array untuk menampung hasil data
         $data = [];
+
+        // Mengambil hasil query dan menambahkan ke array
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
 
+        // Mengembalikan data
         return $data;
     }
 
     public function getUserByEmailAndPassword($email, $password)
     {
+        // Membuat koneksi ke database
         $this->db = new Connection;
-        $stmt = "SELECT * FROM users WHERE email = ? AND password = ?";
-        $params = [$email, $password];
 
+        // Menyiapkan query untuk memanggil stored procedure dengan parameter
+        $stmt = "EXEC GetUserByEmailAndPassword @Email = ?, @Password = ?";
+
+        // Menyiapkan parameter untuk query
+        $params = array($email, $password);
+
+        // Menjalankan query menggunakan sqlsrv_query dan passing parameter
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
+        // Memeriksa jika query berhasil
         if ($result === false) {
             return false;
         }
 
+        // Mengambil hasil query
         $user = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
+        // Mengembalikan data pengguna atau false jika tidak ada data
         return $user ? $user : false;
-    }
-
-    public function postEditUser($id, $data)
-    {
-        $this->db = new Connection;
-
-        // Mengupdate hanya jika password diubah
-        $stmt = "UPDATE users SET nama_lengkap = ?, email = ?, role = ?, alamat = ?, no_hp = ? WHERE id = ?";
-
-        // Jika password diubah
-        if (!empty($data['password'])) {
-            $stmt = "UPDATE users SET nama_lengkap = ?, email = ?, password = ?, role = ?, alamat = ?, no_hp = ? WHERE id = ?";
-            $params = [
-                $data['nama_lengkap'],
-                $data['email'],
-                password_hash($data['password'], PASSWORD_BCRYPT), // Hash password
-                $data['role'],
-                $data['alamat'],
-                $data['no_hp'],
-                $id
-            ];
-        } else {
-            $params = [
-                $data['nama_lengkap'],
-                $data['email'],
-                $data['role'],
-                $data['alamat'],
-                $data['no_hp'],
-                $id
-            ];
-        }
-
-        $result = sqlsrv_query($this->db->conn, $stmt, $params);
-
-        if ($result === false) {
-            return false;
-        }
-
-        return true;
     }
 
     public function deleteUser($id)
     {
-        // Membuat koneksi
+        // Membuat koneksi ke database
         $this->db = new Connection;
 
-        // Menyiapkan query SQL dengan placeholder tanda tanya (?)
-        $stmt = "DELETE FROM users WHERE id = ?";
+        // Menyiapkan query untuk memanggil stored procedure dengan parameter
+        $stmt = "EXEC DeleteUserById @UserId = ?";
 
-        // Menyiapkan query dengan parameter numerik
-        $query = sqlsrv_prepare($this->db->conn, $stmt, array($id));
+        // Menyiapkan parameter untuk query
+        $params = array($id);
 
-        // Mengecek jika query gagal disiapkan
-        if ($query === false) {
-            return false;
-        }
+        // Menjalankan query menggunakan sqlsrv_query dan passing parameter
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
-        // Mengeksekusi query
-        $result = sqlsrv_execute($query);
-
-        // Mengecek apakah eksekusi berhasil
+        // Mengecek jika query gagal dijalankan
         if ($result === false) {
             return false;
         }
 
+        // Mengembalikan true jika berhasil menghapus
         return true;
     }
+
     public function tambahDataUsers($data)
     {
         // Pastikan koneksi database
@@ -183,10 +213,10 @@ class UserModel
             $this->db = new Connection();
         }
 
+        // Menyiapkan query untuk memanggil stored procedure dengan parameter
+        $query = "EXEC InsertUser @Email = ?, @NamaLengkap = ?, @Alamat = ?, @NoHp = ?, @Role = ?, @Password = ?";
 
-        $query = "INSERT INTO users (email, nama_lengkap, alamat, no_hp, role, password) 
-                  VALUES (?, ?, ?, ?, ?, ?)";
-
+        // Menyiapkan parameter untuk query
         $params = array(
             $data['email'],
             $data['nama_lengkap'],
@@ -196,8 +226,10 @@ class UserModel
             $data['password']
         );
 
+        // Menjalankan query menggunakan sqlsrv_query dan passing parameter
         $stmt = sqlsrv_query($this->db->conn, $query, $params);
 
+        // Mengecek jika query gagal
         if ($stmt === false) {
             // Tampilkan error database untuk diagnosa
             $errors = sqlsrv_errors();
@@ -205,6 +237,7 @@ class UserModel
             return false;
         }
 
+        // Mengembalikan true jika berhasil menambah data
         return true;
     }
 
@@ -215,46 +248,39 @@ class UserModel
             $this->db = new Connection();
         }
 
-        // Query dasar untuk update data user
-        $query = "UPDATE users 
-              SET email = ?, 
-                  nama_lengkap = ?, 
-                  alamat = ?, 
-                  no_hp = ?, 
-                  role = ?,
-                  picture = ?";  // Menambahkan kolom picture
+        // Menyiapkan query untuk memanggil stored procedure dengan parameter
+        $query = "EXEC UpdateUser 
+                  @UserId = ?, 
+                  @Email = ?, 
+                  @NamaLengkap = ?, 
+                  @Alamat = ?, 
+                  @NoHp = ?, 
+                  @Role = ?, 
+                  @Picture = ?, 
+                  @Password = ?";
 
-        // Parameter untuk query
-        $params = [
+        // Menyiapkan parameter untuk query
+        $params = array(
+            $id,                           // ID pengguna yang akan diupdate
             $data['email'],
             $data['nama_lengkap'],
             $data['alamat'],
             $data['no_hp'],
             $data['role'],
-            $data['picture']  // Menambahkan path gambar profil
-        ];
+            !empty($data['picture']) ? $data['picture'] : NULL,  // Jika ada picture, kirimkan path, jika tidak, kirim NULL
+            !empty($data['password']) ? $data['password'] : NULL  // Jika ada password, kirimkan password, jika tidak, kirim NULL
+        );
 
-        // Jika ada perubahan password, tambahkan ke query dan params
-        if (!empty($data['password'])) {
-            $query .= ", password = ?";
-            $params[] = $data['password'];
-        }
-
-        // Menambahkan WHERE clause
-        $query .= " WHERE id = ?";
-        $params[] = $id;
-
-        // Eksekusi query
+        // Menjalankan query menggunakan sqlsrv_query dan passing parameter
         $stmt = sqlsrv_query($this->db->conn, $query, $params);
 
-        // Cek apakah query berhasil
+        // Mengecek jika query gagal
         if ($stmt === false) {
             die(print_r(sqlsrv_errors(), true));  // Menampilkan error jika query gagal
         }
 
-        return true;  // Jika berhasil, return true
+        // Mengembalikan true jika berhasil mengedit data
+        return true;
     }
-
-
 }
 ?>

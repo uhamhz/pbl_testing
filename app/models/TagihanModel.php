@@ -6,15 +6,13 @@ class TagihanModel
 
     public function getAllDataTagihan()
     {
-        $this->db = new Connection;
+        // Pastikan koneksi database
+        $this->db = new Connection();
 
-        // Mengambil data tagihan dan nama santri dari tabel users, dengan kolom nama_lengkap
-        $stmt = "
-            SELECT t.id_tagihan, u.nama_lengkap AS nama_santri, t.jenis_tagihan, t.jumlah, t.jatuh_tempo, t.status, t.bukti_pembayaran
-            FROM tagihan t
-            JOIN users u ON t.id_users = u.id
-        ";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC GetAllDataTagihan";
 
+        // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
         // Cek jika query gagal
@@ -22,9 +20,10 @@ class TagihanModel
             die(print_r(sqlsrv_errors(), true));
         }
 
+        // Menyiapkan array untuk menampung data
         $data = [];
 
-        // Ambil setiap baris data hasil query
+        // Mengambil setiap baris hasil query
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
@@ -34,18 +33,15 @@ class TagihanModel
 
     public function getTagihanByEmail($email)
     {
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Mengambil data tagihan dan nama santri dari tabel users, dengan kolom nama_lengkap
-        $stmt = "
-            SELECT t.id_tagihan, u.nama_lengkap AS nama_santri, t.jenis_tagihan, t.jumlah, t.jatuh_tempo, t.status, t.bukti_pembayaran
-            FROM tagihan t
-            JOIN users u ON t.id_users = u.id
-            WHERE u.email = ?
-        ";
+        // Query untuk memanggil stored procedure dengan parameter email
+        $stmt = "EXEC GetTagihanByEmail @Email = ?";
 
+        // Menyiapkan parameter untuk query
         $params = [$email];
 
+        // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
         // Cek jika query gagal
@@ -53,9 +49,10 @@ class TagihanModel
             die(print_r(sqlsrv_errors(), true));
         }
 
+        // Menyiapkan array untuk menampung data
         $data = [];
 
-        // Ambil setiap baris data hasil query
+        // Mengambil setiap baris hasil query
         while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
             $data[] = $row;
         }
@@ -65,13 +62,12 @@ class TagihanModel
 
     public function getJumlahTagihanPending()
     {
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Mengambil jumlah tagihan dengan status 'Pending'
-        $stmt = "
-        SELECT COUNT(*) AS jumlah FROM tagihan WHERE status = 'belum lunas'
-    ";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC GetJumlahTagihanPending";
 
+        // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
         // Cek jika query gagal
@@ -83,19 +79,17 @@ class TagihanModel
         $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
         // Jika ada hasil, kembalikan jumlahnya
-        return ($row && $row['jumlah'] > 0) ? $row['jumlah'] : 0;
+        return ($row && isset($row['jumlah'])) ? $row['jumlah'] : 0;
     }
-
 
     public function getTotalTagihanPending()
     {
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Mengambil total jumlah tagihan dengan status 'Pending'
-        $stmt = "
-            SELECT SUM(jumlah) AS total FROM tagihan WHERE status = 'belum lunas'
-        ";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC GetTotalTagihanPending";
 
+        // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
         // Cek jika query gagal
@@ -107,27 +101,45 @@ class TagihanModel
         $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC);
 
         // Jika ada hasil, kembalikan totalnya
-        return ($row && $row['total'] > 0) ? $row['total'] : 0;
+        return ($row && isset($row['total'])) ? $row['total'] : 0;
     }
 
     public function deleteTagihan($id_tagihan)
     {
         $this->db = new Connection;
-        $stmt = "DELETE FROM tagihan WHERE id_tagihan = ?";
+
+        // Query untuk memanggil stored procedure dengan parameter id_tagihan
+        $stmt = "EXEC DeleteTagihan @IdTagihan = ?";
+
+        // Menyiapkan parameter untuk query
         $params = [$id_tagihan];
+
+        // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Mengecek apakah query berhasil
+        if ($result === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        // Mengembalikan hasil (berhasil atau gagal)
         return $result;
     }
 
     public function tambahTagihan($data)
     {
-        if (!$this->db || !$this->db->conn) {
-            $this->db = new Connection();
-        }
+        $this->db = new Connection();
 
-        $query = "INSERT INTO tagihan (id_users, jenis_tagihan, jumlah, jatuh_tempo, status, bukti_pembayaran) 
-                  VALUES (?, ?, ?, ?, ?, ?)";
+        // Query untuk memanggil stored procedure dengan parameter
+        $stmt = "EXEC TambahTagihan 
+                 @IdUsers = ?, 
+                 @JenisTagihan = ?, 
+                 @Jumlah = ?, 
+                 @JatuhTempo = ?, 
+                 @Status = ?, 
+                 @BuktiPembayaran = ?";
 
+        // Menyiapkan parameter untuk query
         $params = [
             $data['id_users'],
             $data['jenis_tagihan'],
@@ -137,83 +149,81 @@ class TagihanModel
             $data['bukti_pembayaran']
         ];
 
-        try {
-            $stmt = sqlsrv_query($this->db->conn, $query, $params);
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
-            if ($stmt === false) {
-                $errors = sqlsrv_errors();
-                throw new Exception("Database error: " . print_r($errors, true));
-            }
-
-            return true;
-        } catch (Exception $e) {
-            error_log($e->getMessage());
+        // Mengecek apakah query berhasil
+        if ($result === false) {
+            // Menangani error jika query gagal
+            $errors = sqlsrv_errors();
+            error_log(print_r($errors, true));  // Mencatat error ke log
             return false;
         }
+
+        // Jika berhasil, mengembalikan true
+        return true;
     }
 
     public function tambahDataBuktiPembayaran($data, $id)
     {
-        // Pastikan koneksi database valid
-        if (!$this->db || !$this->db->conn) {
-            $this->db = new Connection();  // Inisialisasi koneksi jika belum ada
-        }
+        $this->db = new Connection();
 
-        // Menyusun query untuk update bukti pembayaran
-        $query = "UPDATE tagihan SET bukti_pembayaran = ? WHERE id_tagihan = ?";
+        // Query untuk memanggil stored procedure dengan parameter
+        $stmt = "EXEC TambahBuktiPembayaran 
+                 @IdTagihan = ?, 
+                 @BuktiPembayaran = ?";
 
-        // Parameter yang akan diikatkan ke query
+        // Menyiapkan parameter untuk query
         $params = [
-            $data['bukti_pembayaran'], // Path bukti pembayaran
-            $id                         // ID tagihan
+            $id,                         // ID tagihan
+            $data['bukti_pembayaran']    // Path bukti pembayaran
         ];
 
-        try {
-            // Menjalankan query dengan sqlsrv_query
-            $stmt = sqlsrv_query($this->db->conn, $query, $params);
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
-            if ($stmt === false) {
-                // Jika query gagal, tampilkan error
-                $errors = sqlsrv_errors();
-                throw new Exception("Database error: " . print_r($errors, true));
-            }
-
-            // Jika berhasil, kembalikan true
-            return true;
-        } catch (Exception $e) {
-            // Tangani error dan catat di log
-            error_log($e->getMessage());
+        // Mengecek apakah query berhasil
+        if ($result === false) {
+            // Menangani error jika query gagal
+            $errors = sqlsrv_errors();
+            error_log(print_r($errors, true));  // Mencatat error ke log
             return false;
         }
+
+        // Jika berhasil, mengembalikan true
+        return true;
     }
 
     public function updateStatusTagihan($data)
     {
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Query untuk memperbarui status tagihan berdasarkan id_tagihan
-        $stmt = "
-        UPDATE tagihan
-        SET status = ?
-        WHERE id_tagihan = ?
-        ";
+        // Query untuk memanggil stored procedure dengan parameter
+        $stmt = "EXEC UpdateStatusTagihan 
+                 @IdTagihan = ?, 
+                 @Status = ?";
 
-        // Bind parameter dan jalankan query
-        $query = sqlsrv_query($this->db->conn, $stmt, array(
-            $data['status'],  // Status baru
-            $data['id_tagihan'] // ID tagihan yang ingin diperbarui
-        ));
+        // Menyiapkan parameter untuk query
+        $params = [
+            $data['id_tagihan'],  // ID tagihan
+            $data['status']       // Status baru
+        ];
 
-        if ($query === false) {
-            // Jika query gagal, log error
-            error_log('Gagal mengubah status tagihan: ' . print_r(sqlsrv_errors(), true));
+        // Menjalankan query
+        $result = sqlsrv_query($this->db->conn, $stmt, $params);
+
+        // Mengecek apakah query berhasil
+        if ($result === false) {
+            // Menangani error jika query gagal
+            $errors = sqlsrv_errors();
+            error_log('Gagal mengubah status tagihan: ' . print_r($errors, true));  // Mencatat error ke log
             return false;
         }
 
         // Log bahwa status tagihan berhasil diperbarui
         error_log("Status tagihan dengan ID " . $data['id_tagihan'] . " berhasil diperbarui.");
 
-        return true;  // Jika berhasil
+        // Jika berhasil, mengembalikan true
+        return true;
     }
-
 }

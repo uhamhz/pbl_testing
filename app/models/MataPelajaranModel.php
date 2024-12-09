@@ -6,25 +6,10 @@ class MataPelajaranModel
     public function getJadwalWithPelajaranAndUstadz()
     {
         // Membuka koneksi database
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Query SQL untuk mengambil data jadwal dengan nama pelajaran dan nama ustadz
-        $stmt = "
-            SELECT 
-                j.id_jadwal, 
-                j.id_pelajaran, 
-                j.id_user, 
-                j.waktu, 
-                j.hari, 
-                mp.nama_pelajaran, 
-                u.nama_lengkap
-            FROM 
-                jadwal j
-            LEFT JOIN 
-                users u ON j.id_user = u.id
-            LEFT JOIN 
-                mata_pelajaran mp ON j.id_pelajaran = mp.id_pelajaran
-        ";
+        // Query untuk memanggil stored procedure GetJadwalWithPelajaranAndUstadz
+        $stmt = "EXEC GetJadwalWithPelajaranAndUstadz";
 
         // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt);
@@ -48,19 +33,13 @@ class MataPelajaranModel
 
     public function tambahDataJadwal($data)
     {
-        // Pastikan hari sudah dalam format kapital
-        $data['hari'] = ucfirst(strtolower($data['hari'])); // Sama seperti sebelumnya, formatkan menjadi kapital
-
         // Membuka koneksi database
         $this->db = new Connection;
 
-        // Query SQL untuk menambahkan data jadwal
-        $stmt = "
-        INSERT INTO jadwal (id_pelajaran, id_user, waktu, hari)
-        VALUES (?, ?, ?, ?)
-    ";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_InsertJadwal ?, ?, ?, ?";
 
-        // Ubah menjadi array numerik
+        // Parameter yang dikirimkan ke stored procedure
         $params = [
             $data['id_pelajaran'],  // id_pelajaran
             $data['id_user'],        // id_user
@@ -68,11 +47,16 @@ class MataPelajaranModel
             $data['hari']            // hari
         ];
 
+        // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
+        // Memeriksa apakah query berhasil
         if (!$result) {
-            die(print_r(sqlsrv_errors(), true));
+            die(print_r(sqlsrv_errors(), true));  // Menampilkan error jika query gagal
         }
+
+        // Jika berhasil, tidak perlu return, atau bisa mengembalikan true jika perlu
+        return true;
     }
 
     public function getMataPelajaran()
@@ -80,15 +64,15 @@ class MataPelajaranModel
         // Membuka koneksi database
         $this->db = new Connection;
 
-        // Query SQL untuk mengambil data mata pelajaran
-        $stmt = "SELECT * FROM mata_pelajaran";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_GetMataPelajaran";
 
         // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt);
 
         // Memeriksa apakah query berhasil
         if (!$result) {
-            die(print_r(sqlsrv_errors(), true));
+            die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
         }
 
         // Menyiapkan array untuk menyimpan data
@@ -108,10 +92,10 @@ class MataPelajaranModel
         // Membuka koneksi database
         $this->db = new Connection;
 
-        // Query SQL untuk menambahkan data mata pelajaran
-        $stmt = "INSERT INTO mata_pelajaran (nama_pelajaran) VALUES (?)";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_TambahMataPelajaran @nama_pelajaran = ?";
 
-        // Ubah menjadi array numerik
+        // Menyiapkan parameter yang akan diikat ke query
         $params = [
             $data['nama_pelajaran'],
         ];
@@ -121,54 +105,61 @@ class MataPelajaranModel
 
         // Memeriksa apakah query berhasil
         if (!$result) {
-            die(print_r(sqlsrv_errors(), true));
+            die(print_r(sqlsrv_errors(), true)); // Menampilkan error jika query gagal
         }
+
+        // Jika berhasil, tidak ada nilai yang dikembalikan (langsung selesai)
     }
 
     public function editDataMataPelajaran($id, $nama_pelajaran)
     {
         // Membuka koneksi database
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Query SQL untuk mengupdate data mata pelajaran
-        $stmt = "UPDATE mata_pelajaran SET nama_pelajaran = ? WHERE id_pelajaran = ?";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_EditMataPelajaran @IdPelajaran = ?, @NamaPelajaran = ?";
 
-        // Ubah menjadi array numerik
+        // Menyiapkan parameter yang akan dikirim ke stored procedure
         $params = [
-            $nama_pelajaran,  // Isi dengan nama pelajaran yang baru
-            $id               // ID pelajaran yang akan diupdate
+            $id,               // ID pelajaran yang akan diupdate
+            $nama_pelajaran    // Nama pelajaran yang baru
         ];
 
         // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
-        // Memeriksa apakah query berhasil
+        // Memeriksa apakah query berhasil dijalankan
         if (!$result) {
+            // Menampilkan error jika query gagal
             die(print_r(sqlsrv_errors(), true));
         }
-        return $result;
+
+        return true;  // Mengembalikan true jika berhasil
     }
 
     public function hapusDataMataPelajaran($id)
     {
         // Membuka koneksi database
-        $this->db = new Connection;
+        $this->db = new Connection();
 
-        // Query SQL untuk menghapus data mata pelajaran
-        $stmt = "DELETE FROM mata_pelajaran WHERE id_pelajaran = ?";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_HapusMataPelajaran @IdPelajaran = ?";
 
-        // Ubah menjadi array numerik
+        // Menyiapkan parameter untuk mengirimkan ID pelajaran yang akan dihapus
         $params = [
-            $id,  // ID pelajaran yang akan dihapus
+            $id  // ID pelajaran yang akan dihapus
         ];
 
         // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
-        // Memeriksa apakah query berhasil
+        // Memeriksa apakah query berhasil dijalankan
         if (!$result) {
+            // Menampilkan error jika query gagal
             die(print_r(sqlsrv_errors(), true));
         }
+
+        return true;  // Mengembalikan true jika berhasil menghapus
     }
 
     public function editDataJadwal($id_jadwal, $id_pelajaran, $id_user, $waktu, $hari)
@@ -176,25 +167,28 @@ class MataPelajaranModel
         // Membuka koneksi database
         $this->db = new Connection;
 
-        // Query SQL untuk mengupdate data jadwal
-        $stmt = "UPDATE jadwal SET id_pelajaran = ?, id_user = ?, waktu = ?, hari = ? WHERE id_jadwal = ?";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_EditJadwal @IdJadwal = ?, @IdPelajaran = ?, @IdUser = ?, @Waktu = ?, @Hari = ?";
 
-        // Ubah menjadi array numerik
+        // Menyiapkan parameter untuk mengirimkan data ke stored procedure
         $params = [
+            $id_jadwal,   // ID jadwal yang akan diupdate
             $id_pelajaran,  // ID pelajaran yang baru
             $id_user,       // ID user yang baru
             $waktu,         // Waktu yang baru
             $hari,          // Hari yang baru
-            $id_jadwal      // ID jadwal yang akan diupdate
         ];
 
         // Menjalankan query
         $result = sqlsrv_query($this->db->conn, $stmt, $params);
 
-        // Memeriksa apakah query berhasil
+        // Memeriksa apakah query berhasil dijalankan
         if (!$result) {
+            // Menampilkan error jika query gagal
             die(print_r(sqlsrv_errors(), true));
         }
+
+        return true;  // Mengembalikan true jika berhasil mengupdate jadwal
     }
 
     public function hapusDataJadwal($id_jadwal)
@@ -202,10 +196,10 @@ class MataPelajaranModel
         // Membuka koneksi database
         $this->db = new Connection;
 
-        // Query SQL untuk menghapus data jadwal
-        $stmt = "DELETE FROM jadwal WHERE id_jadwal = ?";
+        // Query untuk memanggil stored procedure
+        $stmt = "EXEC sp_HapusJadwal @IdJadwal = ?";
 
-        // Ubah menjadi array numerik
+        // Menyiapkan parameter untuk stored procedure
         $params = [
             $id_jadwal,  // ID jadwal yang akan dihapus
         ];
@@ -215,8 +209,10 @@ class MataPelajaranModel
 
         // Memeriksa apakah query berhasil
         if (!$result) {
+            // Menampilkan error jika query gagal
             die(print_r(sqlsrv_errors(), true));
         }
-    }
 
+        return true;  // Mengembalikan true jika berhasil menghapus jadwal
+    }
 }
