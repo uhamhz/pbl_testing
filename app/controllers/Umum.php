@@ -32,8 +32,8 @@ class Umum extends Controller
                 case 'admin':
                     header("location:$url/Admin/index");
                     break;
-                case 'pengurus':
-                    header("location:$url/Pengurus");
+                case 'ustadz':
+                    header("location:$url/Ustadz/index");
                     break;
                 case 'santri':
                     header("location:$url/Santri/index");

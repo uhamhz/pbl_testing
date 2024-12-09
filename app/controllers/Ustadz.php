@@ -1,0 +1,482 @@
+<?php
+class Ustadz extends Controller
+{
+    public function index()
+    {
+        if (isset($_SESSION['role'])) {
+            $role = $_SESSION['role'];
+
+            if ($role == "ustadz") {
+                $data['users'] = $this->model("UserModel")->getUserData($_SESSION['email']);
+                $data['ustadz'] = $this->model("UserModel")->getUstadzData();
+                $data['perizinan'] = $this->model("PerizinanModel")->getAllDataPerizinan();
+                $data['jumlahSantri'] = $this->model("UserModel")->getJumlahSantri();
+                $data['jumlahIzin'] = $this->model("PerizinanModel")->getJumlahIzinPending();
+                $data['jadwal'] = $this->model("MataPelajaranModel")->getJadwalWithPelajaranAndUstadz();
+                $data['mataPelajaran'] = $this->model("MataPelajaranModel")->getMataPelajaran();
+
+                $this->view('ustadz/dashboardUstadz', $data);
+            } else if ($role == "pengurus") {
+                header("location:http://localhost/public/Pengurus");
+            } else if ($role == "santri") {
+                header("location:http://localhost/public/Santri");
+            }
+        } else {
+            header("location:http://localhost/public");
+        }
+    }
+
+    public function tambah()
+    {
+        // Validasi input
+        if (empty($_POST['email']) || empty($_POST['password'])) {
+            $_SESSION['error'] = "Email dan password wajib diisi";
+            header('Location: ' . BASEURL . '/Ustadz/#ustadz');
+            exit;
+        }
+
+        $data = [
+            'email' => $_POST['email'],
+            'nama_lengkap' => $_POST['nama_lengkap'],
+            'alamat' => $_POST['alamat'],
+            'no_hp' => $_POST['no_hp'],
+            'role' => $_POST['role'], // Role dari form
+            'password' => $_POST['password'],
+        ];
+
+        // Di controller
+        if ($this->model('UserModel')->tambahDataUsers($data)) {
+            // Berhasil
+            error_log('User berhasil ditambahkan: ' . $data['email']);
+
+            // Redirect berdasarkan role
+            switch ($data['role']) {
+                case 'ustadz':
+                    header('Location: ' . BASEURL . '/Ustadz#ustadz');
+                    break;
+                case 'santri':
+                    header('Location: ' . BASEURL . '/Ustadz#santri');
+                    break;
+                case 'pribadi':
+                    header('Location: ' . BASEURL . '/Ustadz#pribadi');
+                    break;
+                default:
+                    header('Location: ' . BASEURL . '/Ustadz#ustadz');
+            }
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah user: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah user";
+            header('Location: ' . BASEURL . '/Ustadz');
+            exit;
+        }
+    }
+
+    public function edit()
+    {
+        // Validasi input dasar
+        if (empty($_POST['email']) || empty($_POST['nama_lengkap']) || empty($_POST['no_hp']) || empty($_POST['alamat'])) {
+            $_SESSION['error'] = "Semua field wajib diisi";
+            header('Location: ' . BASEURL . '/ustadz');
+            exit;
+        }
+
+        // Menyiapkan data yang akan diupdate
+        $data = [
+            'email' => $_POST['email'],
+            'nama_lengkap' => $_POST['nama_lengkap'],
+            'alamat' => $_POST['alamat'],
+            'no_hp' => $_POST['no_hp'],
+            'role' => $_POST['role'],
+            'picture' => null // Inisialisasi null untuk foto profil
+        ];
+
+        // Jika password diberikan, simpan password
+        if (!empty($_POST['password'])) {
+            $data['password'] = $_POST['password'];  // Tanpa perubahan pada password
+        }
+
+        // Menangani upload gambar profil
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['profile_pic']['tmp_name'];
+            $fileName = $_FILES['profile_pic']['name'];
+            $fileSize = $_FILES['profile_pic']['size'];
+            $fileType = $_FILES['profile_pic']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
+
+            if (in_array($fileExtension, $allowedfileExtensions) && $fileSize < 5000000) {
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                $uploadFileDir = '../public/img/Profile/';
+                $dest_path = $uploadFileDir . $newFileName;
+
+                if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $data['picture'] = $newFileName;  // Simpan hanya nama file
+                } else {
+                    $_SESSION['error'] = 'Error dalam mengupload file.';
+                    header('Location: ' . BASEURL . '/ustadz');
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = 'Upload gagal. Tipe file tidak didukung atau file terlalu besar.';
+                header('Location: ' . BASEURL . '/ustadz');
+                exit;
+            }
+        }
+
+        // Cek apakah data berhasil diperbarui
+        $userModel = $this->model('UserModel');
+        if ($userModel->editDataUser($data, $_POST['id'])) {
+            $_SESSION['success'] = "Data berhasil diperbarui.";
+
+            // Arahkan ke bagian yang sesuai berdasarkan role
+            switch ($data['role']) {
+                case 'ustadz':
+                    header('Location: ' . BASEURL . '/ustadz#ustadz');
+                    break;
+                case 'admin':
+                    // Pastikan bahwa #ustadz sesuai dengan ID atau tab di halaman yang relevan
+                    header('Location: ' . BASEURL . '/ustadz#ustadz');
+                    break;
+                case 'santri':
+                    header('Location: ' . BASEURL . '/ustadz#santri');
+                    break;
+                case 'pribadi':
+                    // Untuk data pribadi, arahkan ke halaman profil atau dashboard
+                    header('Location: ' . BASEURL . '/ustadz#pribadi');
+                    break;
+                default:
+                    // Jika tidak ada role yang cocok, arahkan ke halaman ustadz default
+                    header('Location: ' . BASEURL . '/ustadz');
+            }
+            exit;
+        } else {
+            $_SESSION['error'] = "Gagal memperbarui data.";
+            // Kembali ke halaman ustadz jika update gagal
+            header('Location: ' . BASEURL . '/ustadz');
+            exit;
+        }
+    }
+
+
+    public function hapus()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (isset($_POST['id']) && isset($_POST['role'])) {
+                $id = $_POST['id'];
+                $role = $_POST['role'];  // Ambil role dari POST
+
+                // Panggil model untuk menghapus user berdasarkan ID
+                $userModel = $this->model('UserModel');
+                if ($userModel->deleteUser($id)) {
+                    // Jika berhasil, lakukan redirect berdasarkan role
+                    switch ($role) {
+                        case 'ustadz':
+                            header('Location: ' . BASEURL . '/ustadz#ustadz');
+                            break;
+                        case 'santri':
+                            header('Location: ' . BASEURL . '/ustadz#santri');
+                            break;
+                        case 'pribadi':
+                            header('Location: ' . BASEURL . '/ustadz#pribadi');
+                            break;
+                        default:
+                            header('Location: ' . BASEURL . '/ustadz#ustadz');
+                    }
+                    exit;
+                } else {
+                    $_SESSION['error'] = "Gagal menghapus user.";
+                    header('Location: ' . BASEURL . '/ustadz');
+                    exit;
+                }
+            }
+        }
+    }
+
+    public function tambahTagihanSantri()
+    {
+        // Ensure JSON content type
+        header('Content-Type: application/json');
+
+        try {
+            // Extensive error checking
+            if (empty($_POST['id_users'])) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'ID Pengguna tidak boleh kosong'
+                ]);
+                exit;
+            }
+
+            // Your existing logic
+            $data = [
+                'id_users' => $_POST['id_users'],
+                'jenis_tagihan' => $_POST['jenis_tagihan'],
+                'jumlah' => $_POST['jumlah'],
+                'jatuh_tempo' => $_POST['jatuh_tempo'],
+                'status' => $_POST['status'],
+                'bukti_pembayaran' => null // Handle file upload separately
+            ];
+
+            // File upload handling
+            if (!empty($_FILES['bukti_pembayaran']['name'])) {
+                // Add your file upload logic here
+            }
+
+            // Model method call
+            $result = $this->model('TagihanModel')->tambahTagihan($data);
+
+            if ($result) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Tagihan berhasil ditambahkan'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Gagal menambahkan tagihan'
+                ]);
+            }
+            exit;
+
+        } catch (Exception $e) {
+            // Log the full error
+            error_log('Error in tambahTagihanSantri: ' . $e->getMessage());
+
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+            exit;
+        }
+    }
+
+    public function tambahJadwal()
+    {
+
+        $data = [
+            'id_pelajaran' => $_POST['id_pelajaran'],
+            'id_user' => $_POST['id_user'],
+            'waktu' => $_POST['waktu'],
+            'hari' => $_POST['hari']
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->tambahDataJadwal($data)) {
+            // Berhasil
+            error_log('jadwal berhasil ditambahkan: ' . $data['hari']);
+            header('Location: ' . BASEURL . '/ustadz#jadwal');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah user: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah jadwal";
+            header('Location: ' . BASEURL . '/ustadz#jadwal');
+            exit;
+        }
+    }
+
+    public function approvePerizinan()
+    {
+        //echo var_dump($_POST);
+        // // Validasi input
+        if (empty($_POST['id'])) {
+            $_SESSION['error'] = "ID perizinan tidak ditemukan";
+            header('Location: ' . BASEURL . '/Ustadz/#ustadz');
+            exit;
+        }
+
+        $data = [
+            'status' => $_POST['status'], // Mengubah status menjadi approve
+        ];
+        // echo var_dump($data);
+        // Mengupdate status di database
+        if ($this->model('PerizinanModel')->updateStatusPerizinan($data, $_POST['id'])) {
+            //  echo 'success';
+            // Berhasil
+            error_log('Perizinan berhasil diubah menjadi approve: ID ' . $_POST['id']);
+            $_SESSION['success'] = "Perizinan berhasil disetujui";
+            header('Location: ' . BASEURL . '/ustadz#perizinan');
+            exit;
+        } else {
+            //echo 'gagal';
+            // Gagal
+            error_log('Gagal mengubah perizinan: ID ' . $_POST['id']);
+            $_SESSION['error'] = "Gagal menyetujui perizinan";
+            header('Location: ' . BASEURL . '/ustadz#perizinan');
+            exit;
+        }
+    }
+
+    public function tambahMataPelajaran()
+    {
+        $data = [
+            'nama_pelajaran' => $_POST['nama_pelajaran'],
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->tambahDataMataPelajaran($data)) {
+            // Berhasil
+            error_log('mata pelajaran berhasil ditambahkan: ' . $data['nama_pelajaran']);
+            header('Location: ' . BASEURL . '/ustadz#pelajaran');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal menambah mata pelajaran: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal menambah mata pelajaran";
+            header('Location: ' . BASEURL . '/ustadz#pelajaran');
+            exit;
+        }
+    }
+
+    public function editMataPelajaran()
+    {
+        // Pastikan nama input form sama dengan yang digunakan di modal
+        $data = [
+            'id_pelajaran' => $_POST['id_pelajaran'],  // Sesuaikan dengan name pada form
+            'nama_pelajaran' => $_POST['nama_pelajaran'],
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->editDataMataPelajaran($data['id_pelajaran'], $data['nama_pelajaran'])) {
+            // Berhasil
+            error_log('Mata pelajaran berhasil diubah: ' . $data['id_pelajaran']);
+            header('Location: ' . BASEURL . '/ustadz#pelajaran');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal mengubah mata pelajaran: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal mengubah mata pelajaran";
+            header('Location: ' . BASEURL . '/ustadz#pelajaran');
+            exit;
+        }
+    }
+
+    public function hapusMataPelajaran()
+    {
+        if (isset($_POST['id_pelajaran'])) {
+            $id_pelajaran = $_POST['id_pelajaran'];
+            $this->model('MataPelajaranModel')->hapusDataMataPelajaran($id_pelajaran);
+            header('Location: ' . BASEURL . '/ustadz#pelajaran');
+            exit;
+        }
+    }
+
+
+    public function editJadwal()
+    {
+        $data = [
+            'id_jadwal' => $_POST['jadwalId'],    // Mengambil id_jadwal dari form
+            'id_pelajaran' => $_POST['id_pelajaran'],
+            'id_user' => $_POST['id_user'],
+            'waktu' => $_POST['waktu'],
+            'hari' => $_POST['hari']
+        ];
+
+        // Di controller
+        if ($this->model('MataPelajaranModel')->editDataJadwal($data['id_jadwal'], $data['id_pelajaran'], $data['id_user'], $data['waktu'], $data['hari'])) {
+            // Berhasil
+            error_log('Jadwal berhasil diubah: ' . $data['id_jadwal']);
+            header('Location: ' . BASEURL . '/ustadz#jadwal');
+            exit;
+        } else {
+            // Gagal
+            error_log('Gagal mengubah jadwal: ' . print_r($data, true));
+            $_SESSION['error'] = "Gagal mengubah jadwal";
+            header('Location: ' . BASEURL . '/ustadz#jadwal');
+            exit;
+        }
+    }
+
+    public function hapusJadwal()
+    {
+        if (isset($_POST['id_jadwal'])) {
+            $id_jadwal = $_POST['id_jadwal'];
+
+            // Panggil model untuk menghapus jadwal
+            $this->model('MataPelajaranModel')->hapusDataJadwal($id_jadwal);
+
+            // Redirect setelah berhasil
+            header('Location: ' . BASEURL . '/ustadz#jadwal');
+            exit;
+        } else {
+            // Jika tidak ada ID jadwal
+            $_SESSION['error'] = "Tidak ada jadwal yang dipilih untuk dihapus";
+            header('Location: ' . BASEURL . '/ustadz#jadwal');
+            exit;
+        }
+    }
+
+    public function editStatusTagihan()
+    {
+        // Ambil data dari POST
+        $id_tagihan = $_POST['id_tagihan'];
+        $status = $_POST['status'];
+
+        // Log data yang diterima untuk debugging
+        error_log("Data diterima - ID Tagihan: " . $id_tagihan . " | Status: " . $status);
+
+        $data = [
+            'id_tagihan' => $id_tagihan,
+            'status' => $status
+        ];
+
+        // Pastikan model ini menangani update status tagihan
+        if ($this->model('TagihanModel')->updateStatusTagihan($data)) {
+            // Mengirimkan response JSON dengan status success
+            echo json_encode(['success' => true, 'status' => $status]);
+        } else {
+            // Jika gagal, log kesalahan dan kirimkan response error
+            error_log("Gagal memperbarui status tagihan dengan ID: " . $id_tagihan);
+            echo json_encode(['success' => false]);
+        }
+    }
+
+    public function editProfilePicture()
+    {
+        if (!isset($_FILES['profile_pic']) || $_FILES['profile_pic']['error'] != UPLOAD_ERR_OK) {
+            $_SESSION['error'] = "Terjadi kesalahan upload!";
+            header('Location: ' . BASEURL . '/Ustadz');
+            exit;
+        }
+
+        $file = $_FILES['profile_pic'];
+        $fileNameOriginal = basename($file['name']);
+        $fileExtension = strtolower(pathinfo($fileNameOriginal, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpeg', 'jpg', 'png'];
+
+        if (!in_array($fileExtension, $allowedTypes) || $file['size'] > (5 * 1024 * 1024)) {
+            $_SESSION['error'] = "File tidak valid atau terlalu besar!";
+            header('Location: ' . BASEURL . '/Ustadz');
+            exit;
+        }
+
+        $newFileName = uniqid('img_', true) . '.' . $fileExtension;
+        $uploadPath = '../public/img/Profile/';
+
+        // Membuat folder jika belum ada
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        $filePath = $uploadPath . $newFileName;
+
+        if (move_uploaded_file($file['tmp_name'], $filePath)) {
+            if ($this->model('UserModel')->editProfilePicture($_POST['id'], $newFileName)) {
+                header('Location: ' . BASEURL . '/Ustadz');
+                exit;
+            } else {
+                $_SESSION['error'] = "Gagal mengubah profile picture";
+                header('Location: ' . BASEURL . '/Ustadz');
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "Gagal menyimpan file!";
+            header('Location: ' . BASEURL . '/Ustadz');
+            exit;
+        }
+    }
+}
+?>
