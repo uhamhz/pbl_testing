@@ -15,4 +15,6 @@
 - RANGGA DWI SAPUTRA. (2341720248) https://github.com/Putra1688
 
 ## Laporan
-(ONGOING) 
+(ONGOING)
+Link Laporan Akhir PBL
+https://acesse.one/LaporanAkhirPBLSMT3 
