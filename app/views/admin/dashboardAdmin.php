@@ -700,9 +700,10 @@
                             <td>
                                 <?php if ($data['users'][0]['id'] != $admin['id']): ?>
                                     <!-- Only show Edit and Delete buttons if not the logged-in user -->
-                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST">
-                                        <input type="hidden" name="id" value="<?= $admin['id'] ?>">
-                                        <input type="hidden" name="role" value="<?= $admin['role'] ?>">
+                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST"
+                                        style="display:inline-block;">
+                                        <input type="hidden" name="id" value="<?= $admin['id']; ?>">
+                                        <input type="hidden" name="status" value="<?= $admin['role']; ?>">
                                         <!-- Tambahkan input role -->
                                         <button type="submit" class="btn btn-danger">Hapus</button>
                                     </form>
@@ -874,16 +875,16 @@
                                 <?php if ($data['users'][0]['id'] != $ustadz['id']): ?>
                                     <!-- Only show Edit and Delete buttons if not the logged-in user -->
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
-                                        data-id="<?= $ustadz['id'] ?>">
-                                        <input type="hidden" name="id" value="<?= $ustadz['id'] ?>">
-                                        <input type="hidden" name="role" value="<?= $ustadz['role'] ?>">
+                                        style="display:inline-block;" data-id="<?= $ustadz['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $ustadz['id']; ?>">
+                                        <input type="hidden" name="status" value="<?= $ustadz['role']; ?>">
                                         <button type="button" class="btn btn-danger hapus-ustadz"
                                             data-id="<?= $ustadz['id']; ?>">Hapus</button>
                                     </form>
                                     <button class="btn btn-warning" data-toggle="modal"
                                         data-target="#modalEditUstadz<?= $ustadz['id'] ?>">Edit</button>
                                 <?php else: ?>
-                                    <!-- Hide Edit and Delete buttons for the logged-in ustadz -->
+                                    <!-- Hide Edit and Delete buttons for the logged-in admin -->
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -1046,21 +1047,22 @@
                             <td><?= htmlspecialchars($santri['alamat'], ENT_QUOTES, 'UTF-8') ?></td>
                             <td><?= htmlspecialchars($santri['no_hp'], ENT_QUOTES, 'UTF-8') ?></td>
                             <td>
-                                <!-- Edit Button (opens modal) -->
-                                <button class="btn btn-warning" data-toggle="modal"
-                                    data-target="#modalEditSantri<?= $santri['id'] ?>">Edit</button>
-
-                                <!-- Delete Button (trigger form submission) -->
+                                <!-- Only show Edit and Delete buttons if not the logged-in user -->
                                 <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
-                                    data-id="<?= $santri['id'] ?>">
-                                    <input type="hidden" name="id" value="<?= $santri['id'] ?>">
-                                    <input type="hidden" name="role" value="<?= $santri['role'] ?>">
+                                    style="display:inline-block;" data-id="<?= $santri['id'] ?>">
+                                    <input type="hidden" name="id" value="<?= $santri['id']; ?>">
+                                    <input type="hidden" name="status" value="<?= $santri['role']; ?>">
                                     <button type="button" class="btn btn-danger hapus-admin"
                                         data-id="<?= $santri['id']; ?>">Hapus</button>
                                 </form>
-                            </td>
+                                <button class="btn btn-warning" data-toggle="modal"
+                                    data-target="#modalEditSantri<?= $santri['id'] ?>">Edit</button>
+                        </td>
                         </tr>
                     <?php endforeach; ?>
+
+                   
+
                 </tbody>
             </table>
         </section>
