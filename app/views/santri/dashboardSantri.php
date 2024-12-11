@@ -509,12 +509,30 @@
 
                 <!-- Menampilkan data pribadi sebagai teks biasa -->
                 <div class="data-pribadi">
-                    <p><strong>Nama Lengkap:</strong> <?= $data['users']['0']['nama_lengkap'] ?></p>
-                    <p><strong>Email:</strong><?= $data['users']['0']['email'] ?></p>
-                    <p><strong>Alamat:</strong> <?= $data['users']['0']['alamat'] ?></p>
-                    <p><strong>No. HP:</strong> <?= $data['users']['0']['no_hp'] ?></p>
-                    <p><strong>Password:</strong> ********</p>
+                <table style="width: auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Nama Lengkap</strong></td>
+                        <td>:<?= $data['users']['0']['nama_lengkap'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Email</strong></td>
+                        <td>:<?= $data['users']['0']['email'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Alamat</strong></td>
+                        <td>:<?= $data['users']['0']['alamat'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>No. HP</strong></td>
+                        <td>:<?= $data['users']['0']['no_hp'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Password</strong></td>
+                        <td>: ********</td>
+                    </tr>
+                </table>
                 </div>
+                
 
                 <!-- Form untuk edit data pribadi, tersembunyi pada awalnya -->
                 <form class="profile-form" style="display:none;" action="<?= BASEURL; ?>/Santri/edit" method="post"
