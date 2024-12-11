@@ -18,8 +18,8 @@
         /* CSS Custom Properties */
         /* Modern CSS Reset and Variables */
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1e40af;
+            --primary-color: #00a859;
+            --primary-dark: #2e8b57;
             --secondary-color: #3b82f6;
             --accent-color: #ef4444;
             --background-color: #f1f5f9;
@@ -46,10 +46,10 @@
             line-height: 1.5;
         }
 
-        /* Enhanced Sidebar */
+        /* Sidebar styles */
         .sidebar {
             position: fixed;
-            left: -280px;
+            left: 0; /* Changed from -280px to make visible by default */
             width: 280px;
             height: 100vh;
             background: var(--card-color);
@@ -58,32 +58,59 @@
             z-index: 1000;
         }
 
-        .sidebar.active {
-            left: 0;
+        /* Main content margin to accommodate visible sidebar */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            transition: var(--transition);
         }
 
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--card-color);
-            text-align: center;
-        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -100%;
+                width: 100%;
+            }
 
-        .admin-avatar {
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+                .admin-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            margin-bottom: 1rem;
+            margin: 0 auto 1rem auto; /* Center horizontally and keep bottom margin */
             border: 4px solid rgba(255, 255, 255, 0.2);
             padding: 3px;
             background: var(--card-color);
             transition: var(--transition);
+            display: block; /* Makes margin auto work properly */
         }
 
         .admin-avatar:hover {
             transform: scale(1.05);
         }
 
+        /* Ensure the sidebar header properly centers its content */
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--card-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         /* Enhanced Navigation */
         nav ul li a {
             display: flex;
@@ -499,11 +526,7 @@
     <!-- Toggle Button -->
     <div class="toggle-btn" onclick="toggleSidebar()">
         <div class="toggle-content">
-            <svg width="30" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+            
             <span class="toggle-text">Ashabul Kahfi</span>
         </div>
     </div>
