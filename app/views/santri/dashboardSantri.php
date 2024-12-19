@@ -598,14 +598,14 @@
                 <h2>Jadwal</h2>
 
                 <!-- Tabel untuk menampilkan jadwal -->
-                <table border="1" cellpadding="10">
+                <table border="1" cellpadding="10" style="border-collapse: collapse; border: 2px solid black;">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Pelajaran</th>
-                            <th>Ustadz</th>
-                            <th>Waktu</th>
-                            <th>Hari</th>
+                            <th style="border: 2px solid black; background-color: yellow;">No</th>
+                            <th style="border: 2px solid black; background-color: yellow;">Pelajaran</th>
+                            <th style="border: 2px solid black; background-color: yellow;">Ustadz</th>
+                            <th style="border: 2px solid black; background-color: yellow;">Waktu</th>
+                            <th style="border: 2px solid black; background-color: yellow;">Hari</th>
                         </tr>
                     </thead>
                     <tbody>

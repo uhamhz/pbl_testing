@@ -1232,6 +1232,13 @@
         <!-- Mata Pelajaran Section -->
         <section id="pelajaran" class="content-section">
             <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
+
+              <!-- Tombol untuk membuka modal tambah mata pelajaran -->
+              <div class="text-left mt-4">
+                <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">Tambah Mata
+                    Pelajaran</button>
+                </div>
+                <br>
             <div class="pelajaran-container row">
                 <!-- Menampilkan daftar mata pelajaran -->
                 <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
@@ -1257,11 +1264,6 @@
                 <?php endforeach; ?>
             </div>
 
-            <!-- Tombol untuk membuka modal tambah mata pelajaran -->
-            <div class="text-center mt-4">
-                <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">Tambah Mata
-                    Pelajaran</button>
-            </div>
         </section>
 
 
