@@ -166,18 +166,23 @@ class Admin extends Controller
         }
     }
 
-
     public function hapus()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Cek apakah 'id' dan 'role' ada di data POST
             if (isset($_POST['id']) && isset($_POST['role'])) {
                 $id = $_POST['id'];
-                $role = $_POST['role'];  // Ambil role dari POST
+                $role = $_POST['role']; // pastikan ini 'role', bukan 'status'
+
+                // Debugging log untuk melihat apakah ID dan role terkirim dengan benar
+                error_log("ID: " . $id . " Role: " . $role); // Pastikan role ada di sini
 
                 // Panggil model untuk menghapus user berdasarkan ID
                 $userModel = $this->model('UserModel');
-                if ($userModel->deleteUser($id)) {
-                    // Jika berhasil, lakukan redirect berdasarkan role
+                $deleteResult = $userModel->deleteUser($id);
+
+                if ($deleteResult) {
+                    // Redirect sesuai dengan role
                     switch ($role) {
                         case 'ustadz':
                             header('Location: ' . BASEURL . '/admin#ustadz');
@@ -197,6 +202,9 @@ class Admin extends Controller
                     header('Location: ' . BASEURL . '/admin');
                     exit;
                 }
+            } else {
+                // Debugging log jika data tidak ada
+                error_log("Data tidak lengkap. ID dan/atau role tidak ditemukan di POST.");
             }
         }
     }

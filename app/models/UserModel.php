@@ -185,13 +185,11 @@ class UserModel
 
     public function deleteUser($id)
     {
-        // Membuat koneksi ke database
         $this->db = new Connection;
 
         // Menyiapkan query untuk memanggil stored procedure dengan parameter
         $stmt = "EXEC DeleteUserById @UserId = ?";
 
-        // Menyiapkan parameter untuk query
         $params = array($id);
 
         // Menjalankan query menggunakan sqlsrv_query dan passing parameter
@@ -199,12 +197,15 @@ class UserModel
 
         // Mengecek jika query gagal dijalankan
         if ($result === false) {
+            // Logging kesalahan SQL untuk debug
+            error_log("Error executing query: " . print_r(sqlsrv_errors(), true));
             return false;
         }
 
         // Mengembalikan true jika berhasil menghapus
         return true;
     }
+
 
     public function tambahDataUsers($data)
     {

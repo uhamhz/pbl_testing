@@ -49,7 +49,8 @@
         /* Sidebar styles */
         .sidebar {
             position: fixed;
-            left: 0; /* Changed from -280px to make visible by default */
+            left: 0;
+            /* Changed from -280px to make visible by default */
             width: 280px;
             height: 100vh;
             background: var(--card-color);
@@ -85,16 +86,19 @@
                 grid-template-columns: 1fr;
             }
         }
-                .admin-avatar {
+
+        .admin-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            margin: 0 auto 1rem auto; /* Center horizontally and keep bottom margin */
+            margin: 0 auto 1rem auto;
+            /* Center horizontally and keep bottom margin */
             border: 4px solid rgba(255, 255, 255, 0.2);
             padding: 3px;
             background: var(--card-color);
             transition: var(--transition);
-            display: block; /* Makes margin auto work properly */
+            display: block;
+            /* Makes margin auto work properly */
         }
 
         .admin-avatar:hover {
@@ -111,6 +115,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         /* Enhanced Navigation */
         nav ul li a {
             display: flex;
@@ -526,7 +531,7 @@
     <!-- Toggle Button -->
     <div class="toggle-btn" onclick="toggleSidebar()">
         <div class="toggle-content">
-            
+
             <span class="toggle-text">Ashabul Kahfi</span>
         </div>
     </div>
@@ -662,7 +667,7 @@
                         <td>: <?= $data['users']['0']['no_hp'] ?></td>
                     </tr>
                 </table>
-                
+
             </div>
 
             <!-- Form untuk edit data pribadi dan upload gambar profil -->
@@ -741,12 +746,13 @@
                             <td>
                                 <?php if ($data['users'][0]['id'] != $admin['id']): ?>
                                     <!-- Only show Edit and Delete buttons if not the logged-in user -->
-                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST"
-                                        style="display:inline-block;">
+                                    <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
+                                        style="display:inline-block;" data-id="<?= $admin['id'] ?>">
                                         <input type="hidden" name="id" value="<?= $admin['id']; ?>">
-                                        <input type="hidden" name="status" value="<?= $admin['role']; ?>">
-                                        <!-- Tambahkan input role -->
-                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                        <input type="hidden" name="role" value="<?= $admin['role']; ?>">
+                                        <!-- pastikan ini 'role', bukan 'status' -->
+                                        <button type="button" class="btn btn-danger hapus-admin"
+                                            data-id="<?= $admin['id']; ?>">Hapus</button>
                                     </form>
                                     <button class="btn btn-warning" data-toggle="modal"
                                         data-target="#modalEditAdmin<?= $admin['id'] ?>">Edit</button>
@@ -918,7 +924,8 @@
                                     <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                         style="display:inline-block;" data-id="<?= $ustadz['id'] ?>">
                                         <input type="hidden" name="id" value="<?= $ustadz['id']; ?>">
-                                        <input type="hidden" name="status" value="<?= $ustadz['role']; ?>">
+                                        <input type="hidden" name="role" value="<?= $ustadz['role']; ?>">
+                                        <!-- pastikan ini 'role', bukan 'status' -->
                                         <button type="button" class="btn btn-danger hapus-ustadz"
                                             data-id="<?= $ustadz['id']; ?>">Hapus</button>
                                     </form>
@@ -1092,18 +1099,17 @@
                                 <form action="<?= BASEURL; ?>/Admin/hapus" method="POST" class="form-hapus"
                                     style="display:inline-block;" data-id="<?= $santri['id'] ?>">
                                     <input type="hidden" name="id" value="<?= $santri['id']; ?>">
-                                    <input type="hidden" name="status" value="<?= $santri['role']; ?>">
-                                    <button type="button" class="btn btn-danger hapus-admin"
+                                    <input type="hidden" name="role" value="<?= $santri['role']; ?>">
+                                    <!-- pastikan ini 'role', bukan 'status' -->
+                                    <button type="button" class="btn btn-danger hapus-santri"
                                         data-id="<?= $santri['id']; ?>">Hapus</button>
                                 </form>
+
                                 <button class="btn btn-warning" data-toggle="modal"
                                     data-target="#modalEditSantri<?= $santri['id'] ?>">Edit</button>
-                        </td>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
-
-                   
-
                 </tbody>
             </table>
         </section>
@@ -1233,12 +1239,12 @@
         <section id="pelajaran" class="content-section">
             <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
 
-              <!-- Tombol untuk membuka modal tambah mata pelajaran -->
-              <div class="text-left mt-4">
+            <!-- Tombol untuk membuka modal tambah mata pelajaran -->
+            <div class="text-left mt-4">
                 <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">Tambah Mata
                     Pelajaran</button>
-                </div>
-                <br>
+            </div>
+            <br>
             <div class="pelajaran-container row">
                 <!-- Menampilkan daftar mata pelajaran -->
                 <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
@@ -2207,92 +2213,43 @@
             buttonsStyling: false
         });
 
-        // Menambahkan event listener untuk tombol "Hapus Admin"
-        document.querySelectorAll(".hapus-admin").forEach(button => {
-            button.addEventListener("click", function () {
-                const idToDelete = this.getAttribute("data-id"); // Mengambil ID dari tombol
-                const form = this.closest("form"); // Mendapatkan form yang terkait dengan tombol
+        // Fungsi untuk menangani event "Hapus"
+        function handleDelete(buttonClass) {
+            document.querySelectorAll(buttonClass).forEach(button => {
+                button.addEventListener("click", function () {
+                    const idToDelete = this.getAttribute("data-id"); // Mengambil ID dari tombol
+                    const form = this.closest("form"); // Mendapatkan form yang terkait dengan tombol
 
-                // Menampilkan SweetAlert konfirmasi sebelum hapus
-                swalWithBootstrapButtons.fire({
-                    title: "Apakah Anda yakin?",
-                    text: "Data yang dihapus tidak dapat dikembalikan!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel!",
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit(); // Mengirimkan form untuk penghapusan
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        swalWithBootstrapButtons.fire({
-                            title: "Cancelled",
-                            text: "Data tidak jadi dihapus.",
-                            icon: "error"
-                        });
-                    }
+                    // Menampilkan SweetAlert konfirmasi sebelum hapus
+                    swalWithBootstrapButtons.fire({
+                        title: "Apakah Anda yakin?",
+                        text: "Data yang dihapus tidak dapat dikembalikan!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel!",
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log("Form akan dikirim");  // Debugging log
+                            form.submit(); // Kirim form untuk penghapusan
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            swalWithBootstrapButtons.fire({
+                                title: "Cancelled",
+                                text: "Data tidak jadi dihapus.",
+                                icon: "error"
+                            });
+                        }
+                    });
                 });
             });
-        });
+        }
 
-        // Menambahkan event listener untuk tombol "Hapus Admin"
-        document.querySelectorAll(".hapus-ustadz").forEach(button => {
-            button.addEventListener("click", function () {
-                const idToDelete = this.getAttribute("data-id"); // Mengambil ID dari tombol
-                const form = this.closest("form"); // Mendapatkan form yang terkait dengan tombol
-
-                // Menampilkan SweetAlert konfirmasi sebelum hapus
-                swalWithBootstrapButtons.fire({
-                    title: "Apakah Anda yakin?",
-                    text: "Data yang dihapus tidak dapat dikembalikan!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel!",
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit(); // Mengirimkan form untuk penghapusan
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        swalWithBootstrapButtons.fire({
-                            title: "Cancelled",
-                            text: "Data tidak jadi dihapus.",
-                            icon: "error"
-                        });
-                    }
-                });
-            });
-        });
-
-        // Menambahkan event listener untuk tombol "Hapus Santri"
-        document.querySelectorAll(".hapus-santri").forEach(button => {
-            button.addEventListener("click", function () {
-                const idToDelete = this.getAttribute("data-id"); // Mendapatkan ID dari tombol
-                const form = document.querySelector(`.form-hapus[data-id="${idToDelete}"]`); // Mencari form berdasarkan data-id
-
-                // Menampilkan SweetAlert konfirmasi sebelum hapus
-                swalWithBootstrapButtons.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel!",
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit(); // Mengirimkan form untuk penghapusan
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        swalWithBootstrapButtons.fire({
-                            title: "Cancelled",
-                            text: "Your data is safe :)",
-                            icon: "error"
-                        });
-                    }
-                });
-            });
-        });
+        // Menambahkan event listener untuk tombol "Hapus Admin", "Hapus Ustadz", dan "Hapus Santri"
+        // Cukup panggil fungsi handleDelete untuk masing-masing kelas
+        handleDelete(".hapus-admin");
+        handleDelete(".hapus-ustadz");
+        handleDelete(".hapus-santri");
     </script>
 
     <script>
