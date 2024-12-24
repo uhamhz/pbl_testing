@@ -477,11 +477,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .toggle-btn:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.05);
-            /* Efek zoom saat hover */
-        }
+        
 
         .toggle-content {
             display: flex;
@@ -1242,31 +1238,31 @@
 
         <!-- Mata Pelajaran Section -->
         <section id="pelajaran" class="content-section">
-                <div class="text-left mb-4">
-                    <!-- Tombol untuk membuka modal tambah mata pelajaran -->
-                    <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">
-                        Tambah Mata Pelajaran
-                    </button>
-                </div>
                 <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
-                <div class="pelajaran-container row">
-                    <!-- Menampilkan daftar mata pelajaran -->
-                    <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
-                        <div class="col-md-4 mb-4">
-                            <div class="pelajaran-card card shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title"><?= $pelajaran['nama_pelajaran'] ?></h5>
-                                    <p class="card-text"><strong>ID Pelajaran:</strong> <?= $pelajaran['id_pelajaran'] ?></p>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">
-                                            Edit
-                                        </button>
-                                        <form action="<?= BASEURL; ?>/Admin/hapusMataPelajaran" method="POST" class="m-0">
-                                            <input type="hidden" name="id_pelajaran" value="<?= $pelajaran['id_pelajaran'] ?>">
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                Hapus
-                                            </button>
-                                        </form>
+            <!-- Tombol untuk membuka modal tambah mata pelajaran -->
+            <div class="text-center mt-4">
+                <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">Tambah Mata
+                    Pelajaran</button>
+            </div>
+            <br>
+            <div class="pelajaran-container row">
+                <!-- Menampilkan daftar mata pelajaran -->
+                <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="pelajaran-card card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= $pelajaran['nama_pelajaran'] ?></h5>
+                                <p class="card-text"><strong>ID Pelajaran:</strong> <?= $pelajaran['id_pelajaran'] ?>
+                                </p>
+                                <div class="text-align: center">
+                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">Edit</button>
+                                    <form action="<?= BASEURL; ?>/Admin/hapusMataPelajaran" method="POST"
+                                        style="display: inline;">
+                                        <!-- Menggunakan input hidden untuk mengirimkan id_pelajaran ke controller -->
+                                        <input type="hidden" name="id_pelajaran" value="<?= $pelajaran['id_pelajaran'] ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
                                     </div>
                                 </div>
                             </div>
@@ -1385,7 +1381,6 @@
                                     <input type="hidden" name="id_jadwal" value="<?= $jadwal['id_jadwal'] ?>">
                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                 </form>
-                                        </form>
                                     </div>
                                 </li>
                             <?php endforeach; ?>

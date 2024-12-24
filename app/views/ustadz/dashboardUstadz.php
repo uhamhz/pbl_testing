@@ -25,8 +25,8 @@
         /* CSS Custom Properties */
         /* Modern CSS Reset and Variables */
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1e40af;
+            --primary-color: #00a859;
+            --primary-dark: #2e8b57;
             --secondary-color: #3b82f6;
             --accent-color: #ef4444;
             --background-color: #f1f5f9;
@@ -53,10 +53,11 @@
             line-height: 1.5;
         }
 
-        /* Enhanced Sidebar */
+        /* Sidebar styles */
         .sidebar {
             position: fixed;
-            left: -280px;
+            left: 0;
+            /* Changed from -280px to make visible by default */
             width: 280px;
             height: 100vh;
             background: var(--card-color);
@@ -65,30 +66,61 @@
             z-index: 1000;
         }
 
-        .sidebar.active {
-            left: 0;
+        /* Main content margin to accommodate visible sidebar */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            transition: var(--transition);
         }
 
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: var(--card-color);
-            text-align: center;
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -100%;
+                width: 100%;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
         }
 
         .ustadz-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            margin-bottom: 1rem;
+            margin: 0 auto 1rem auto;
+            /* Center horizontally and keep bottom margin */
             border: 4px solid rgba(255, 255, 255, 0.2);
             padding: 3px;
             background: var(--card-color);
             transition: var(--transition);
+            display: block;
+            /* Makes margin auto work properly */
         }
 
-        .ustadz-avatar:hover {
+        .admin-avatar:hover {
             transform: scale(1.05);
+        }
+
+        /* Ensure the sidebar header properly centers its content */
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--card-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* Enhanced Navigation */
@@ -452,11 +484,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .toggle-btn:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.05);
-            /* Efek zoom saat hover */
-        }
+        
 
         .toggle-content {
             display: flex;
@@ -471,12 +499,6 @@
             height: 32px;
             /* Sesuaikan proporsi ikon */
         }
-
-        .modal {
-            z-index: 1050;
-            /* Pastikan modal berada di atas elemen lain */
-        }
-
 
         .toggle-content .toggle-text {
             font-size: 1.6rem;
@@ -505,20 +527,9 @@
                 font-size: 1.2rem;
             }
         }
-
-        .content-section {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .content-section.active {
-            display: block;
-            opacity: 1;
-        }
     </style>
 
-    <script>
+<script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.querySelector('.sidebar');
             const toggleButton = document.querySelector('.sidebar-toggle'); // Tombol untuk membuka/menutup sidebar
@@ -565,18 +576,13 @@
             }
         });
     </script>
-
 </head>
 
 <body>
     <!-- Toggle Button -->
     <div class="toggle-btn" onclick="toggleSidebar()">
         <div class="toggle-content">
-            <svg width="30" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
+
             <span class="toggle-text">Ashabul Kahfi</span>
         </div>
     </div>
@@ -676,13 +682,30 @@
         <section id="pribadi" class="content-section">
             <h2>Data Pribadi</h2>
 
-
             <div class="data-pribadi">
-                <p><strong>Nama Lengkap:</strong> <?= $data['users']['0']['nama_lengkap'] ?></p>
-                <p><strong>Email:</strong> <?= $data['users']['0']['email'] ?></p>
-                <p><strong>Role:</strong> <?= $data['users']['0']['role'] ?></p>
-                <p><strong>Alamat:</strong> <?= $data['users']['0']['alamat'] ?></p>
-                <p><strong>No. HP:</strong> <?= $data['users']['0']['no_hp'] ?></p>
+                <table style="width: auto; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Nama Lengkap</strong></td>
+                        <td>: <?= $data['users']['0']['nama_lengkap'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Email</strong></td>
+                        <td>: <?= $data['users']['0']['email'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Role</strong></td>
+                        <td>: <?= $data['users']['0']['role'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>Alamat</strong></td>
+                        <td>: <?= $data['users']['0']['alamat'] ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 10px;"><strong>No. HP</strong></td>
+                        <td>: <?= $data['users']['0']['no_hp'] ?></td>
+                    </tr>
+                </table>
+
             </div>
 
             <!-- Form untuk edit data pribadi dan upload gambar profil -->
@@ -732,6 +755,12 @@
         <!-- Mata Pelajaran Section -->
         <section id="pelajaran" class="content-section">
             <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
+            <!-- Tombol untuk membuka modal tambah mata pelajaran -->
+            <div class="text-center mt-4">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahPelajaran">Tambah Mata
+                    Pelajaran</button>
+            </div>
+            <br>
             <div class="pelajaran-container row">
                 <!-- Menampilkan daftar mata pelajaran -->
                 <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
@@ -741,7 +770,7 @@
                                 <h5 class="card-title"><?= $pelajaran['nama_pelajaran'] ?></h5>
                                 <p class="card-text"><strong>ID Pelajaran:</strong> <?= $pelajaran['id_pelajaran'] ?>
                                 </p>
-                                <div class="d-flex justify-content-between">
+                                <div class="text-align: center">
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">Edit</button>
                                     <form action="<?= BASEURL; ?>/Ustadz/hapusMataPelajaran" method="POST"
@@ -755,12 +784,6 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
-            </div>
-
-            <!-- Tombol untuk membuka modal tambah mata pelajaran -->
-            <div class="text-center mt-4">
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahPelajaran"">Tambah Mata
-                    Pelajaran</button>
             </div>
         </section>
 
@@ -864,21 +887,17 @@
                                         </span> -
                                         <strong><?= $jadwal['nama_pelajaran'] ?></strong> -
                                         <strong><?= $jadwal['nama_lengkap'] ?></strong>
-                                        <button class="btn btn-success btn-sm edit-jadwal" data-toggle="modal"
-                                            data-target="#modalEditJadwal" data-id="<?= $jadwal['id_jadwal'] ?>"
-                                            data-pelajaran="<?= $jadwal['id_pelajaran'] ?>"
-                                            data-ustadz="<?= $jadwal['id_user'] ?>"
-                                            data-waktu="<?= $jadwal['waktu']->format('H:i') ?>"
-                                            data-hari="<?= $jadwal['hari'] ?>">
-                                            Edit
-                                        </button>
-                                        <form action="<?= BASEURL; ?>/Ustadz/hapusJadwal" method="POST"
-                                            style="display: inline;">
-                                            <!-- Menggunakan input hidden untuk mengirimkan id_jadwal ke controller -->
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-warning btn-sm edit-jadwal" data-toggle="modal"
+                                                data-target="#modalEditJadwal" data-id="<?= $jadwal['id_jadwal'] ?>"
+                                                data-pelajaran="<?= $jadwal['id_pelajaran'] ?>" data-ustadz="<?= $jadwal['id_user'] ?>"
+                                                data-waktu="<?= $jadwal['waktu']->format('H:i') ?>"
+                                                data-hari="<?= $jadwal['hari'] ?>" style="margin-right: 5px;">Edit</button>
+                                        <form action="<?= BASEURL; ?>/Admin/hapusJadwal" method="POST" style="display: inline;">
                                             <input type="hidden" name="id_jadwal" value="<?= $jadwal['id_jadwal'] ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                         </form>
-
+                                            </div>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
