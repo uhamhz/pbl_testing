@@ -724,6 +724,9 @@
 
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahAdmin">Tambah
                 Admin</button>
+
+                <div class="mt-4"></div>
+
             <table id="adminTable">
                 <thead>
                     <tr>
@@ -899,6 +902,7 @@
                 onkeyup="searchData('ustadz')">
 
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahUstadz">Tambah Ustadz</button>
+            <div class="mt-4"></div>
             <table id="ustadzTable">
                 <thead>
                     <tr>
@@ -1075,6 +1079,7 @@
 
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahSantri">Tambah
                 Santri</button>
+                <div class="mt-4"></div>
             <table class="table table-bordered" id="santriTable">
                 <thead>
                     <tr>
