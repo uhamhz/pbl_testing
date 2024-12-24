@@ -1242,40 +1242,38 @@
 
         <!-- Mata Pelajaran Section -->
         <section id="pelajaran" class="content-section">
-            <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
-
-            <!-- Tombol untuk membuka modal tambah mata pelajaran -->
-            <div class="text-left mt-4">
-                <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">Tambah Mata
-                    Pelajaran</button>
-            </div>
-            <br>
-            <div class="pelajaran-container row">
-                <!-- Menampilkan daftar mata pelajaran -->
-                <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
-                    <div class="col-md-4 mb-4">
-                        <div class="pelajaran-card card shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $pelajaran['nama_pelajaran'] ?></h5>
-                                <p class="card-text"><strong>ID Pelajaran:</strong> <?= $pelajaran['id_pelajaran'] ?>
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    <button class="btn btn-primary btn-sm" data-toggle="modal"
-                                        data-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">Edit</button>
-                                    <form action="<?= BASEURL; ?>/Admin/hapusMataPelajaran" method="POST"
-                                        style="display: inline;">
-                                        <!-- Menggunakan input hidden untuk mengirimkan id_pelajaran ke controller -->
-                                        <input type="hidden" name="id_pelajaran" value="<?= $pelajaran['id_pelajaran'] ?>">
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                    </form>
+                <div class="text-left mb-4">
+                    <!-- Tombol untuk membuka modal tambah mata pelajaran -->
+                    <button class="btn btn-success" data-toggle="modal" data-target="#modalTambahPelajaran">
+                        Tambah Mata Pelajaran
+                    </button>
+                </div>
+                <h2 class="text-center mb-4">Daftar Mata Pelajaran</h2>
+                <div class="pelajaran-container row">
+                    <!-- Menampilkan daftar mata pelajaran -->
+                    <?php foreach ($data['mataPelajaran'] as $pelajaran): ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="pelajaran-card card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $pelajaran['nama_pelajaran'] ?></h5>
+                                    <p class="card-text"><strong>ID Pelajaran:</strong> <?= $pelajaran['id_pelajaran'] ?></p>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalEditPelajaran<?= $pelajaran['id_pelajaran'] ?>">
+                                            Edit
+                                        </button>
+                                        <form action="<?= BASEURL; ?>/Admin/hapusMataPelajaran" method="POST" class="m-0">
+                                            <input type="hidden" name="id_pelajaran" value="<?= $pelajaran['id_pelajaran'] ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-        </section>
+                    <?php endforeach; ?>
+                </div>
+            </section>
 
 
         <!-- Modal untuk menambah mata pelajaran -->
@@ -1343,7 +1341,6 @@
             <h2>Jadwal</h2>
             <div class="jadwal-container">
                 <?php
-                // Inisialisasi array untuk menyimpan jadwal per hari
                 $jadwalPerHari = [
                     'Senin' => [],
                     'Selasa' => [],
@@ -1354,15 +1351,13 @@
                     'Minggu' => []
                 ];
 
-                // Kelompokkan jadwal berdasarkan hari
                 foreach ($data['jadwal'] as $jadwal) {
-                    $hari = $jadwal['hari']; // Misalnya 'Senin', 'Selasa', dsb.
+                    $hari = $jadwal['hari'];
                     if (array_key_exists($hari, $jadwalPerHari)) {
                         $jadwalPerHari[$hari][] = $jadwal;
                     }
                 }
 
-                // Looping untuk setiap hari
                 foreach ($jadwalPerHari as $hari => $jadwals): ?>
                     <div class="jadwal-box" id="jadwal<?= $hari ?>">
                         <h3><?= $hari ?></h3>
@@ -1371,7 +1366,6 @@
                                 <li data-id="<?= $jadwal['id_jadwal'] ?>">
                                     <span>
                                         <?php
-                                        // Format waktu jika 'waktu' adalah objek DateTime
                                         if ($jadwal['waktu'] instanceof DateTime) {
                                             echo $jadwal['waktu']->format('H:i');
                                         } else {
@@ -1381,27 +1375,28 @@
                                     </span> -
                                     <strong><?= $jadwal['nama_pelajaran'] ?></strong> -
                                     <strong><?= $jadwal['nama_lengkap'] ?></strong>
-                                    <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal"
+                                    <div class="d-flex gap-2">
+                                    <button class="btn btn-warning btn-sm edit-jadwal" data-toggle="modal"
                                         data-target="#modalEditJadwal" data-id="<?= $jadwal['id_jadwal'] ?>"
                                         data-pelajaran="<?= $jadwal['id_pelajaran'] ?>" data-ustadz="<?= $jadwal['id_user'] ?>"
                                         data-waktu="<?= $jadwal['waktu']->format('H:i') ?>"
-                                        data-hari="<?= $jadwal['hari'] ?>">Edit</button>
-                                    <form action="<?= BASEURL; ?>/Admin/hapusJadwal" method="POST" style="display: inline;">
-                                        <!-- Menggunakan input hidden untuk mengirimkan id_jadwal ke controller -->
-                                        <input type="hidden" name="id_jadwal" value="<?= $jadwal['id_jadwal'] ?>">
-                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                    </form>
-
+                                        data-hari="<?= $jadwal['hari'] ?>" style="margin-right: 5px;">Edit</button>
+                                <form action="<?= BASEURL; ?>/Admin/hapusJadwal" method="POST" style="display: inline;">
+                                    <input type="hidden" name="id_jadwal" value="<?= $jadwal['id_jadwal'] ?>">
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                                        </form>
+                                    </div>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
                         <button class="btn btn-success btn-sm tambah-jadwal" data-toggle="modal"
-                            data-target="#modalTambahJadwal" data-day="<?= strtolower($hari) ?>">Tambah
-                            Jadwal</button>
+                            data-target="#modalTambahJadwal" data-day="<?= strtolower($hari) ?>">Tambah Jadwal</button>
                     </div>
                 <?php endforeach; ?>
             </div>
         </section>
+
 
         <!-- Modal Tambah Jadwal -->
         <div class="modal fade" id="modalTambahJadwal" tabindex="-1" role="dialog" aria-labelledby="modalJadwalLabel"
