@@ -17,20 +17,33 @@
         }
 
         :root {
-            --primary-color: #2C3E50;
-            --secondary-color: #3498DB;
-            --accent-color: #E74C3C;
-            --background-color: #F5F6FA;
-            --card-color: #FFFFFF;
-            --text-primary: #2C3E50;
-            --text-secondary: #7F8C8D;
-            --success-color: #27AE60;
-            --warning-color: #F1C40F;
-            --danger-color: #E74C3C;
+            --primary-color: #00a859;
+            --primary-dark: #2e8b57;
+            --secondary-color: #3b82f6;
+            --accent-color: #ef4444;
+            --background-color: #f1f5f9;
+            --card-color: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #eab308;
+            --danger-color: #ef4444;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
         body {
             background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.5;
         }
 
         .dashboard-container {
@@ -367,10 +380,87 @@
                 grid-template-columns: 1fr;
             }
         }
+
+         /* Navbar Toggle Button */
+         .toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            /* Ukuran padding untuk tombol */
+            cursor: pointer;
+            background-color: var(--primary-color);
+            border-radius: 12px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        
+
+        .toggle-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Jarak antara ikon dan teks */
+        }
+
+        .toggle-content svg {
+            width: 40px;
+            /* Ukuran ikon lebih besar */
+            height: 32px;
+            /* Sesuaikan proporsi ikon */
+        }
+
+        .toggle-content .toggle-text {
+            font-size: 1.6rem;
+            /* Perbesar ukuran teks */
+            font-weight: bold;
+            color: white;
+            /* Warna teks */
+            text-transform: uppercase;
+            /* Membuat teks menjadi huruf besar */
+            letter-spacing: 1.5px;
+            /* Memberikan jarak antar huruf */
+        }
+
+        /* Responsif */
+        @media (max-width: 768px) {
+            .toggle-btn {
+                padding: 15px;
+            }
+
+            .toggle-content svg {
+                width: 30px;
+                height: 24px;
+            }
+
+            .toggle-content .toggle-text {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 
 <body>
+     <!-- Toggle Button -->
+     <div class="toggle-btn" onclick="toggleSidebar()">
+        <div class="toggle-content">
+
+            <span class="toggle-text">Ashabul Kahfi</span>
+        </div>
+    </div>
+    <!-- Overlay -->
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Toggle Button -->
+    <div class="toggle-btn" onclick="toggleSidebar()">
+    <div class="toggle-content">
+        <span class="toggle-text">
+        Ashabul Kahfi
+        </span>
+    </div>
+    </div>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">

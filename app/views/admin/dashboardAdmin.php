@@ -520,6 +520,26 @@
                 font-size: 1.2rem;
             }
         }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .user-info {
+            margin: 0;
+        }
+
+        #realTimeClock {/
+            font-size: 24px;
+            font-weight: normal;
+        }
     </style>
 </head>
 
@@ -573,42 +593,18 @@
 
         <!-- Main Content -->
     </div>
-
-    <script>
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('active');
-            document.querySelector('.main-content').classList.toggle('active');
-            document.querySelector('.overlay').classList.toggle('active');
-        }
-
-        // Menutup sidebar ketika mengklik link menu (opsional)
-        document.querySelectorAll('.sidebar nav a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    toggleSidebar();
-                }
-            });
-        });
-
-        // Menutup sidebar ketika ukuran window berubah ke desktop
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                document.querySelector('.sidebar').classList.remove('active');
-                document.querySelector('.main-content').classList.remove('active');
-                document.querySelector('.overlay').classList.remove('active');
-            }
-        });
-    </script>
     <!-- Main Content -->
     <main class="main-content">
-        <div class="main-header">
-            <h1>Selamat Datang,
-                <?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
-            </h1>
-            <div class="user-info">
-                <h2 id="realTimeClock"> </h2>
+            <div class="main-header">
+                <h1>Selamat Datang,
+                    <?= !isset($data['users']['0']['nama_lengkap']) ? 'Not Found' : $data['users']['0']['nama_lengkap'] ?>
+                </h1>
+
+                <div class="user-info">
+                    <h2 id="realTimeClock"></h2>
+                </div>
             </div>
-        </div>
+
 
         <!-- Dashboard Section -->
         <section id="dashboard" class="content-section active">
