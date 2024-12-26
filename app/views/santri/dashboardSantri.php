@@ -444,6 +444,16 @@
             padding-bottom: 0.5rem;
         }
 
+        /* Styles for the Perizinan Table Header */
+        th {
+            background-color: #d4edda; /* Light green background color */
+            color: #155724; /* Dark green text color */
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid var(--background-color);
+            font-weight: bold; /* Make the text bold */
+        }
+
         /* Responsif */
         @media (max-width: 768px) {
             .toggle-btn {
