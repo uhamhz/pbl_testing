@@ -423,6 +423,27 @@
             /* Memberikan jarak antar huruf */
         }
 
+        .jadwal-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+        .jadwal-box {
+            background: var(--card-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .jadwal-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+
         /* Responsif */
         @media (max-width: 768px) {
             .toggle-btn {
@@ -685,60 +706,58 @@
 
             <!-- Jadwal Section -->
             <section id="jadwal" class="content-section">
-                <h2>Jadwal</h2>
+            <h2>Jadwal</h2>
+            <div class="jadwal-container">
+                <?php
+                // Inisialisasi array untuk menyimpan jadwal per hari
+                $jadwalPerHari = [
+                    'Senin' => [],
+                    'Selasa' => [],
+                    'Rabu' => [],
+                    'Kamis' => [],
+                    'Jumat' => [],
+                    'Sabtu' => [],
+                    'Minggu' => []
+                ];
 
-                <!-- Tabel untuk menampilkan jadwal -->
-                <table border="1" cellpadding="10" style="border-collapse: collapse; border: 2px solid black;">
-                    <thead>
-                        <tr>
-                            <th style="border: 2px solid black; background-color: yellow;">No</th>
-                            <th style="border: 2px solid black; background-color: yellow;">Pelajaran</th>
-                            <th style="border: 2px solid black; background-color: yellow;">Ustadz</th>
-                            <th style="border: 2px solid black; background-color: yellow;">Waktu</th>
-                            <th style="border: 2px solid black; background-color: yellow;">Hari</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($data)): ?>
-                            <?php foreach ($data['jadwal'] as $index => $jadwal): ?>
-                                <tr>
-                                    <td><?php echo $index + 1; ?></td>
-                                    <td><?php echo htmlspecialchars($jadwal['nama_pelajaran']); ?></td>
-                                    <td><?php echo htmlspecialchars($jadwal['nama_lengkap']); ?></td>
-                                    <td>
-                                        <?php
-                                        // Check if 'waktu' is a valid DateTime object
-                                        if ($jadwal['waktu'] instanceof DateTime) {
-                                            // If it's already a DateTime object, format it directly
-                                            echo $jadwal['waktu']->format('H:i');
-                                        } else {
-                                            // If it's a string, create a DateTime object from it
-                                            try {
-                                                // Remove fractional seconds (if any) before creating DateTime object
-                                                $timeString = preg_replace('/\.\d+/', '', $jadwal['waktu']);
-                                                $dateTime = new DateTime($timeString);  // Create DateTime object from the time string
-                                
-                                                // Format the time to 'H:i' (Hour:Minute)
-                                                echo $dateTime->format('H:i');
-                                            } catch (Exception $e) {
-                                                // If the time is invalid, display error message
+                // Kelompokkan jadwal berdasarkan hari
+                foreach ($data['jadwal'] as $jadwal) {
+                    $hari = $jadwal['hari']; // Misalnya 'Senin', 'Selasa', dsb.
+                    if (array_key_exists($hari, $jadwalPerHari)) {
+                        $jadwalPerHari[$hari][] = $jadwal;
+                    }
+                }
+
+                // Looping untuk setiap hari
+                foreach ($jadwalPerHari as $hari => $jadwals): ?>
+                    <div class="jadwal-box" id="jadwal<?= $hari ?>">
+                        <h3><?= $hari ?></h3>
+                        <ul id="listJadwal<?= $hari ?>">
+                            <?php if (empty($jadwals)): ?>
+                                <li>Tidak ada jadwal untuk hari ini.</li>
+                            <?php else: ?>
+                                <?php foreach ($jadwals as $jadwal): ?>
+                                    <li data-id="<?= $jadwal['id_jadwal'] ?>">
+                                        <span>
+                                            <?php
+                                            // Format waktu jika 'waktu' adalah objek DateTime
+                                            if ($jadwal['waktu'] instanceof DateTime) {
+                                                echo $jadwal['waktu']->format('H:i');
+                                            } else {
                                                 echo 'Waktu tidak valid';
                                             }
-                                        }
-                                        ?>
-                                    </td>
-                                    <td><?php echo htmlspecialchars($jadwal['hari']); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5">Tidak ada jadwal yang tersedia.</td>
-                            </tr>
-                        <?php endif; ?>
-
-                    </tbody>
-                </table>
-            </section>
+                                            ?>
+                                        </span> -
+                                        <strong><?= $jadwal['nama_pelajaran'] ?></strong> -
+                                        <strong><?= $jadwal['nama_lengkap'] ?></strong>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
 
             <!-- Permission Section -->
             <section id="perizinan" class="content-section">
